@@ -27,7 +27,7 @@ export default function App() {
   );
 }
 
-//XDDDD
+//XDDDD jestem teraz na scrollView
 
 const styles = StyleSheet.create({
   container: {
