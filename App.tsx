@@ -27,6 +27,8 @@ export default function App() {
   );
 }
 
+//XDDDD
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
