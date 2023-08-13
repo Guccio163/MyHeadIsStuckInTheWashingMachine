@@ -20,22 +20,23 @@ export default function EmployeeSectionList() {
   return (
     <View
       style={{
-        height: "100%",
-        width: Dimensions.get("window").width,
+        height: 200,
+        width: 200,
         backgroundColor: "lightgreen",
+        alignItems: 'center',
       }}
     >
       <Text>EmployeeSectionList</Text>
       <SectionList
         sections={data}
-        renderItem={({ item }) => <Text>{item}</Text>}
+        renderItem={({ item, index }) => <Text key={index}>{item}</Text>}
         renderSectionHeader={({ section }) => (
           <Text style={{ fontStyle: "italic", fontSize: 20 }}>
             {section.section}
           </Text>
         )}
         keyExtractor={(item) => `basicListEntry-${item}`}
-        style={{ maxHeight: 150, backgroundColor: "magenta", maxWidth: 150 }}
+        style={{ width: '60%', backgroundColor: "magenta" }}
       ></SectionList>
     </View>
   );

@@ -5,24 +5,32 @@ import LoremScroll from "./components/LoremScrl";
 import EmployeeList from "./components/EmployeeList";
 import EmployeeSectionList from "./components/EmployeeSectionList";
 import ScrollableHome from "./components/ScrollableHome";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 export default function App() {
+  const myIcon = <Icon name="home" size={30} color="black" />;
+  const myIcon2 = <Icon name="list" size={30} color="black" />;
+  const myIcon3 = <Icon name="school" size={30} color="black" />;
+  const myIcon4 = <Icon name="cat" size={30} color="black" />;
+
+  const icons = [
+    myIcon,
+    myIcon2,
+    myIcon3,
+    myIcon4,
+  ];
+
   return (
     <>
-      {/* <View style={styles.container}> */}
-        {/* <Text>Open up App.tsx to start working on your app!</Text> */}
-        {/* <Cat name={"Puszek"} />
-        <Cat name={"Okruszek"} />
-        <Cat name={"Debil"} /> */}
-        {/* <loremScroll/> */}
-        {/* <StatusBar style="auto" />
-        <LoremScroll />
-        <View>
-          <EmployeeList />
-          <EmployeeSectionList/>
-        </View>
-      </View> */}
-      <ScrollableHome children={[<EmployeeList/>,<EmployeeSectionList/>]} />
+      <ScrollableHome
+        children={[
+          <EmployeeList />,
+          <EmployeeSectionList />,
+          <LoremScroll />,
+          <Cat name="puszek" />,
+        ]}
+        navIcons={icons}
+      />
     </>
   );
 }
