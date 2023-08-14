@@ -1,4 +1,10 @@
-import { View, Text, FlatList, StyleSheet, ListRenderItemInfo } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ListRenderItemInfo,
+} from "react-native";
 import React from "react";
 import { Dimensions } from "react-native";
 import ListElement from "./ListElement";
@@ -7,7 +13,6 @@ type listItem = {
   index: number;
   item: string;
 };
-
 
 export default function EmployeeList() {
   const data = [
@@ -27,38 +32,46 @@ export default function EmployeeList() {
 
   return (
     <>
-      <Text style={{ alignSelf: "center" }}>EmployeeList</Text>
+      <View style={styles.titleView}>
+        <Text style={styles.EmployeeListTitle}>EmployeeList</Text>
+      </View>
       <FlatList
-        pagingEnabled
-        contentContainerStyle={styles.flatListChildren}
         style={styles.flatListContainer}
         data={data}
-        renderItem={(item) => <ListElement name={item.item.name} index={item.index} ></ListElement>}
+        renderItem={(item) => (
+          <ListElement name={item.item.name} index={item.index}></ListElement>
+        )}
       ></FlatList>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  EmployeeListTitle: {
+    fontSize: 20,
+    alignSelf: "center",
+  },
+  titleView: {
+    height: 80,
+    width: "100%",
+    backgroundColor: "white",
+    paddingTop: 40,
+    marginBottom: 10,
+    position: "absolute",
+    top: 0,
+  },
   employeeListContainer: {
     backgroundColor: "turquoise",
-    width: 400,
+    width: "90%",
     height: 400,
     justifyContent: "center",
   },
   flatListContainer: {
+    marginTop: 90,
     alignSelf: "center",
     minHeight: 200,
-    maxHeight: 100,
-    width: 200,
+    maxHeight: "90%",
+    width: "90%",
     backgroundColor: "yellow",
   },
-  flatListChildren: {
-    alignItems: "center",
-  },
-  flatListChild: {
-    borderWidth: 1,
-    borderBlockColor: 'gray',
-    margin: 2,
-  }
 });
