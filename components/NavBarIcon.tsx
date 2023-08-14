@@ -7,16 +7,8 @@ interface Props{
     active: boolean,
 }
 
-interface Props2{
-  icon: JSX.Element,
-  color: string
-}
 
-const ChangeColorIcon = ({ icon, color }: Props2) => {
-  return React.cloneElement(icon, { color });
-};
-
-export default function NavBarIcons({icon, onPress, active}:Props) {
+export default function NavBarIcon({icon, onPress, active}:Props) {
   return (
     <Pressable
       onPress={onPress}

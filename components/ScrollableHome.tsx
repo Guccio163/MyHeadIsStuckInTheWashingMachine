@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, StyleSheet, Dimensions } from "react-native";
 import React, { FC, useRef, useState } from "react";
-import NavBarIcons from "./NavBarIcons";
+import NavBarIcon from "./NavBarIcon";
 
 interface Props {
   children: JSX.Element[];
@@ -8,6 +8,7 @@ interface Props {
 }
 
 export default function ScrollableHome({ children, navIcons }: Props) {
+  
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<any>();
 
@@ -45,12 +46,11 @@ export default function ScrollableHome({ children, navIcons }: Props) {
       <View style={styles.navBar}>
         {navIcons.map((icon, index) => (
           <>
-            <NavBarIcons
+            <NavBarIcon
               active={activeIndex === index}
               onPress={onPress(index)}
               icon={icon}
-            ></NavBarIcons>
-            {/* <Text>{index}</Text> */}
+            ></NavBarIcon>
           </>
         ))}
       </View>

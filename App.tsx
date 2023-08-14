@@ -8,16 +8,12 @@ import ScrollableHome from "./components/ScrollableHome";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
 export default function App() {
-  const myIcon = <Icon name="home" size={30} color="black" />;
-  const myIcon2 = <Icon name="list" size={30} color="black" />;
-  const myIcon3 = <Icon name="school" size={30} color="black" />;
-  const myIcon4 = <Icon name="cat" size={30} color="black" />;
 
   const icons = [
-    myIcon,
-    myIcon2,
-    myIcon3,
-    myIcon4,
+    <Icon name="home" size={30} color="black" />,
+    <Icon name="list" size={30} color="black" />,
+    <Icon name="school" size={30} color="black" />,
+    <Icon name="cat" size={30} color="black" />,
   ];
 
   return (
