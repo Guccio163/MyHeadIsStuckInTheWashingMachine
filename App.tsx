@@ -5,15 +5,16 @@ import LoremScroll from "./components/LoremScrl";
 import EmployeeList from "./components/EmployeeList";
 import EmployeeSectionList from "./components/EmployeeSectionList";
 import ScrollableHome from "./components/ScrollableHome";
-import Icon from "react-native-vector-icons/FontAwesome5";
+import Icon from "react-native-vector-icons/FontAwesome";
+import UserInfoPage from "./components/UserInfoPage";
 
 export default function App() {
 
   const icons = [
-    <Icon name="home" size={30} color="black" />,
-    <Icon name="list" size={30} color="black" />,
-    <Icon name="school" size={30} color="black" />,
-    <Icon name="cat" size={30} color="black" />,
+    <Icon name="tags" size={30} color="black" />,
+    <Icon name="group" size={30} color="black" />,
+    <Icon name="support" size={30} color="black" />,
+    <Icon name="user-circle" size={30} color="black" />,
   ];
 
   return (
@@ -23,7 +24,7 @@ export default function App() {
           <EmployeeList />,
           <EmployeeSectionList />,
           <LoremScroll />,
-          <Cat name="puszek" />,
+          <UserInfoPage/>
         ]}
         navIcons={icons}
       />

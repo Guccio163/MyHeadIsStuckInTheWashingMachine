@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, StyleSheet, Dimensions } from "react-native";
 import React, { FC, useRef, useState } from "react";
 import NavBarIcon from "./NavBarIcon";
+import { mainColor } from "./PageTitle";
 
 interface Props {
   children: JSX.Element[];
@@ -32,6 +33,7 @@ export default function ScrollableHome({ children, navIcons }: Props) {
       <ScrollView
         horizontal
         pagingEnabled
+        scrollEnabled
         showsHorizontalScrollIndicator={false}
         style={styles.container}
         ref={scrollRef}
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
   },
   navBar: {
     height: 60,
-    backgroundColor: "#D74848",
+    backgroundColor: mainColor,
     alignItems: "center",
     justifyContent: "space-evenly",
     flexDirection: "row",

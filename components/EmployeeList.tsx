@@ -8,6 +8,7 @@ import {
 import React from "react";
 import { Dimensions } from "react-native";
 import ListElement from "./ListElement";
+import PageTitle from "./PageTitle";
 
 type listItem = {
   index: number;
@@ -32,9 +33,7 @@ export default function EmployeeList() {
 
   return (
     <>
-      <View style={styles.titleView}>
-        <Text style={styles.EmployeeListTitle}>EmployeeList</Text>
-      </View>
+      <PageTitle name="Employee List"/>
       <FlatList
         style={styles.flatListContainer}
         data={data}
@@ -51,15 +50,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: "center",
   },
-  titleView: {
-    height: 80,
-    width: "100%",
-    backgroundColor: "white",
-    paddingTop: 40,
-    marginBottom: 10,
-    position: "absolute",
-    top: 0,
-  },
+  // titleView: {
+  //   height: 80,
+  //   width: "100%",
+  //   backgroundColor: "#D74848",
+  //   paddingTop: 40,
+  //   marginBottom: 10,
+  //   position: "absolute",
+  //   top: 0,
+  // },
   employeeListContainer: {
     backgroundColor: "turquoise",
     width: "90%",
@@ -67,11 +66,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   flatListContainer: {
-    marginTop: 90,
     alignSelf: "center",
     minHeight: 200,
     maxHeight: "90%",
     width: "90%",
-    backgroundColor: "yellow",
+    backgroundColor: "transparent",
   },
 });
