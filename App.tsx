@@ -1,15 +1,14 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import Cat from "./components/Cat";
+import { StyleSheet} from "react-native";
 import LoremScroll from "./components/LoremScrl";
-import EmployeeList from "./components/EmployeeList";
-import EmployeeSectionList from "./components/EmployeeSectionList";
+import TagListPage from "./components/mainPages/TagListPage";
+import FriendListPage from "./components/mainPages/FriendListPage";
 import ScrollableHome from "./components/ScrollableHome";
 import Icon from "react-native-vector-icons/FontAwesome";
 import UserInfoPage from "./components/UserInfoPage";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
-
   const icons = [
     <Icon name="tags" size={30} color="black" />,
     <Icon name="group" size={30} color="black" />,
@@ -19,15 +18,17 @@ export default function App() {
 
   return (
     <>
-      <ScrollableHome
-        children={[
-          <EmployeeList />,
-          <EmployeeSectionList />,
-          <LoremScroll />,
-          <UserInfoPage/>
-        ]}
-        navIcons={icons}
-      />
+      <NavigationContainer>
+        <ScrollableHome
+          children={[
+            <TagListPage />,
+            <FriendListPage />,
+            <LoremScroll />,
+            <UserInfoPage />,
+          ]}
+          navIcons={icons}
+        />
+      </NavigationContainer>
     </>
   );
 }

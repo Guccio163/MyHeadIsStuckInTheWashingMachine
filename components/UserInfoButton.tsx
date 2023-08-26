@@ -8,7 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import React from "react";
-import { mainColor } from "./PageTitle";
+import { mainColor1 } from "./PageTitle";
 
 interface Props{
     name: string,
@@ -30,7 +30,7 @@ export default function UserInfoButton({name}: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: mainColor,
+    backgroundColor: mainColor1,
     width: 300,
     height: 50,
     justifyContent: "center",

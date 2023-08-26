@@ -5,7 +5,7 @@ interface Props {
   name: string;
 }
 
-export const mainColor = "#D74848";
+export const mainColor1 = "#78C3FB";
 
 export default function PageTitle({ name }: Props) {
   return (
@@ -27,12 +27,14 @@ const styles = StyleSheet.create({
     height: 80,
     // width: Dimensions.get("window").width,
     width: "100%",
-    backgroundColor: mainColor,
+    backgroundColor: mainColor1,
     paddingTop: 40,
     // marginBottom: 10,
     position: "absolute",
     top: 0,
     left: 0,
     // zIndex: 999
+    // borderBottomLeftRadius: 15,
+    // borderBottomRightRadius: 15,
   },
 });

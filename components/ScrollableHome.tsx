@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, StyleSheet, Dimensions } from "react-native";
 import React, { FC, useRef, useState } from "react";
 import NavBarIcon from "./NavBarIcon";
-import { mainColor } from "./PageTitle";
+import { mainColor1 } from "./PageTitle";
 
 interface Props {
   children: JSX.Element[];
@@ -45,16 +45,18 @@ export default function ScrollableHome({ children, navIcons }: Props) {
           </View>
         ))}
       </ScrollView>
-      <View style={styles.navBar}>
-        {navIcons.map((icon, index) => (
-          <>
-            <NavBarIcon
-              active={activeIndex === index}
-              onPress={onPress(index)}
-              icon={icon}
-            ></NavBarIcon>
-          </>
-        ))}
+      <View style={{ backgroundColor: "#89A6FB" }}>
+        <View style={styles.navBar}>
+          {navIcons.map((icon, index) => (
+            <>
+              <NavBarIcon
+                active={activeIndex === index}
+                onPress={onPress(index)}
+                icon={icon}
+              ></NavBarIcon>
+            </>
+          ))}
+        </View>
       </View>
     </>
   );
@@ -63,18 +65,21 @@ export default function ScrollableHome({ children, navIcons }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'yellow',
   },
   childDiv: {
     width: Dimensions.get("window").width,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "pink",
+    backgroundColor: "#89A6FB",
   },
   navBar: {
     height: 60,
-    backgroundColor: mainColor,
+    backgroundColor: mainColor1,
     alignItems: "center",
     justifyContent: "space-evenly",
     flexDirection: "row",
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
   },
 });

@@ -1,266 +1,220 @@
 import {
   View,
   Text,
-  ScrollView,
   Image,
   StyleSheet,
   SectionList,
+  Pressable,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import PageTitle from "./PageTitle";
-import tagItem from "./tagItem";
+import tagItem from "../functions/tagItem";
 
-// type tagHelp = {
-//   name: string
-//   description: string
-// }
-
-function getFilePath(suffix: string) {
-  return "../assets/washIcons/" + suffix;
-}
+const data = [
+  {
+    index: 0,
+    section: "Pranie",
+    sectionHeaderImage: "wash_30",
+    data: [
+      "wash_machine",
+      "wash_machine_press",
+      "wash_machine_delicate",
+      "wash_hand",
+      "wash_not",
+      "wash_30",
+      "wash_40",
+      "wash_50",
+      "wash_60",
+      "wash_70",
+      "wash_95",
+      "wash_30*",
+      "wash_40*",
+      "wash_50*",
+      "wash_60*",
+      "wash_70*",
+      "wash_95*",
+    ],
+  },
+  {
+    index: 1,
+    section: "Prasowanie",
+    sectionHeaderImage: "iron_medium",
+    data: [
+      "iron",
+      "iron_not",
+      "iron_non_steam",
+      "iron_low",
+      "iron_medium",
+      "iron_high",
+    ],
+  },
+  {
+    index: 2,
+    section: "Suszenie",
+    sectionHeaderImage: "dry_machine",
+    data: [
+      "dry",
+      "dry_not",
+      "dry_hang",
+      "dry_drip",
+      "dry_flat",
+      "dry_shade",
+      "dry_machine",
+      "dry_machine_not",
+      "dry_machine_low",
+      "dry_machine_medium",
+      "dry_machine_high",
+      "dry_machine_non_heat",
+      "dry_machine_press",
+      "dry_machine_delicate",
+    ],
+  },
+  {
+    index: 3,
+    section: "Czyszczenie",
+    sectionHeaderImage: "clean_dry_not",
+    data: [
+      "clean_dry",
+      "clean_dry_not",
+      "clean_wet",
+      "clean_wet_not",
+      "clean_any",
+      "clean_petroleum",
+      "clean_any_not_p",
+    ],
+  },
+  {
+    index: 4,
+    section: "Wybielanie",
+    sectionHeaderImage: "bleach",
+    data: [
+      "bleach",
+      "bleach_not",
+      "bleach_not_2",
+      "bleach_non_cl",
+      "bleach_non_cl_2",
+    ],
+  },
+  {
+    index: 5,
+    section: "Inne",
+    sectionHeaderImage: "",
+    data: [
+      "heat_low",
+      "reduced_moisture",
+      "short_cycle",
+      "steam_not",
+      "wring_not",
+    ],
+  },
+];
 
 export default function LoremScroll() {
-  const imagesFolderPath: string = "../assets/washIcons/";
-  // const folder = require("../assets/washIcons")
+  let sectionsArray = Array.from({ length: data.length }, () => 0);
+  const [isExpanded, setExpanded] = useState(sectionsArray);
 
-  // const washArray = [{name: 'wash_not', description:'do not wash'}]
-  const data = [
-    {
-      section: "Sposób prania",
-      data: [
-        "wash_machine",
-        "wash_machine_press",
-        "wash_machine_delicate",
-        "wash_hand",
-        "wash_not",
-      ],
-    },
-    {
-      section: "Sposób wybielania",
-      data: [
-        "bleach",
-        "bleach_not",
-        "bleach_non_cl",
-        "bleach_non_cl_2",
-      ],
-    },
-    // { section: "Dziewczyny", data: ["ania", "basia", "patrycja"] },
-    // {
-    //   section: "Zwierzęta",
-    //   data: ["czołg tygrys", "azor", "t-rex"],
-    // },
-  ];
+  function handleClick(index: number) {
+    let newArray = isExpanded;
 
-
+    if (isExpanded[index]) {
+      newArray[index] = 0;
+    } else {
+      newArray[index] = 1;
+    }
+    setExpanded([...newArray]);
+  }
 
   return (
-    <View style={{ width: "100%", height: "100%", flex: 1 }}>
+    <View style={{ width: "100%", height: "100%" }}>
       <PageTitle name="Pomoc" />
       <SectionList
-      showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         sections={data}
-        renderItem={({ item, index }) => (
-          <View style={styles.helpView} key={index}>
-            <Image
-              source={tagItem(item)?.image}
-              style={styles.blankUserImage}
-              resizeMode="center"
-            />
-            <Text
-              style={{
-                flexWrap: "wrap",
-                maxWidth: "78%",
-                alignSelf: 'center',
-                // backgroundColor: "white",
-              }}
-            >
-              {tagItem(item)?.description}
-            </Text>
-          </View>
-        )}
-        renderSectionHeader={({ section }) => (
-          <Text style={{ fontStyle: "italic", fontSize: 20 }}>
-            {section.section}
-          </Text>
-        )}
-        style={{
-          // maxHeight: "80%",
-          minHeight: 150,
-          // width: '100%',
-          // marginTop: 80,
-          marginLeft: 30,
-          marginRight: 30,
-          // borderColor: "black",
-          // borderWidth: 2,
-          flexWrap: "wrap",
-          marginTop: 10,
-          // alignSelf: "center",
+        extraData={isExpanded}
+        style={styles.sectionList}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({ section: { index }, item }) => {
+          if (!isExpanded[index]) return null;
+
+          return (
+            <View style={styles.sectionItem}>
+              <Image
+                source={tagItem(item)?.image}
+                style={styles.sectionItemImage}
+                resizeMode="center"
+              />
+              <Text style={styles.sectionItemText}>{tagItem(item)?.name}</Text>
+            </View>
+          );
         }}
-      />
-{/* 
-      <ScrollView
-        // pagingEnabled
-        style={{
-          // maxHeight: "80%",
-          minHeight: 150,
-          // width: '100%',
-          // marginTop: 80,
-          marginLeft: 30,
-          marginRight: 30,
-          borderColor: "black",
-          borderWidth: 2,
-          flexWrap: "wrap",
-          marginTop: 10,
-          // alignSelf: "center",
-        }}
-      > */}
-        {/* <View style={styles.helpView}>
-          <Image
-            source={require(imagesFolderPath + "wash_machine.png")}
-            style={styles.blankUserImage}
-            resizeMode="center"
-          />
-          <Text
-            style={{
-              flexWrap: "wrap",
-              maxWidth: "78%",
-              // backgroundColor: "white",
-            }}
+        renderSectionHeader={({
+          section: { index, section, sectionHeaderImage },
+        }) => (
+          <Pressable
+            onPress={() => handleClick(index)}
+            style={[
+              styles.sectionHeader,
+              {
+                borderBottomColor: isExpanded[index] ? "#00000001" : "black",
+              },
+            ]}
           >
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab tempora
-            dolorum animi soluta mollitia. Repellendus magnam dolor, consequatur
-            pariatur exercitationem maiores autem dolores assumenda veritatis,
-            quis alias ex consectetur hic.
-          </Text>
-        </View>
-        <View style={styles.helpView}>
-          <Image
-            source={require("../assets/washIcons/wash_machine_press.png")}
-            style={styles.blankUserImage}
-            resizeMode="center"
-          />
-          <Text style={{ display: "flex", flexWrap: "wrap", maxWidth: "78%" }}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab tempora
-            dolorum animi soluta mollitia. Repellendus magnam dolor, consequatur
-            pariatur exercitationem maiores autem dolores assumenda veritatis,
-            quis alias ex consectetur hic.
-          </Text>
-        </View>
-        <View style={styles.helpView}>
-          <Image
-            source={require("../assets/washIcons/wash_machine_delicate.png")}
-            style={styles.blankUserImage}
-            resizeMode="center"
-          />
-          <Text style={{ display: "flex", flexWrap: "wrap", maxWidth: "78%" }}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab tempora
-            dolorum animi soluta mollitia. Repellendus magnam dolor, consequatur
-            pariatur exercitationem maiores autem dolores assumenda veritatis,
-            quis alias ex consectetur hic.
-          </Text>
-        </View>
-        <View style={styles.helpView}>
-          <Image
-            source={require("../assets/washIcons/wash_hand.png")}
-            style={styles.blankUserImage}
-            resizeMode="center"
-          />
-          <Text style={{ display: "flex", flexWrap: "wrap", maxWidth: "78%" }}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab tempora
-            dolorum animi soluta mollitia. Repellendus magnam dolor, consequatur
-            pariatur exercitationem maiores autem dolores assumenda veritatis,
-            quis alias ex consectetur hic.
-          </Text>
-        </View>
-        <View style={styles.helpView}>
-          <Image
-            source={require("../assets/washIcons/wash_not.png")}
-            style={styles.blankUserImage}
-            resizeMode="center"
-          />
-          <Text style={{ display: "flex", flexWrap: "wrap", maxWidth: "78%" }}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab tempora
-            dolorum animi soluta mollitia. Repellendus magnam dolor, consequatur
-            pariatur exercitationem maiores autem dolores assumenda veritatis,
-            quis alias ex consectetur hic.
-          </Text>
-        </View> */}
-        {/* <View style={styles.helpView}>
-          <Image
-            source={require("../assets/washIcons/bleach.png")}
-            style={styles.blankUserImage}
-            resizeMode="center"
-          />
-          <Text style={{ display: "flex", flexWrap: "wrap", maxWidth: "78%" }}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab tempora
-            dolorum animi soluta mollitia. Repellendus magnam dolor, consequatur
-            pariatur exercitationem maiores autem dolores assumenda veritatis,
-            quis alias ex consectetur hic.
-          </Text>
-        </View>
-        <View style={styles.helpView}>
-          <Image
-            source={require("../assets/washIcons/bleach_not.png")}
-            style={styles.blankUserImage}
-            resizeMode="center"
-          />
-          <Text style={{ display: "flex", flexWrap: "wrap", maxWidth: "78%" }}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab tempora
-            dolorum animi soluta mollitia. Repellendus magnam dolor, consequatur
-            pariatur exercitationem maiores autem dolores assumenda veritatis,
-            quis alias ex consectetur hic.
-          </Text>
-        </View>
-        <View style={styles.helpView}>
-          <Image
-            source={require("../assets/washIcons/bleach_non_cl.png")}
-            style={styles.blankUserImage}
-            resizeMode="center"
-          />
-          <Text style={{ display: "flex", flexWrap: "wrap", maxWidth: "78%" }}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab tempora
-            dolorum animi soluta mollitia. Repellendus magnam dolor, consequatur
-            pariatur exercitationem maiores autem dolores assumenda veritatis,
-            quis alias ex consectetur hic.
-          </Text>
-        </View>
-        <View style={styles.helpView}>
-          <Image
-            source={require("../assets/washIcons/bleach_non_cl_2.png")}
-            style={styles.blankUserImage}
-            resizeMode="center"
-          />
-          <Text style={{ display: "flex", flexWrap: "wrap", maxWidth: "78%" }}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab tempora
-            dolorum animi soluta mollitia. Repellendus magnam dolor, consequatur
-            pariatur exercitationem maiores autem dolores assumenda veritatis,
-            quis alias ex consectetur hic.
-          </Text>
-        </View>
-      </ScrollView> */}
+            <Image
+              source={tagItem(sectionHeaderImage)?.image}
+              style={styles.sectionItemImage}
+            />
+            <Text style={styles.sectionHeaderText}>{section}</Text>
+          </Pressable>
+        )}
+      />
     </View>
   );
 }
 const styles = StyleSheet.create({
-  blankUserImage: {
+  sectionList: {
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    marginTop: 10,
+    width: "90%",
+    alignSelf: "center",
+  },
+  sectionHeader: {
+    backgroundColor: "transparent",
+    borderSideWidth: 0.5,
+    borderBottomWidth: 1,
+    borderTopWidth: 0,
+    height: 70,
+    maxWidth: "100%",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  sectionHeaderText: {
+    fontSize: 20,
+    maxWidth: "100%",
+    alignSelf: "center",
+  },
+  sectionItem: {
+    flexDirection: "row",
+    margin: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
+    maxWidth: "100%",
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  sectionItemImage: {
     borderWidth: 0,
     margin: 6,
     width: 50,
     height: 50,
     borderRadius: 100,
-    // height: Dimensions.get('window').height * 0.15,
     backgroundColor: "transparent",
     alignSelf: "center",
-    // fontSize: 50,
     transform: [{ scaleX: 3 }, { scaleY: 3 }, { translateY: 1 }],
   },
-  helpView: {
-    flexDirection: "row",
-    margin: 10,
-    // backgroundColor: 'white',
-  },
-  wrapper: {
-    display: "flex",
-    flexDirection: "column",
+  sectionItemText: {
+    flexWrap: "wrap",
+    maxWidth: "85%",
+    alignSelf: "center",
+    // backgroundColor: "white",
   },
 });

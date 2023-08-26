@@ -1,6 +1,5 @@
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import React from "react";
-import Cat from "./Cat";
 import PageTitle from "./PageTitle";
 import UserInfoButton from "./UserInfoButton";
 

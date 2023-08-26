@@ -1,13 +1,5 @@
-import {
-  View,
-  Text,
-  ListRenderItemInfo,
-  ListRenderItem,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import React from "react";
-import { CodeSandboxCircleFilled } from "@ant-design/icons";
 
 interface Props {
   name: string;
@@ -15,7 +7,6 @@ interface Props {
 }
 
 export default function ListElement({ name, index }: Props) {
-//   console.log(name);
   return (
     <View key={index} style={styles.flatListChild}>
       <Text>item index: {index} </Text>
@@ -29,10 +20,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderBlockColor: "gray",
     margin: 6,
-    width: '95%',
-    height: Dimensions.get('window').height * 0.15,
+    width: "95%",
+    height: Dimensions.get("window").height * 0.15,
     backgroundColor: "white",
-    alignSelf: 'center',
+    alignSelf: "center",
   },
-
 });
