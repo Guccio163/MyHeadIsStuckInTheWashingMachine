@@ -12,10 +12,14 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import AddTagPage from "../AddTagPanel";
+import AddTagPage from "../addTagPanel/AddTagPanel";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-export default function TagListPage() {
+interface Props {
+  func: (arg0: boolean) => void;
+}
+
+export default function TagListPage({ func }: Props) {
   const data = [
     { index: 0, name: "ania" },
     { index: 1, name: "antoni" },

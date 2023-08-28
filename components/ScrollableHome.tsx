@@ -1,5 +1,13 @@
-import { View, Text, ScrollView, StyleSheet, Dimensions } from "react-native";
-import React, { FC, useRef, useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Dimensions,
+  KeyboardAvoidingView,
+  Keyboard,
+} from "react-native";
+import React, { FC, useEffect, useRef, useState } from "react";
 import NavBarIcon from "./NavBarIcon";
 import { mainColor1 } from "./PageTitle";
 
@@ -9,7 +17,6 @@ interface Props {
 }
 
 export default function ScrollableHome({ children, navIcons }: Props) {
-  
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<any>();
 
@@ -28,6 +35,18 @@ export default function ScrollableHome({ children, navIcons }: Props) {
     if (index !== activeIndex) setActiveIndex(index);
   };
 
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardOpen(true);
+    });
+
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardOpen(false);
+    });
+     }, []);
+
   return (
     <>
       <ScrollView
@@ -45,7 +64,7 @@ export default function ScrollableHome({ children, navIcons }: Props) {
           </View>
         ))}
       </ScrollView>
-      <View style={{ backgroundColor: "#89A6FB" }}>
+      {!isKeyboardOpen ? <View style={{ backgroundColor: "#89A6FB", display: isKeyboardOpen ? 'none' : 'flex'  }}>
         <View style={styles.navBar}>
           {navIcons.map((icon, index) => (
             <>
@@ -57,7 +76,7 @@ export default function ScrollableHome({ children, navIcons }: Props) {
             </>
           ))}
         </View>
-      </View>
+      </View> : null}
     </>
   );
 }
@@ -65,7 +84,7 @@ export default function ScrollableHome({ children, navIcons }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'yellow',
+    backgroundColor: "yellow",
   },
   childDiv: {
     width: Dimensions.get("window").width,

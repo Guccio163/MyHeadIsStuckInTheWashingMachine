@@ -2,6 +2,7 @@ import { View, StyleSheet, Text } from "react-native";
 import React from "react";
 import PageTitle from "../PageTitle";
 import Icon from "react-native-vector-icons/FontAwesome";
+import FormSample from "../addTagPanel/FormSample";
 
 export default function FriendListPage() {
   return (
@@ -11,6 +12,7 @@ export default function FriendListPage() {
         <Icon name="lock" size={60} color="black" />
         <Text style={styles.altText}>Soon !</Text>
       </View>
+      {/* <FormSample/> */}
     </View>
   );
 }
@@ -22,7 +24,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   friendList: {
-    height: "100%",
+    height: "50%",
     justifyContent: "center",
     alignItems: "center",
   },
