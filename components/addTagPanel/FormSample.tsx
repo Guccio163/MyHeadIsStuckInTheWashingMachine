@@ -12,6 +12,7 @@ import React from "react";
 import NotesInput from "./formComponents/NotesInput";
 import MaterialsInput from "./formComponents/MaterialsInput";
 import CustomButton from "./formComponents/CustomButton";
+import IconsInput from "./formComponents/IconsInput";
 
 interface Tag {
   name: string;
@@ -79,13 +80,7 @@ export default function FormSample() {
           placeholder="Brand"
           keyboardType="default"
         />
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeIcons}
-          value={icons}
-          placeholder="ICON BUTTONS placeholder"
-          keyboardType="default"
-        />
+        <IconsInput/>
         <MaterialsInput
           materials={materials}
           onChangeMaterials={onChangeMaterials}

@@ -7,8 +7,8 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
-import PageTitle from "./PageTitle";
-import tagItem from "../functions/tagItem";
+import PageTitle from "../../PageTitle";
+import tagItem from "../../../functions/tagItem";
 
 const data = [
   {
@@ -16,23 +16,15 @@ const data = [
     section: "Wash",
     sectionHeaderImage: "wash_30",
     data: [
-      "wash_machine",
-      "wash_machine_press",
-      "wash_machine_delicate",
-      "wash_hand",
-      "wash_not",
-      "wash_30",
-      "wash_40",
-      "wash_50",
-      "wash_60",
-      "wash_70",
-      "wash_95",
-      "wash_30*",
-      "wash_40*",
-      "wash_50*",
-      "wash_60*",
-      "wash_70*",
-      "wash_95*",
+      [
+        "wash_machine",
+        "wash_machine_press",
+        "wash_machine_delicate",
+        "wash_hand",
+        "wash_not",
+      ],
+      ["wash_30", "wash_40", "wash_50", "wash_60", "wash_70", "wash_95"],
+      ["wash_30*", "wash_40*", "wash_50*", "wash_60*", "wash_70*", "wash_95*"],
     ],
   },
   {
@@ -40,12 +32,14 @@ const data = [
     section: "Iron",
     sectionHeaderImage: "iron_medium",
     data: [
-      "iron",
-      "iron_not",
-      "iron_non_steam",
-      "iron_low",
-      "iron_medium",
-      "iron_high",
+      [
+        "iron",
+        "iron_not",
+        "iron_non_steam",
+        "iron_low",
+        "iron_medium",
+        "iron_high",
+      ],
     ],
   },
   {
@@ -53,20 +47,19 @@ const data = [
     section: "Dry",
     sectionHeaderImage: "dry_machine",
     data: [
-      "dry",
-      "dry_not",
-      "dry_hang",
-      "dry_drip",
-      "dry_flat",
-      "dry_shade",
-      "dry_machine",
-      "dry_machine_not",
-      "dry_machine_low",
-      "dry_machine_medium",
-      "dry_machine_high",
-      "dry_machine_non_heat",
-      "dry_machine_press",
-      "dry_machine_delicate",
+      ["dry", "dry_not", "dry_hang", "dry_drip", "dry_flat", "dry_shade"],
+      [
+        "dry_machine",
+        "dry_machine_not",
+        "dry_machine_low",
+        "dry_machine_medium",
+      ],
+      [
+        "dry_machine_high",
+        "dry_machine_non_heat",
+        "dry_machine_press",
+        "dry_machine_delicate",
+      ],
     ],
   },
   {
@@ -74,13 +67,8 @@ const data = [
     section: "Clean",
     sectionHeaderImage: "clean_dry_not",
     data: [
-      "clean_dry",
-      "clean_dry_not",
-      "clean_wet",
-      "clean_wet_not",
-      "clean_any",
-      "clean_petroleum",
-      "clean_any_not_p",
+      ["clean_dry", "clean_dry_not", "clean_wet_not"],
+      ["clean_wet", "clean_any", "clean_petroleum", "clean_any_not_p"],
     ],
   },
   {
@@ -88,11 +76,13 @@ const data = [
     section: "Bleach",
     sectionHeaderImage: "bleach",
     data: [
-      "bleach",
-      "bleach_not",
-      "bleach_not_2",
-      "bleach_non_cl",
-      "bleach_non_cl_2",
+      [
+        "bleach",
+        "bleach_not",
+        "bleach_not_2",
+        "bleach_non_cl",
+        "bleach_non_cl_2",
+      ],
     ],
   },
   {
@@ -100,50 +90,48 @@ const data = [
     section: "Others",
     sectionHeaderImage: "",
     data: [
-      "heat_low",
-      "reduced_moisture",
-      "short_cycle",
-      "steam_not",
-      "wring_not",
+      ["heat_low", "reduced_moisture", "short_cycle", "steam_not", "wring_not"],
     ],
   },
 ];
 
-export default function LoremScroll() {
-  let sectionsArray = Array.from({ length: data.length }, () => 0);
+export default function IconsInput() {
+  let sectionsArray = Array.from({ length: data.length }, () => false);
   const [isExpanded, setExpanded] = useState(sectionsArray);
 
   function handleClick(index: number) {
     let newArray = isExpanded;
 
     if (isExpanded[index]) {
-      newArray[index] = 0;
+      newArray[index] = false;
     } else {
-      newArray[index] = 1;
+      newArray[index] = true;
     }
     setExpanded([...newArray]);
   }
 
   return (
-    <View style={{ width: "100%", height: "100%" }}>
-      <PageTitle name="Pomoc" />
+    <View style={{ width: '100%'}}>
       <SectionList
         showsVerticalScrollIndicator={false}
         sections={data}
         extraData={isExpanded}
         style={styles.sectionList}
-        keyExtractor={(item, index) => item + index}
+        keyExtractor={(data, index) => data[0] + index}
         renderItem={({ section: { index }, item }) => {
           if (!isExpanded[index]) return null;
 
           return (
-            <View style={styles.sectionItem}>
-              <Image
-                source={tagItem(item)?.image}
-                style={styles.sectionItemImage}
-                resizeMode="center"
-              />
-              <Text style={styles.sectionItemText}>{tagItem(item)?.name}</Text>
+            <View style={{flexDirection: 'row'}}>
+              {item.map((element, index) => (
+                <View style={styles.sectionItem}>
+                  <Image
+                    source={tagItem(element)?.image}
+                    style={styles.sectionItemImage}
+                    resizeMode="center"
+                  />
+                </View>
+              ))}
             </View>
           );
         }}
@@ -172,24 +160,26 @@ export default function LoremScroll() {
 }
 const styles = StyleSheet.create({
   sectionList: {
-    borderWidth: 1,
-    borderBottomWidth: 0,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderTopWidth: 0.5,
     marginTop: 10,
-    width: "90%",
+    width: "93.5%",
     alignSelf: "center",
+    marginBottom: 5,
   },
   sectionHeader: {
     backgroundColor: "transparent",
-    borderSideWidth: 0.5,
-    borderBottomWidth: 1,
-    borderTopWidth: 0,
-    height: 70,
+    borderBottomWidth: 0.5,
+    borderTopWidth: 0.5,
+    height: 40,
     maxWidth: "100%",
     justifyContent: "center",
     flexDirection: "row",
   },
   sectionHeaderText: {
-    fontSize: 20,
+    fontSize: 14,
     maxWidth: "100%",
     alignSelf: "center",
   },
@@ -203,13 +193,13 @@ const styles = StyleSheet.create({
   },
   sectionItemImage: {
     borderWidth: 0,
-    margin: 6,
-    width: 50,
-    height: 50,
+    margin: 4,
+    width: 25,
+    height: 25,
     borderRadius: 100,
     backgroundColor: "transparent",
     alignSelf: "center",
-    transform: [{ scaleX: 3 }, { scaleY: 3 }, { translateY: 1 }],
+    transform: [{ scaleX: 4 }, { scaleY: 4 }, { translateY: 0.25 }],
   },
   sectionItemText: {
     flexWrap: "wrap",
