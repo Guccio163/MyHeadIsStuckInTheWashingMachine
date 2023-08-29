@@ -1,10 +1,10 @@
-import { StyleSheet} from "react-native";
-import LoremScroll from "./components/LoremScrl";
-import TagListPage from "./components/mainPages/TagListPage";
-import FriendListPage from "./components/mainPages/FriendListPage";
+import { StyleSheet } from "react-native";
+import HelpPage from "./components/mainPages/HelpPage";
+import TagsPage from "./components/mainPages/TagsPage";
+import FriendsPage from "./components/mainPages/FriendsPage";
 import ScrollableHome from "./components/ScrollableHome";
 import Icon from "react-native-vector-icons/FontAwesome";
-import UserInfoPage from "./components/UserInfoPage";
+import UserPage from "./components/mainPages/UserPage";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -17,19 +17,12 @@ export default function App() {
   ];
 
   return (
-    <>
       <NavigationContainer>
         <ScrollableHome
-          children={[
-            <TagListPage />,
-            <FriendListPage />,
-            <LoremScroll />,
-            <UserInfoPage />,
-          ]}
+          children={[<TagsPage />, <FriendsPage />, <HelpPage />, <UserPage />]}
           navIcons={icons}
         />
       </NavigationContainer>
-    </>
   );
 }
 

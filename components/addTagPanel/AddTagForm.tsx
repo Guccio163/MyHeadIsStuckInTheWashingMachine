@@ -1,17 +1,13 @@
 import {
-  View,
-  Text,
-  SafeAreaView,
   TextInput,
   StyleSheet,
   ScrollView,
-  Button,
   KeyboardAvoidingView,
 } from "react-native";
 import React from "react";
 import NotesInput from "./formComponents/NotesInput";
 import MaterialsInput from "./formComponents/MaterialsInput";
-import CustomButton from "./formComponents/CustomButton";
+import CustomButton from "../CustomButton";
 import IconsInput from "./formComponents/IconsInput";
 
 interface Tag {
@@ -29,7 +25,7 @@ export type Material = {
   name: string;
 };
 
-export default function FormSample() {
+export default function AddTagForm() {
   const [name, onChangeName] = React.useState("");
   const [category, onChangeCategory] = React.useState("");
   const [colour, onChangeColour] = React.useState("");
@@ -42,7 +38,6 @@ export default function FormSample() {
 
   function handleIconClick(name: string) {
     if (icons.includes(name)) {
-      // let tempIcons = iconsActive;
       let tempIcons = icons.filter((e: string) => e !== name);
       onChangeIcons(tempIcons);
       console.log(icons);
@@ -52,12 +47,7 @@ export default function FormSample() {
   return (
     <KeyboardAvoidingView enabled behavior="padding">
       <ScrollView
-        style={{
-          maxHeight: "93%",
-          width: "100%",
-          backgroundColor: "transparent",
-          alignSelf: "center",
-        }}
+        style={styles.scrollView}
         showsVerticalScrollIndicator
         scrollEnabled
       >
@@ -89,45 +79,60 @@ export default function FormSample() {
           placeholder="Brand"
           keyboardType="default"
         />
-        {/* something to pass commit */}
-        <IconsInput onIconPress={(name: string) => handleIconClick(name)} icons={icons} />
+        <IconsInput
+          onIconPress={(name: string) => handleIconClick(name)}
+          icons={icons}
+        />
         <MaterialsInput
           materials={materials}
           onChangeMaterials={onChangeMaterials}
         />
         <CustomButton
+          title="ADD MATERIAL"
+          style={propStyles.button}
           onPress={() => {
             onChangeMaterials((materials) => [
               ...materials,
               { name: "", percentage: "" },
             ]);
           }}
-          title="ADD MATERIAL"
-          myStyle={myStyles.button}
         />
 
         <NotesInput notes={notes} onChangeNotes={onChangeNotes} />
         <CustomButton
+          title="ADD NOTE"
+          style={propStyles.button}
           onPress={() => {
             onChangeNotes((notes) => [...notes, ""]);
           }}
-          title="ADD NOTE"
-          myStyle={myStyles.button}
         />
         <CustomButton
-          title={"Console log notes"}
+          title={"Console log notes (save)"}
           onPress={() => {
-            console.log({name, category, colour, brand, icons, materials, notes});
+            console.log({
+              name,
+              category,
+              colour,
+              brand,
+              icons,
+              materials,
+              notes,
+            });
           }}
-          myStyle={myStyles.button}
+          style={propStyles.button}
         />
         <CustomButton
+          title="RESET"
+          style={propStyles.button}
           onPress={() => {
-            onChangeNotes([""]);
+            onChangeName("");
+            onChangeCategory("");
+            onChangeColour("");
+            onChangeBrand("");
+            onChangeIcons([]);
             onChangeMaterials([{ name: "", percentage: "" }]);
+            onChangeNotes([""]);
           }}
-          title="Reset"
-          myStyle={myStyles.button}
         />
       </ScrollView>
     </KeyboardAvoidingView>
@@ -135,15 +140,22 @@ export default function FormSample() {
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    maxHeight: "93%",
+    width: "100%",
+    backgroundColor: "transparent",
+    alignSelf: "center",
+  },
   input: {
     height: 40,
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    borderRadius: 10,
   },
 });
 
-const myStyles = StyleSheet.create({
+const propStyles = StyleSheet.create({
   button: {
     backgroundColor: "rgba(255, 255, 255, 0.4)",
     borderBlockColor: "black",

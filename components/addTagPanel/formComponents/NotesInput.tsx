@@ -1,6 +1,6 @@
-import { View, Text, TextInput, StyleSheet, Button, Dimensions } from "react-native";
+import { View, TextInput, StyleSheet, Dimensions } from "react-native";
 import React, { Dispatch, SetStateAction } from "react";
-import CustomButton from "./CustomButton";
+import CustomButton from "../../CustomButton";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 interface Props {
@@ -8,47 +8,36 @@ interface Props {
   onChangeNotes: Dispatch<SetStateAction<string[]>>;
 }
 
-export default function NotesInput({notes, onChangeNotes}: Props) {
-
-  const changeNote = (value:string, index: number) => {
-    let tmp = [...notes]
-    tmp[index] = value
-    onChangeNotes(tmp)
-  }
-
-  const xd = notes.map((elem, index) => (
-    <View
-      style={{
-        flexDirection: "row",
-        width: Dimensions.get("window").width - 50,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      <Icon name="circle" size={10} color="black" />
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => changeNote(text, index)}
-        value={elem}
-        placeholder="Add note"
-        keyboardType="default"
-      />
-      <CustomButton
-        onPress={() => {
-          let temp = notes.length;
-          let temp2 = [];
-          for (let i = 0; i < temp; i++) {
-            if (i != index) temp2.push(notes[i]);
-          }
-          onChangeNotes(temp2);
-        }}
-        title="-"
-        myStyle={myStyles.button}
-      />
+export default function NotesInput({ notes, onChangeNotes }: Props) {
+  const changeNote = (value: string, index: number) => {
+    let tmp = [...notes];
+    tmp[index] = value;
+    onChangeNotes(tmp);
+  };
+  return (
+    <View>
+      {notes.map((elem, index) => (
+        <View style={styles.noteRow}>
+          <Icon name="circle" size={10} color="black" />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => changeNote(text, index)}
+            value={elem}
+            placeholder="Add note"
+            keyboardType="default"
+          />
+          <CustomButton
+            onPress={() => {
+              let newNotes = notes.filter((e) => e !== elem);
+              onChangeNotes(newNotes);
+            }}
+            title="-"
+            style={myStyles.button}
+          />
+        </View>
+      ))}
     </View>
-  ));
-
-  return <View>{xd}</View>;
+  );
 }
 
 const styles = StyleSheet.create({
@@ -58,6 +47,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     width: Dimensions.get("window").width - 140,
+    borderRadius: 10,
+  },
+  noteRow: {
+    flexDirection: "row",
+    width: Dimensions.get("window").width - 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

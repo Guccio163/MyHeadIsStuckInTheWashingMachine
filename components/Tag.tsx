@@ -6,7 +6,7 @@ interface Props {
   index: number;
 }
 
-export default function ListElement({ name, index }: Props) {
+export default function Tag({ name, index }: Props) {
   return (
     <View key={index} style={styles.flatListChild}>
       <Text>item index: {index} </Text>

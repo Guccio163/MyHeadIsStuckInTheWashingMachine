@@ -7,93 +7,9 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
-import PageTitle from "../../PageTitle";
 import tagItem from "../../../functions/tagItem";
+import { iconsInRows } from "../../../assets/iconsRegister";
 
-const data = [
-  {
-    index: 0,
-    section: "Wash",
-    sectionHeaderImage: "wash_30",
-    data: [
-      [
-        "wash_machine",
-        "wash_machine_press",
-        "wash_machine_delicate",
-        "wash_hand",
-        "wash_not",
-      ],
-      ["wash_30", "wash_40", "wash_50", "wash_60", "wash_70", "wash_95"],
-      ["wash_30*", "wash_40*", "wash_50*", "wash_60*", "wash_70*", "wash_95*"],
-    ],
-  },
-  {
-    index: 1,
-    section: "Iron",
-    sectionHeaderImage: "iron_medium",
-    data: [
-      [
-        "iron",
-        "iron_not",
-        "iron_non_steam",
-        "iron_low",
-        "iron_medium",
-        "iron_high",
-      ],
-    ],
-  },
-  {
-    index: 2,
-    section: "Dry",
-    sectionHeaderImage: "dry_machine",
-    data: [
-      ["dry", "dry_not", "dry_hang", "dry_drip", "dry_flat", "dry_shade"],
-      [
-        "dry_machine",
-        "dry_machine_not",
-        "dry_machine_low",
-        "dry_machine_medium",
-      ],
-      [
-        "dry_machine_high",
-        "dry_machine_non_heat",
-        "dry_machine_press",
-        "dry_machine_delicate",
-      ],
-    ],
-  },
-  {
-    index: 3,
-    section: "Clean",
-    sectionHeaderImage: "clean_dry_not",
-    data: [
-      ["clean_dry", "clean_dry_not", "clean_wet_not"],
-      ["clean_wet", "clean_any", "clean_petroleum", "clean_any_not_p"],
-    ],
-  },
-  {
-    index: 4,
-    section: "Bleach",
-    sectionHeaderImage: "bleach",
-    data: [
-      [
-        "bleach",
-        "bleach_not",
-        "bleach_not_2",
-        "bleach_non_cl",
-        "bleach_non_cl_2",
-      ],
-    ],
-  },
-  {
-    index: 5,
-    section: "Others",
-    sectionHeaderImage: "",
-    data: [
-      ["heat_low", "reduced_moisture", "short_cycle", "steam_not", "wring_not"],
-    ],
-  },
-];
 
 interface Props {
   onIconPress: (arg0: string) => void;
@@ -101,7 +17,7 @@ interface Props {
 }
 
 export default function IconsInput({ onIconPress, icons }: Props) {
-  let sectionsArray = Array.from({ length: data.length }, () => false);
+  let sectionsArray = Array.from({ length: iconsInRows.length }, () => true);
   const [isExpanded, setExpanded] = useState(sectionsArray);
 
   function handleClick(index: number) {
@@ -119,7 +35,7 @@ export default function IconsInput({ onIconPress, icons }: Props) {
     <View style={{ width: "100%" }}>
       <SectionList
         showsVerticalScrollIndicator={false}
-        sections={data}
+        sections={iconsInRows}
         extraData={isExpanded}
         style={styles.sectionList}
         keyExtractor={(data, index) => data[0] + index}
@@ -128,15 +44,24 @@ export default function IconsInput({ onIconPress, icons }: Props) {
 
           return (
             <View style={{ flexDirection: "row" }}>
-              {item.map((element, index) => {
+              {item.map((element) => {
                 return (
                   <Pressable
                     style={[
-                      styles.sectionItem,
+                      styles.washIcon,
                       {
                         backgroundColor: icons.includes(element)
-                          ? "yellow"
+                          ? "rgba(255, 243, 61, 0.55)"
                           : "rgba(255, 255, 255, 0.4)",
+                        borderBlockColor: icons.includes(element)
+                          ? "rgba(255, 243, 61, 0.9)"
+                          : "black",
+                        borderLeftColor: icons.includes(element)
+                          ? "rgba(255, 243, 61, 0.9)"
+                          : "black",
+                        borderRightColor: icons.includes(element)
+                          ? "rgba(255, 243, 61, 0.9)"
+                          : "black",
                       },
                     ]}
                     onPress={() => {
@@ -145,7 +70,7 @@ export default function IconsInput({ onIconPress, icons }: Props) {
                   >
                     <Image
                       source={tagItem(element)?.image}
-                      style={styles.sectionItemImage}
+                      style={styles.washIconImage}
                       resizeMode="center"
                     />
                   </Pressable>
@@ -168,7 +93,7 @@ export default function IconsInput({ onIconPress, icons }: Props) {
           >
             <Image
               source={tagItem(sectionHeaderImage)?.image}
-              style={styles.sectionItemImage}
+              style={styles.washIconImage}
             />
             <Text style={styles.sectionHeaderText}>{section}</Text>
           </Pressable>
@@ -187,6 +112,7 @@ const styles = StyleSheet.create({
     width: "93.5%",
     alignSelf: "center",
     marginBottom: 5,
+    borderRadius: 10,
   },
   sectionHeader: {
     backgroundColor: "transparent",
@@ -196,13 +122,14 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     justifyContent: "center",
     flexDirection: "row",
+    borderRadius: 10,
   },
   sectionHeaderText: {
     fontSize: 14,
     maxWidth: "100%",
     alignSelf: "center",
   },
-  sectionItem: {
+  washIcon: {
     flexDirection: "row",
     margin: 10,
     backgroundColor: "rgba(255, 255, 255, 0.4)",
@@ -210,7 +137,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
   },
-  sectionItemImage: {
+  washIconImage: {
     borderWidth: 0,
     margin: 4,
     width: 25,
@@ -219,11 +146,5 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     alignSelf: "center",
     transform: [{ scaleX: 4 }, { scaleY: 4 }, { translateY: 0.25 }],
-  },
-  sectionItemText: {
-    flexWrap: "wrap",
-    maxWidth: "85%",
-    alignSelf: "center",
-    // backgroundColor: "white",
   },
 });

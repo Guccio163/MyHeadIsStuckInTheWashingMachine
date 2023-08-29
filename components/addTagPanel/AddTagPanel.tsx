@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Pressable,
   StyleSheet,
   Dimensions,
@@ -10,7 +9,7 @@ import React from "react";
 import { SharedValue, withSpring } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { mainColor1 } from "../PageTitle";
-import FormSample from "./FormSample";
+import FormSample from "./AddTagForm";
 
 interface Props {
   translateYValue: SharedValue<number>;

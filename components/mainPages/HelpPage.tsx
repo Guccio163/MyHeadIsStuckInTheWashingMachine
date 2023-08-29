@@ -7,110 +7,12 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
-import PageTitle from "./PageTitle";
-import tagItem from "../functions/tagItem";
-
-const data = [
-  {
-    index: 0,
-    section: "Wash",
-    sectionHeaderImage: "wash_30",
-    data: [
-      "wash_machine",
-      "wash_machine_press",
-      "wash_machine_delicate",
-      "wash_hand",
-      "wash_not",
-      "wash_30",
-      "wash_40",
-      "wash_50",
-      "wash_60",
-      "wash_70",
-      "wash_95",
-      "wash_30*",
-      "wash_40*",
-      "wash_50*",
-      "wash_60*",
-      "wash_70*",
-      "wash_95*",
-    ],
-  },
-  {
-    index: 1,
-    section: "Iron",
-    sectionHeaderImage: "iron_medium",
-    data: [
-      "iron",
-      "iron_not",
-      "iron_non_steam",
-      "iron_low",
-      "iron_medium",
-      "iron_high",
-    ],
-  },
-  {
-    index: 2,
-    section: "Dry",
-    sectionHeaderImage: "dry_machine",
-    data: [
-      "dry",
-      "dry_not",
-      "dry_hang",
-      "dry_drip",
-      "dry_flat",
-      "dry_shade",
-      "dry_machine",
-      "dry_machine_not",
-      "dry_machine_low",
-      "dry_machine_medium",
-      "dry_machine_high",
-      "dry_machine_non_heat",
-      "dry_machine_press",
-      "dry_machine_delicate",
-    ],
-  },
-  {
-    index: 3,
-    section: "Clean",
-    sectionHeaderImage: "clean_dry_not",
-    data: [
-      "clean_dry",
-      "clean_dry_not",
-      "clean_wet",
-      "clean_wet_not",
-      "clean_any",
-      "clean_petroleum",
-      "clean_any_not_p",
-    ],
-  },
-  {
-    index: 4,
-    section: "Bleach",
-    sectionHeaderImage: "bleach",
-    data: [
-      "bleach",
-      "bleach_not",
-      "bleach_not_2",
-      "bleach_non_cl",
-      "bleach_non_cl_2",
-    ],
-  },
-  {
-    index: 5,
-    section: "Others",
-    sectionHeaderImage: "",
-    data: [
-      "heat_low",
-      "reduced_moisture",
-      "short_cycle",
-      "steam_not",
-      "wring_not",
-    ],
-  },
-];
+import PageTitle from "../PageTitle";
+import tagItem from "../../functions/tagItem";
+import { icons } from "../../assets/iconsRegister";
 
 export default function LoremScroll() {
-  let sectionsArray = Array.from({ length: data.length }, () => 0);
+  let sectionsArray = Array.from({ length: icons.length }, () => 0);
   const [isExpanded, setExpanded] = useState(sectionsArray);
 
   function handleClick(index: number) {
@@ -129,7 +31,7 @@ export default function LoremScroll() {
       <PageTitle name="Pomoc" />
       <SectionList
         showsVerticalScrollIndicator={false}
-        sections={data}
+        sections={icons}
         extraData={isExpanded}
         style={styles.sectionList}
         keyExtractor={(item, index) => item + index}
@@ -177,6 +79,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: "90%",
     alignSelf: "center",
+    borderRadius: 10,
   },
   sectionHeader: {
     backgroundColor: "transparent",
@@ -215,6 +118,5 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     maxWidth: "85%",
     alignSelf: "center",
-    // backgroundColor: "white",
   },
 });

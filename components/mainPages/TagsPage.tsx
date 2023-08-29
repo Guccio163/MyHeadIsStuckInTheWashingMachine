@@ -1,7 +1,7 @@
 import { View, FlatList, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import { Dimensions } from "react-native";
-import ListElement from "../ListElement";
+import TagListElement from "../Tag";
 import PageTitle from "../PageTitle";
 import Animated, {
   Easing,
@@ -15,11 +15,8 @@ import Animated, {
 import AddTagPage from "../addTagPanel/AddTagPanel";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-interface Props {
-  func: (arg0: boolean) => void;
-}
 
-export default function TagListPage({ func }: Props) {
+export default function TagListPage() {
   const data = [
     { index: 0, name: "ania" },
     { index: 1, name: "antoni" },
@@ -92,7 +89,7 @@ export default function TagListPage({ func }: Props) {
         style={styles.flatListContainer}
         data={data}
         renderItem={(item) => (
-          <ListElement name={item.item.name} index={item.index}></ListElement>
+          <TagListElement name={item.item.name} index={item.index}></TagListElement>
         )}
       ></FlatList>
     </View>

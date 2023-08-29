@@ -1,4 +1,4 @@
-import { View, Text, ImageComponent, Pressable, StyleSheet } from 'react-native'
+import { Pressable } from 'react-native'
 import React from 'react'
 
 interface Props{

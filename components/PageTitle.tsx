@@ -25,16 +25,11 @@ const styles = StyleSheet.create({
   },
   titleView: {
     height: 80,
-    // width: Dimensions.get("window").width,
     width: "100%",
     backgroundColor: mainColor1,
     paddingTop: 40,
-    // marginBottom: 10,
     position: "absolute",
     top: 0,
     left: 0,
-    // zIndex: 999
-    // borderBottomLeftRadius: 15,
-    // borderBottomRightRadius: 15,
   },
 });

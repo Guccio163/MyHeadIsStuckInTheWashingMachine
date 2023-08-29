@@ -1,13 +1,11 @@
 import {
   View,
-  Text,
   ScrollView,
   StyleSheet,
   Dimensions,
-  KeyboardAvoidingView,
   Keyboard,
 } from "react-native";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import NavBarIcon from "./NavBarIcon";
 import { mainColor1 } from "./PageTitle";
 
@@ -38,11 +36,11 @@ export default function ScrollableHome({ children, navIcons }: Props) {
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+    Keyboard.addListener('keyboardDidShow', () => {
       setIsKeyboardOpen(true);
     });
 
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+    Keyboard.addListener('keyboardDidHide', () => {
       setIsKeyboardOpen(false);
     });
      }, []);

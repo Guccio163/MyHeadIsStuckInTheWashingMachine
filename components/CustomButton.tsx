@@ -6,12 +6,12 @@ import React from 'react'
 interface Props {
   title: string;
   onPress: () => void;
-  myStyle: StyleProp<ViewStyle>;
+  style: StyleProp<ViewStyle>;
 }
 
-export default function CustomButton({title, onPress, myStyle}:Props) {
+export default function CustomButton({title, onPress, style}:Props) {
   return (
-    <Pressable style={myStyle} onPress={onPress}>
+    <Pressable style={style} onPress={onPress}>
       <Text style={styles.buttonText}>{title}</Text>
     </Pressable>
   )

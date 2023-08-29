@@ -1,10 +1,8 @@
 import {
   View,
   Text,
-  Button,
   Alert,
   StyleSheet,
-  TouchableOpacity,
   Pressable,
 } from "react-native";
 import React from "react";
