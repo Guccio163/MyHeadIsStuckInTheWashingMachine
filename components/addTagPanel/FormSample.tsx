@@ -34,17 +34,26 @@ export default function FormSample() {
   const [category, onChangeCategory] = React.useState("");
   const [colour, onChangeColour] = React.useState("");
   const [brand, onChangeBrand] = React.useState("");
-  const [icons, onChangeIcons] = React.useState("");
+  const [icons, onChangeIcons] = React.useState<string[]>([]);
   const [materials, onChangeMaterials] = React.useState<Material[]>([
     { percentage: "", name: "" },
   ]);
   const [notes, onChangeNotes] = React.useState([""]);
 
+  function handleIconClick(name: string) {
+    if (icons.includes(name)) {
+      // let tempIcons = iconsActive;
+      let tempIcons = icons.filter((e: string) => e !== name);
+      onChangeIcons(tempIcons);
+      console.log(icons);
+    } else onChangeIcons((iconsActive) => [...iconsActive, name]);
+  }
+
   return (
     <KeyboardAvoidingView enabled behavior="padding">
       <ScrollView
         style={{
-          maxHeight: "90%",
+          maxHeight: "93%",
           width: "100%",
           backgroundColor: "transparent",
           alignSelf: "center",
@@ -81,7 +90,7 @@ export default function FormSample() {
           keyboardType="default"
         />
         {/* something to pass commit */}
-        <IconsInput/>
+        <IconsInput onIconPress={(name: string) => handleIconClick(name)} icons={icons} />
         <MaterialsInput
           materials={materials}
           onChangeMaterials={onChangeMaterials}
@@ -108,8 +117,7 @@ export default function FormSample() {
         <CustomButton
           title={"Console log notes"}
           onPress={() => {
-            console.log(notes);
-            console.log(name);
+            console.log({name, category, colour, brand, icons, materials, notes});
           }}
           myStyle={myStyles.button}
         />

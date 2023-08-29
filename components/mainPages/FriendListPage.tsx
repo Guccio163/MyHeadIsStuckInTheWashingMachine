@@ -6,17 +6,13 @@ import IconsInput from "../addTagPanel/formComponents/IconsInput";
 
 export default function FriendListPage() {
   return (
-    // <View style={styles.pageWrapper}>
-    //   <PageTitle name="Friends List" />
-    //   <View style={styles.friendList}>
-    //     <Icon name="lock" size={60} color="black" />
-    //     <Text style={styles.altText}>Soon !</Text>
-    //   </View>
-    // </View>
-    <>
-    <IconsInput/>
-    {/* <NewComp/> */}
-    </>
+    <View style={styles.pageWrapper}>
+      <PageTitle name="Friends List" />
+      <View style={styles.friendList}>
+        <Icon name="lock" size={60} color="black" />
+        <Text style={styles.altText}>Soon !</Text>
+      </View>
+    </View>
   );
 }
 

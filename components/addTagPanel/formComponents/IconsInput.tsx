@@ -95,7 +95,12 @@ const data = [
   },
 ];
 
-export default function IconsInput() {
+interface Props {
+  onIconPress: (arg0: string) => void;
+  icons: string[]
+}
+
+export default function IconsInput({ onIconPress, icons }: Props) {
   let sectionsArray = Array.from({ length: data.length }, () => false);
   const [isExpanded, setExpanded] = useState(sectionsArray);
 
@@ -111,7 +116,7 @@ export default function IconsInput() {
   }
 
   return (
-    <View style={{ width: '100%'}}>
+    <View style={{ width: "100%" }}>
       <SectionList
         showsVerticalScrollIndicator={false}
         sections={data}
@@ -122,16 +127,30 @@ export default function IconsInput() {
           if (!isExpanded[index]) return null;
 
           return (
-            <View style={{flexDirection: 'row'}}>
-              {item.map((element, index) => (
-                <View style={styles.sectionItem}>
-                  <Image
-                    source={tagItem(element)?.image}
-                    style={styles.sectionItemImage}
-                    resizeMode="center"
-                  />
-                </View>
-              ))}
+            <View style={{ flexDirection: "row" }}>
+              {item.map((element, index) => {
+                return (
+                  <Pressable
+                    style={[
+                      styles.sectionItem,
+                      {
+                        backgroundColor: icons.includes(element)
+                          ? "yellow"
+                          : "rgba(255, 255, 255, 0.4)",
+                      },
+                    ]}
+                    onPress={() => {
+                      onIconPress(element);
+                    }}
+                  >
+                    <Image
+                      source={tagItem(element)?.image}
+                      style={styles.sectionItemImage}
+                      resizeMode="center"
+                    />
+                  </Pressable>
+                );
+              })}
             </View>
           );
         }}
