@@ -80,6 +80,7 @@ export default function FormSample() {
           placeholder="Brand"
           keyboardType="default"
         />
+        {/* something to pass commit */}
         <IconsInput/>
         <MaterialsInput
           materials={materials}
