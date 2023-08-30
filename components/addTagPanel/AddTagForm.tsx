@@ -3,14 +3,25 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
+  Text,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import NotesInput from "./formComponents/NotesInput";
 import MaterialsInput from "./formComponents/MaterialsInput";
 import CustomButton from "../CustomButton";
 import IconsInput from "./formComponents/IconsInput";
+import ImageInput from "./formComponents/ImageInput";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  addTagToDB,
+  addToDB,
+  getAllKeys,
+  getFromDB,
+} from "../../functions/asyncStorage";
 
-interface Tag {
+export type Tag = {
+  id: string;
+  imageUri: string;
   name: string;
   category: string;
   colour: string;
@@ -18,7 +29,7 @@ interface Tag {
   icons: string[];
   materials: Material[];
   notes: string[];
-}
+};
 
 export type Material = {
   percentage: string;
@@ -26,15 +37,18 @@ export type Material = {
 };
 
 export default function AddTagForm() {
-  const [name, onChangeName] = React.useState("");
-  const [category, onChangeCategory] = React.useState("");
-  const [colour, onChangeColour] = React.useState("");
-  const [brand, onChangeBrand] = React.useState("");
-  const [icons, onChangeIcons] = React.useState<string[]>([]);
-  const [materials, onChangeMaterials] = React.useState<Material[]>([
+  const [name, onChangeName] = useState("");
+  const [category, onChangeCategory] = useState("");
+  const [colour, onChangeColour] = useState("");
+  const [brand, onChangeBrand] = useState("");
+  const [icons, onChangeIcons] = useState<string[]>([]);
+  const [materials, onChangeMaterials] = useState<Material[]>([
     { percentage: "", name: "" },
   ]);
-  const [notes, onChangeNotes] = React.useState([""]);
+  const [image, setImage] = useState<string>("");
+  const [notes, onChangeNotes] = useState([""]);
+
+  const [tagCount, setTagcount] = useState(0);
 
   function handleIconClick(name: string) {
     if (icons.includes(name)) {
@@ -44,6 +58,17 @@ export default function AddTagForm() {
     } else onChangeIcons((iconsActive) => [...iconsActive, name]);
   }
 
+  function resetStates() {
+    setImage("");
+    onChangeName("");
+    onChangeCategory("");
+    onChangeColour("");
+    onChangeBrand("");
+    onChangeIcons([]);
+    onChangeMaterials([{ name: "", percentage: "" }]);
+    onChangeNotes([""]);
+  }
+
   return (
     <KeyboardAvoidingView enabled behavior="padding">
       <ScrollView
@@ -51,6 +76,8 @@ export default function AddTagForm() {
         showsVerticalScrollIndicator
         scrollEnabled
       >
+        <ImageInput setImage={setImage} image={image} />
+
         <TextInput
           style={styles.input}
           onChangeText={onChangeName}
@@ -124,15 +151,32 @@ export default function AddTagForm() {
         <CustomButton
           title="RESET"
           style={propStyles.button}
+          onPress={resetStates}
+        />
+
+        <CustomButton
+          title="ADD TAG"
+          style={propStyles.button}
           onPress={() => {
-            onChangeName("");
-            onChangeCategory("");
-            onChangeColour("");
-            onChangeBrand("");
-            onChangeIcons([]);
-            onChangeMaterials([{ name: "", percentage: "" }]);
-            onChangeNotes([""]);
+            addTagToDB({
+              id: "",
+              imageUri: image,
+              name: name,
+              category: category,
+              colour: colour,
+              brand: brand,
+              materials: materials,
+              icons: icons,
+              notes: notes,
+            });
+            resetStates;
           }}
+        />
+
+        <CustomButton
+          title="set tagCount"
+          style={propStyles.button}
+          onPress={() => addToDB("tagCount", "0")}
         />
       </ScrollView>
     </KeyboardAvoidingView>
