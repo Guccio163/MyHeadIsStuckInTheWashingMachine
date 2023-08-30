@@ -11,7 +11,7 @@ export const addItemToDB = async (key: string, value: string) => {
   console.log("adding item done.");
 };
 
-export const addTagToDB = async (object: Tag) => {
+export const addTagToDB = async (object: Tag, refreshList: (arg0: string)=>void) => {
   try {
     const key = await getFromDB("tagCount");
     const tagArray = await getFromDB("tags");
@@ -23,14 +23,15 @@ export const addTagToDB = async (object: Tag) => {
       tagArrayParsed.push(object);
       console.log(tagArrayParsed);
       const value = JSON.stringify(tagArrayParsed);
-      addItemToDB("tags", value);
+      await addItemToDB("tags", value);
       let newTagCount = parseInt(key) + 1;
-      addItemToDB("tagCount", `${newTagCount}`);
+      await addItemToDB("tagCount", `${newTagCount}`);
     }
   } catch (e) {
     console.log(e);
   }
   console.log("adding tag done.");
+  refreshList(object.id)
 };
 
 export const getFromDB = async (key: string) => {
@@ -51,6 +52,23 @@ export const getFromDBandSetState = async (
     const result = await AsyncStorage.getItem(key);
     if (result != null) {
       setState(result);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  console.log("getting done.");
+};
+
+export const getTagSetState = async (
+  key: string,
+  setState: (arg0: Tag[]) => void
+) => {
+  try {
+    const result = await AsyncStorage.getItem(key);
+    if (result != null) {
+      let resultParsed = JSON.parse(result)
+      setState(resultParsed);
     }
   } catch (e) {
     console.log(e);
@@ -101,7 +119,9 @@ export const removeTag = async (key: string) => {
     if (tagArray != null) {
       console.log(tagArray);
       let tagArrayParsed = JSON.parse(tagArray);
-      let newTagArray = tagArrayParsed.filter((e: { id: string; }) => e.id !== key);
+      let newTagArray = tagArrayParsed.filter(
+        (e: { id: string }) => e.id !== key
+      );
       console.log(newTagArray);
       const value = JSON.stringify(newTagArray);
       addItemToDB("tags", value);

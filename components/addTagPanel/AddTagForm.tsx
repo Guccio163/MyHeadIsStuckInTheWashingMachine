@@ -24,7 +24,7 @@ import {
 export type Tag = {
   id: string;
   imageUri: string;
-  name: string;
+  // name: string;
   category: string;
   colour: string;
   brand: string;
@@ -38,8 +38,12 @@ export type Material = {
   name: string;
 };
 
-export default function AddTagForm() {
-  const [name, onChangeName] = useState("");
+interface Props {
+  refreshList: (arg0: string) => void;
+}
+
+export default function AddTagForm({ refreshList }: Props) {
+  // const [name, onChangeName] = useState("");
   const [category, onChangeCategory] = useState("");
   const [colour, onChangeColour] = useState("");
   const [brand, onChangeBrand] = useState("");
@@ -49,8 +53,6 @@ export default function AddTagForm() {
   ]);
   const [image, setImage] = useState<string>("");
   const [notes, onChangeNotes] = useState([""]);
-
-  const [tagCount, setTagcount] = useState(0);
 
   function handleIconClick(name: string) {
     if (icons.includes(name)) {
@@ -62,7 +64,7 @@ export default function AddTagForm() {
 
   function resetStates() {
     setImage("");
-    onChangeName("");
+    // onChangeName("");
     onChangeCategory("");
     onChangeColour("");
     onChangeBrand("");
@@ -80,13 +82,13 @@ export default function AddTagForm() {
       >
         <ImageInput setImage={setImage} image={image} />
 
-        <TextInput
+        {/* <TextInput
           style={styles.input}
           onChangeText={onChangeName}
           value={name}
           placeholder="Name"
           keyboardType="default"
-        />
+        /> */}
         <TextInput
           style={styles.input}
           onChangeText={onChangeCategory}
@@ -160,31 +162,33 @@ export default function AddTagForm() {
           title="SAVE TAG"
           style={propStyles.button}
           onPress={() => {
-            addTagToDB({
-              id: "",
-              imageUri: image,
-              name: name,
-              category: category,
-              colour: colour,
-              brand: brand,
-              materials: materials,
-              icons: icons,
-              notes: notes,
-            });
-            resetStates;
+            addTagToDB(
+              {
+                id: "",
+                imageUri: image,
+                category: category,
+                colour: colour,
+                brand: brand,
+                materials: materials,
+                icons: icons,
+                notes: notes,
+              },
+              refreshList
+            );
+            resetStates();
           }}
         />
 
-        {/* <CustomButton
+        <CustomButton
           title="set tagCount (for maintenance)"
           style={propStyles.button}
-          onPress={() => addItemToDB("tagCount", "1")}
-        /> */}
+          onPress={() => addItemToDB("tagCount", "0")}
+        />
 
         {/* <CustomButton
           title="custom button (for maintenance)"
           style={propStyles.button}
-          onPress={() => removeTag('5')}
+          onPress={() => removeTag('9')}
         /> */}
       </ScrollView>
     </KeyboardAvoidingView>

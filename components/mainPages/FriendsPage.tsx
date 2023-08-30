@@ -7,7 +7,7 @@ import { getAllKeysAndSetState, getFromDB, getFromDBandSetState } from "../../fu
 
 export default function FriendListPage() {
   const [tagCount, setCount] = useState("?");
-  const [firstTag, setFirstTag] = useState("?");
+  const [allTags, setAllTags] = useState("?");
   const [allKeys, setAllKeys] = useState<string[]>([]);
 
 
@@ -23,17 +23,17 @@ export default function FriendListPage() {
           style={propStyles.button}
           onPress={() => getFromDBandSetState("tagCount", setCount)}
         />
-        <Text>{firstTag}</Text>
+        <Text>{allTags}</Text>
         <CustomButton
-          title="set first tag"
+          title="set all tags"
           style={propStyles.button}
-          onPress={() => getFromDBandSetState("tags", setFirstTag)}
+          onPress={() => getFromDBandSetState("tags", setAllTags)}
         />
         {allKeys.map((element)=>(
           <Text>{element}</Text>
         ))}
         <CustomButton
-          title="set first tag"
+          title="see all tags"
           style={propStyles.button}
           onPress={() => getAllKeysAndSetState(setAllKeys)}
         />

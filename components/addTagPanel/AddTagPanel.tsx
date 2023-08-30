@@ -14,9 +14,10 @@ import FormSample from "./AddTagForm";
 interface Props {
   translateYValue: SharedValue<number>;
   rotateOnClose: () => void;
+  refreshList: (arg0: string) => void;
 }
 
-export default function AddTagPanel({ translateYValue, rotateOnClose }: Props) {
+export default function AddTagPanel({ translateYValue, rotateOnClose, refreshList }: Props) {
   const hidePanel = () => {
     translateYValue.value = withSpring(Dimensions.get("window").height);
   };
@@ -34,7 +35,7 @@ export default function AddTagPanel({ translateYValue, rotateOnClose }: Props) {
       </Pressable>
       <View style={styles.addTagForm}>
         <KeyboardAvoidingView enabled behavior="padding">
-          <FormSample />
+          <FormSample refreshList={refreshList}/>
         </KeyboardAvoidingView>
       </View>
     </View>

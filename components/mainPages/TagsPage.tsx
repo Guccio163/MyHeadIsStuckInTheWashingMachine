@@ -1,7 +1,7 @@
 import { View, FlatList, StyleSheet, Pressable } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
-import TagListElement from "../Tag";
+import TagElement from "../TagElement";
 import PageTitle from "../PageTitle";
 import Animated, {
   Easing,
@@ -14,9 +14,16 @@ import Animated, {
 } from "react-native-reanimated";
 import AddTagPage from "../addTagPanel/AddTagPanel";
 import Icon from "react-native-vector-icons/FontAwesome";
-
+import {
+  getFromDBandSetState,
+  getTagSetState,
+} from "../../functions/asyncStorage";
+import { Tag } from "../addTagPanel/AddTagForm";
 
 export default function TagListPage() {
+  const [tagList, setTags] = useState<Tag[]>([]);
+  const [isUpToDate, setUpToDate] = useState('');
+
   const data = [
     { index: 0, name: "ania" },
     { index: 1, name: "antoni" },
@@ -32,7 +39,15 @@ export default function TagListPage() {
     { index: 11, name: "mikołaj" },
   ];
 
-  const tags ='chuj'
+  // if (!isUpToDate) {
+  //   getTagSetState("tags", setTags);
+  //   setUpToDate(true);
+  // }
+  useEffect(() => {
+    getTagSetState("tags", setTags);
+    console.log('odświeżono')
+  }, [isUpToDate]);
+
 
   const translateYValue = useSharedValue(Dimensions.get("window").height);
   const buttonRotationValue = useSharedValue(0);
@@ -65,7 +80,7 @@ export default function TagListPage() {
       transform: [{ rotate: `${rotation.value}deg` }],
     };
   });
-
+  console.log(tagList);
   return (
     <View style={styles.pageWrapper}>
       <PageTitle name="Tags List" />
@@ -85,13 +100,24 @@ export default function TagListPage() {
         <AddTagPage
           translateYValue={translateYValue}
           rotateOnClose={() => startRotation(0)}
+          refreshList={setUpToDate}
         />
       </Animated.View>
       <FlatList
         style={styles.flatListContainer}
-        data={data}
-        renderItem={(item) => (
-          <TagListElement name={item.item.name} index={item.index}></TagListElement>
+        data={tagList}
+        renderItem={({ item }) => (
+          <TagElement
+            id={item.id}
+            imageUri={item.imageUri}
+            // name={item.name}
+            category={item.category}
+            colour={item.colour}
+            brand={item.brand}
+            icons={item.icons}
+            materials={item.materials}
+            notes={item.notes}
+          ></TagElement>
         )}
       ></FlatList>
     </View>
