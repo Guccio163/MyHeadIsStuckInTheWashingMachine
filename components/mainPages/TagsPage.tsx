@@ -110,7 +110,7 @@ export default function TagListPage() {
           <TagElement
             id={item.id}
             imageUri={item.imageUri}
-            // name={item.name}
+            name={item.name}
             category={item.category}
             colour={item.colour}
             brand={item.brand}

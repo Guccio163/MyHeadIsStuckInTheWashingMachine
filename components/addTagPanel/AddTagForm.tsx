@@ -20,11 +20,13 @@ import {
   removeItem,
   removeTag,
 } from "../../functions/asyncStorage";
+import { Picker } from "@react-native-picker/picker";
+
 
 export type Tag = {
   id: string;
   imageUri: string;
-  // name: string;
+  name: string;
   category: string;
   colour: string;
   brand: string;
@@ -43,7 +45,7 @@ interface Props {
 }
 
 export default function AddTagForm({ refreshList }: Props) {
-  // const [name, onChangeName] = useState("");
+  const [name, onChangeName] = useState("");
   const [category, onChangeCategory] = useState("");
   const [colour, onChangeColour] = useState("");
   const [brand, onChangeBrand] = useState("");
@@ -64,7 +66,7 @@ export default function AddTagForm({ refreshList }: Props) {
 
   function resetStates() {
     setImage("");
-    // onChangeName("");
+    onChangeName("");
     onChangeCategory("");
     onChangeColour("");
     onChangeBrand("");
@@ -82,20 +84,35 @@ export default function AddTagForm({ refreshList }: Props) {
       >
         <ImageInput setImage={setImage} image={image} />
 
-        {/* <TextInput
+        <TextInput
           style={styles.input}
           onChangeText={onChangeName}
           value={name}
           placeholder="Name"
           keyboardType="default"
-        /> */}
-        <TextInput
+        />
+        <Picker
+          selectedValue={category}
+          onValueChange={(itemValue, itemIndex) => onChangeCategory(itemValue)}
+        >
+          <Picker.Item label="Bluzka" value="Bluzka" />
+          <Picker.Item label="Spodnie" value="Spodnie" />
+          <Picker.Item label="Bielizna" value="Bielizna" />
+          <Picker.Item label="Sukienka" value="Sukienka" />
+          <Picker.Item label="Spódnica" value="Spódnica" />
+          <Picker.Item label="Eleganckie" value="Eleganckie" />
+          <Picker.Item label="Sweter/Bluza" value="Sweter/Bluza" />
+          <Picker.Item label="Odzież wierzchnia" value="Odzież wierzchnia" />
+          <Picker.Item label="Inne" value="Inne" />
+          <Picker.Item label="Akcesorium" value="Akcesorium" />
+        </Picker>
+        {/* <TextInput
           style={styles.input}
           onChangeText={onChangeCategory}
           value={category}
           placeholder="Category"
           keyboardType="default"
-        />
+        /> */}
         <TextInput
           style={styles.input}
           onChangeText={onChangeColour}
@@ -166,6 +183,7 @@ export default function AddTagForm({ refreshList }: Props) {
               {
                 id: "",
                 imageUri: image,
+                name: name,
                 category: category,
                 colour: colour,
                 brand: brand,
@@ -179,11 +197,11 @@ export default function AddTagForm({ refreshList }: Props) {
           }}
         />
 
-        <CustomButton
+        {/* <CustomButton
           title="set tagCount (for maintenance)"
           style={propStyles.button}
           onPress={() => addItemToDB("tagCount", "0")}
-        />
+        /> */}
 
         {/* <CustomButton
           title="custom button (for maintenance)"

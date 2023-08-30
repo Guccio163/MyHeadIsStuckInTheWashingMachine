@@ -13,7 +13,7 @@
     "@hookform/resolvers": "^3.3.0",
     "@react-native-assets/slider": "^7.0.3",
     "@react-native-async-storage/async-storage": "^1.19.3",
-    "@react-native-picker/picker": "^2.5.0",
+    "@react-native-picker/picker": "2.4.10",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
     "expo": "~49.0.7",
