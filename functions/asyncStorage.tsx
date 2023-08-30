@@ -1,30 +1,36 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Tag } from "../components/addTagPanel/AddTagForm";
 
-export const addToDB = async (key: string, value: string) => {
+export const addItemToDB = async (key: string, value: string) => {
   try {
     await AsyncStorage.setItem(key, value);
   } catch (e) {
     console.log(e);
   }
 
-  console.log("adding done.");
+  console.log("adding item done.");
 };
 
 export const addTagToDB = async (object: Tag) => {
   try {
     const key = await getFromDB("tagCount");
-    if (key != null) {
+    const tagArray = await getFromDB("tags");
+
+    if (key != null && tagArray != null) {
+      console.log(tagArray);
       object.id = key;
-      const value = JSON.stringify(object);
-      addToDB(key, value);
+      let tagArrayParsed = JSON.parse(tagArray);
+      tagArrayParsed.push(object);
+      console.log(tagArrayParsed);
+      const value = JSON.stringify(tagArrayParsed);
+      addItemToDB("tags", value);
       let newTagCount = parseInt(key) + 1;
-      addToDB("tagCount", `${newTagCount}`);
+      addItemToDB("tagCount", `${newTagCount}`);
     }
   } catch (e) {
     console.log(e);
   }
-  console.log("adding done.");
+  console.log("adding tag done.");
 };
 
 export const getFromDB = async (key: string) => {
@@ -61,4 +67,47 @@ export const getAllKeys = async () => {
   }
 
   console.log("getting all keys done.");
+};
+
+export const getAllKeysAndSetState = async (
+  setState: (arg0: string[]) => void
+) => {
+  try {
+    const result = await AsyncStorage.getAllKeys();
+    if (result != null) {
+      let temp = [...result];
+      setState(temp);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  console.log("getting all keys done.");
+};
+
+export const removeItem = async (key: string) => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (e) {
+    console.log(e);
+  }
+  console.log("Removing done.");
+};
+
+export const removeTag = async (key: string) => {
+  try {
+    const tagArray = await getFromDB("tags");
+
+    if (tagArray != null) {
+      console.log(tagArray);
+      let tagArrayParsed = JSON.parse(tagArray);
+      let newTagArray = tagArrayParsed.filter((e: { id: string; }) => e.id !== key);
+      console.log(newTagArray);
+      const value = JSON.stringify(newTagArray);
+      addItemToDB("tags", value);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  console.log("adding tag done.");
 };

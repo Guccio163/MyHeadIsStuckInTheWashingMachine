@@ -32,6 +32,8 @@ export default function TagListPage() {
     { index: 11, name: "mikołaj" },
   ];
 
+  const tags ='chuj'
+
   const translateYValue = useSharedValue(Dimensions.get("window").height);
   const buttonRotationValue = useSharedValue(0);
 

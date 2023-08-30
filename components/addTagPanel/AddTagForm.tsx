@@ -13,10 +13,12 @@ import IconsInput from "./formComponents/IconsInput";
 import ImageInput from "./formComponents/ImageInput";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
+  addItemToDB,
   addTagToDB,
-  addToDB,
   getAllKeys,
   getFromDB,
+  removeItem,
+  removeTag,
 } from "../../functions/asyncStorage";
 
 export type Tag = {
@@ -133,8 +135,8 @@ export default function AddTagForm() {
             onChangeNotes((notes) => [...notes, ""]);
           }}
         />
-        <CustomButton
-          title={"Console log notes (save)"}
+        {/* <CustomButton
+          title={"Console log notes (for maintenance)"}
           onPress={() => {
             console.log({
               name,
@@ -147,7 +149,7 @@ export default function AddTagForm() {
             });
           }}
           style={propStyles.button}
-        />
+        /> */}
         <CustomButton
           title="RESET"
           style={propStyles.button}
@@ -155,7 +157,7 @@ export default function AddTagForm() {
         />
 
         <CustomButton
-          title="ADD TAG"
+          title="SAVE TAG"
           style={propStyles.button}
           onPress={() => {
             addTagToDB({
@@ -173,11 +175,17 @@ export default function AddTagForm() {
           }}
         />
 
-        <CustomButton
-          title="set tagCount"
+        {/* <CustomButton
+          title="set tagCount (for maintenance)"
           style={propStyles.button}
-          onPress={() => addToDB("tagCount", "0")}
-        />
+          onPress={() => addItemToDB("tagCount", "1")}
+        /> */}
+
+        {/* <CustomButton
+          title="custom button (for maintenance)"
+          style={propStyles.button}
+          onPress={() => removeTag('5')}
+        /> */}
       </ScrollView>
     </KeyboardAvoidingView>
   );

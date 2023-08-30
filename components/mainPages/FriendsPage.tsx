@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import PageTitle from "../PageTitle";
 import Icon from "react-native-vector-icons/FontAwesome";
 import CustomButton from "../CustomButton";
-import { getFromDB, getFromDBandSetState } from "../../functions/asyncStorage";
+import { getAllKeysAndSetState, getFromDB, getFromDBandSetState } from "../../functions/asyncStorage";
 
 export default function FriendListPage() {
   const [tagCount, setCount] = useState("?");
   const [firstTag, setFirstTag] = useState("?");
+  const [allKeys, setAllKeys] = useState<string[]>([]);
+
 
   return (
     <View style={styles.pageWrapper}>
@@ -25,7 +27,15 @@ export default function FriendListPage() {
         <CustomButton
           title="set first tag"
           style={propStyles.button}
-          onPress={() => getFromDBandSetState("0", setFirstTag)}
+          onPress={() => getFromDBandSetState("tags", setFirstTag)}
+        />
+        {allKeys.map((element)=>(
+          <Text>{element}</Text>
+        ))}
+        <CustomButton
+          title="set first tag"
+          style={propStyles.button}
+          onPress={() => getAllKeysAndSetState(setAllKeys)}
         />
       </View>
     </View>
