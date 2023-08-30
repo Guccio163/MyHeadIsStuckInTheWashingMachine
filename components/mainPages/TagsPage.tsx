@@ -1,4 +1,11 @@
-import { View, FlatList, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Pressable,
+  Text,
+  ScrollView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import TagElement from "../TagElement";
@@ -18,11 +25,15 @@ import {
   getFromDBandSetState,
   getTagSetState,
 } from "../../functions/asyncStorage";
-import { Tag } from "../addTagPanel/AddTagForm";
+import { Tag, categories } from "../addTagPanel/AddTagForm";
+import FilterCategory from "../FilterCategory";
+import { filterArrayByCategory } from "../../functions/filterArray";
 
 export default function TagListPage() {
   const [tagList, setTags] = useState<Tag[]>([]);
-  const [isUpToDate, setUpToDate] = useState('');
+  const [filteredTagList, setFiltered] = useState<Tag[]>([]);
+  const [isUpToDate, setUpToDate] = useState("");
+  const [filterCategory, setCategory] = useState("All");
 
   const data = [
     { index: 0, name: "ania" },
@@ -39,15 +50,19 @@ export default function TagListPage() {
     { index: 11, name: "mikołaj" },
   ];
 
-  // if (!isUpToDate) {
-  //   getTagSetState("tags", setTags);
-  //   setUpToDate(true);
-  // }
   useEffect(() => {
     getTagSetState("tags", setTags);
-    console.log('odświeżono')
+    console.log("odświeżono");
   }, [isUpToDate]);
 
+  useEffect(() => {
+    if (filterCategory == "All") {
+      getTagSetState("tags", setFiltered);
+    } else {
+      setFiltered(filterArrayByCategory(tagList, filterCategory));
+    }
+    console.log("odświeżono");
+  }, [filterCategory]);
 
   const translateYValue = useSharedValue(Dimensions.get("window").height);
   const buttonRotationValue = useSharedValue(0);
@@ -81,6 +96,8 @@ export default function TagListPage() {
     };
   });
   console.log(tagList);
+
+  const filterCategories = ["All"].concat(categories);
   return (
     <View style={styles.pageWrapper}>
       <PageTitle name="Tags List" />
@@ -96,6 +113,7 @@ export default function TagListPage() {
           <Icon name="plus" size={30} color="black" />
         </Pressable>
       </Animated.View>
+
       <Animated.View style={[styles.addTagRollout, animatedStyles]}>
         <AddTagPage
           translateYValue={translateYValue}
@@ -103,23 +121,30 @@ export default function TagListPage() {
           refreshList={setUpToDate}
         />
       </Animated.View>
-      <FlatList
-        style={styles.flatListContainer}
-        data={tagList}
-        renderItem={({ item }) => (
-          <TagElement
-            id={item.id}
-            imageUri={item.imageUri}
-            name={item.name}
-            category={item.category}
-            colour={item.colour}
-            brand={item.brand}
-            icons={item.icons}
-            materials={item.materials}
-            notes={item.notes}
-          ></TagElement>
-        )}
-      ></FlatList>
+
+      <View>
+        <FilterCategory
+          chosenCategory={filterCategory}
+          setCategory={setCategory}
+        />
+        <FlatList
+          style={styles.flatListContainer}
+          data={filteredTagList}
+          renderItem={({ item }) => (
+            <TagElement
+              id={item.id}
+              imageUri={item.imageUri}
+              name={item.name}
+              category={item.category}
+              colour={item.colour}
+              brand={item.brand}
+              icons={item.icons}
+              materials={item.materials}
+              notes={item.notes}
+            ></TagElement>
+          )}
+        ></FlatList>
+      </View>
     </View>
   );
 }

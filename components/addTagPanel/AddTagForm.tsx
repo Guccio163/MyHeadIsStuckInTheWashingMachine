@@ -22,7 +22,6 @@ import {
 } from "../../functions/asyncStorage";
 import { Picker } from "@react-native-picker/picker";
 
-
 export type Tag = {
   id: string;
   imageUri: string;
@@ -40,6 +39,19 @@ export type Material = {
   name: string;
 };
 
+export const categories = [
+  "Bluzka",
+  "Spodnie",
+  "Bielizna",
+  "Sukienka",
+  "Spódnica",
+  "Eleganckie",
+  "Sweter/Bluza",
+  "Odzież wierzchnia",
+  "Akcesoria",
+  "Inne",
+];
+
 interface Props {
   refreshList: (arg0: string) => void;
 }
@@ -55,6 +67,8 @@ export default function AddTagForm({ refreshList }: Props) {
   ]);
   const [image, setImage] = useState<string>("");
   const [notes, onChangeNotes] = useState([""]);
+
+
 
   function handleIconClick(name: string) {
     if (icons.includes(name)) {
@@ -93,26 +107,12 @@ export default function AddTagForm({ refreshList }: Props) {
         />
         <Picker
           selectedValue={category}
-          onValueChange={(itemValue, itemIndex) => onChangeCategory(itemValue)}
+          onValueChange={(itemValue) => onChangeCategory(itemValue)}
         >
-          <Picker.Item label="Bluzka" value="Bluzka" />
-          <Picker.Item label="Spodnie" value="Spodnie" />
-          <Picker.Item label="Bielizna" value="Bielizna" />
-          <Picker.Item label="Sukienka" value="Sukienka" />
-          <Picker.Item label="Spódnica" value="Spódnica" />
-          <Picker.Item label="Eleganckie" value="Eleganckie" />
-          <Picker.Item label="Sweter/Bluza" value="Sweter/Bluza" />
-          <Picker.Item label="Odzież wierzchnia" value="Odzież wierzchnia" />
-          <Picker.Item label="Inne" value="Inne" />
-          <Picker.Item label="Akcesorium" value="Akcesorium" />
+          {categories.map((c) => (
+            <Picker.Item label={c} value={c} />
+          ))}
         </Picker>
-        {/* <TextInput
-          style={styles.input}
-          onChangeText={onChangeCategory}
-          value={category}
-          placeholder="Category"
-          keyboardType="default"
-        /> */}
         <TextInput
           style={styles.input}
           onChangeText={onChangeColour}

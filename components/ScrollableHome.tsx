@@ -55,6 +55,7 @@ export default function ScrollableHome({ children, navIcons }: Props) {
         style={styles.container}
         ref={scrollRef}
         onMomentumScrollEnd={onMomentumScrollEnd}
+        nestedScrollEnabled = {true}
       >
         {children.map((child, index) => (
           <View key={index} style={styles.childDiv}>

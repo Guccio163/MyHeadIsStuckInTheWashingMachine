@@ -17,7 +17,8 @@ export default function FriendListPage() {
       <View style={styles.friendList}>
         <Icon name="lock" size={60} color="black" />
         <Text style={styles.altText}>Soon !</Text>
-        <Text>current tag count: {tagCount}</Text>
+        {/* COMPONENTS FOR MAINTENANCE REASONS: */}
+        {/* <Text>current tag count: {tagCount}</Text>
         <CustomButton
           title="see tagCount"
           style={propStyles.button}
@@ -36,7 +37,7 @@ export default function FriendListPage() {
           title="see all tags"
           style={propStyles.button}
           onPress={() => getAllKeysAndSetState(setAllKeys)}
-        />
+        /> */}
       </View>
     </View>
   );
