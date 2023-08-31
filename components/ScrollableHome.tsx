@@ -66,13 +66,12 @@ export default function ScrollableHome({ children, navIcons }: Props) {
       {!isKeyboardOpen ? <View style={{ backgroundColor: "#89A6FB", display: isKeyboardOpen ? 'none' : 'flex'  }}>
         <View style={styles.navBar}>
           {navIcons.map((icon, index) => (
-            <>
               <NavBarIcon
                 active={activeIndex === index}
                 onPress={onPress(index)}
                 icon={icon}
+                key={index}
               ></NavBarIcon>
-            </>
           ))}
         </View>
       </View> : null}

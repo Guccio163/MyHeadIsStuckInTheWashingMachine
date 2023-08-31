@@ -17,7 +17,7 @@ export default function NotesInput({ notes, onChangeNotes }: Props) {
   return (
     <View>
       {notes.map((elem, index) => (
-        <View style={styles.noteRow}>
+        <View style={styles.noteRow} key={index}>
           <Icon name="circle" size={10} color="black" />
           <TextInput
             style={styles.input}

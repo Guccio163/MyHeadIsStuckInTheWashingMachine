@@ -6,7 +6,6 @@ import ScrollableHome from "./components/ScrollableHome";
 import Icon from "react-native-vector-icons/FontAwesome";
 import UserPage from "./components/mainPages/UserPage";
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
   const icons = [
@@ -17,16 +16,13 @@ export default function App() {
   ];
 
   return (
-      <NavigationContainer>
-        <ScrollableHome
-          children={[<TagsPage />, <FriendsPage />, <HelpPage />, <UserPage />]}
-          navIcons={icons}
-        />
-      </NavigationContainer>
+    <ScrollableHome
+      children={[<TagsPage />, <FriendsPage />, <HelpPage />, <UserPage />]}
+      navIcons={icons}
+      key={0}
+    />
   );
 }
-
-//XDDDD jestem teraz na scrollView
 
 const styles = StyleSheet.create({
   container: {

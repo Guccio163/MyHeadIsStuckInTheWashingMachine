@@ -5,7 +5,7 @@ import {
   KeyboardAvoidingView,
   Text,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import NotesInput from "./formComponents/NotesInput";
 import MaterialsInput from "./formComponents/MaterialsInput";
 import CustomButton from "../CustomButton";
@@ -15,12 +15,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   addItemToDB,
   addTagToDB,
+  editTagInDB,
   getAllKeys,
   getFromDB,
   removeItem,
   removeTag,
 } from "../../functions/asyncStorage";
 import { Picker } from "@react-native-picker/picker";
+import { UpToDateContext } from "../mainPages/TagsPage";
 
 export type Tag = {
   id: string;
@@ -53,10 +55,11 @@ export const categories = [
 ];
 
 interface Props {
-  refreshList: (arg0: string) => void;
+  tag?: Tag;
 }
 
-export default function AddTagForm({ refreshList }: Props) {
+export default function AddTagForm(prop: Props) {
+  const [id, setId] = useState("");
   const [name, onChangeName] = useState("");
   const [category, onChangeCategory] = useState("");
   const [colour, onChangeColour] = useState("");
@@ -68,14 +71,14 @@ export default function AddTagForm({ refreshList }: Props) {
   const [image, setImage] = useState<string>("");
   const [notes, onChangeNotes] = useState([""]);
 
-
-
   function handleIconClick(name: string) {
     if (icons.includes(name)) {
       let tempIcons = icons.filter((e: string) => e !== name);
       onChangeIcons(tempIcons);
-      console.log(icons);
-    } else onChangeIcons((iconsActive) => [...iconsActive, name]);
+    } else {
+      onChangeIcons((iconsActive) => [...iconsActive, name]);
+    }
+    console.log(icons);
   }
 
   function resetStates() {
@@ -89,12 +92,34 @@ export default function AddTagForm({ refreshList }: Props) {
     onChangeNotes([""]);
   }
 
+  function setStates(tag: Tag) {
+    setId(tag.id);
+    setImage(tag.imageUri);
+    onChangeName(tag.name);
+    onChangeCategory(tag.category);
+    onChangeColour(tag.colour);
+    onChangeBrand(tag.brand);
+    onChangeIcons(tag.icons);
+    onChangeMaterials(tag.materials);
+    onChangeNotes(tag.notes);
+  }
+
+  useEffect(() => {
+    if (prop.tag) {
+      setStates(prop.tag);
+    }
+    console.log("odświeżono");
+  }, []);
+
+  const {arg0: isUpToDate, arg1: setUpToDate} = useContext(UpToDateContext);
+
   return (
     <KeyboardAvoidingView enabled behavior="padding">
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator
         scrollEnabled
+        nestedScrollEnabled
       >
         <ImageInput setImage={setImage} image={image} />
 
@@ -109,8 +134,8 @@ export default function AddTagForm({ refreshList }: Props) {
           selectedValue={category}
           onValueChange={(itemValue) => onChangeCategory(itemValue)}
         >
-          {categories.map((c) => (
-            <Picker.Item label={c} value={c} />
+          {categories.map((c, index) => (
+            <Picker.Item label={c} value={c} key={index} />
           ))}
         </Picker>
         <TextInput
@@ -127,6 +152,7 @@ export default function AddTagForm({ refreshList }: Props) {
           placeholder="Brand"
           keyboardType="default"
         />
+
         <IconsInput
           onIconPress={(name: string) => handleIconClick(name)}
           icons={icons}
@@ -178,23 +204,46 @@ export default function AddTagForm({ refreshList }: Props) {
         <CustomButton
           title="SAVE TAG"
           style={propStyles.button}
-          onPress={() => {
-            addTagToDB(
-              {
-                id: "",
-                imageUri: image,
-                name: name,
-                category: category,
-                colour: colour,
-                brand: brand,
-                materials: materials,
-                icons: icons,
-                notes: notes,
-              },
-              refreshList
-            );
-            resetStates();
-          }}
+          onPress={
+            prop.tag
+              ? () => {
+                  editTagInDB({
+                    id: id,
+                    imageUri: image,
+                    name: name,
+                    category: category,
+                    colour: colour,
+                    brand: brand,
+                    materials: materials,
+                    icons: icons,
+                    notes: notes,
+                  });
+                  if (isUpToDate) {
+                    setUpToDate(false);
+                  } else {
+                    setUpToDate(true);
+                  }
+                }
+              : async () => {
+                  await addTagToDB({
+                    id: id,
+                    imageUri: image,
+                    name: name,
+                    category: category,
+                    colour: colour,
+                    brand: brand,
+                    materials: materials,
+                    icons: icons,
+                    notes: notes,
+                  });
+                  resetStates();
+                  if (isUpToDate) {
+                    setUpToDate(false);
+                  } else {
+                    setUpToDate(true);
+                  }
+                }
+          }
         />
 
         {/* <CustomButton
@@ -203,11 +252,11 @@ export default function AddTagForm({ refreshList }: Props) {
           onPress={() => addItemToDB("tagCount", "0")}
         /> */}
 
-        {/* <CustomButton
+        <CustomButton
           title="custom button (for maintenance)"
           style={propStyles.button}
-          onPress={() => removeTag('9')}
-        /> */}
+          onPress={() => removeTag("7")}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );

@@ -27,7 +27,7 @@ export default function MaterialsInput({
   return (
     <View>
       {materials.map((elem, index) => (
-        <View>
+        <View key={index}>
           <View style={{ flexDirection: "row" }}>
             <TextInput
               style={[styles.input, styles.percentageInput]}

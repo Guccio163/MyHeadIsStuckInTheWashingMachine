@@ -6,6 +6,8 @@ import CustomButton from "../CustomButton";
 import { getAllKeysAndSetState, getFromDB, getFromDBandSetState } from "../../functions/asyncStorage";
 
 export default function FriendListPage() {
+
+  // MAINTENANCE 
   const [tagCount, setCount] = useState("?");
   const [allTags, setAllTags] = useState("?");
   const [allKeys, setAllKeys] = useState<string[]>([]);
@@ -18,7 +20,7 @@ export default function FriendListPage() {
         <Icon name="lock" size={60} color="black" />
         <Text style={styles.altText}>Soon !</Text>
         {/* COMPONENTS FOR MAINTENANCE REASONS: */}
-        {/* <Text>current tag count: {tagCount}</Text>
+        <Text>current tag count: {tagCount}</Text>
         <CustomButton
           title="see tagCount"
           style={propStyles.button}
@@ -37,7 +39,7 @@ export default function FriendListPage() {
           title="see all tags"
           style={propStyles.button}
           onPress={() => getAllKeysAndSetState(setAllKeys)}
-        /> */}
+        />
       </View>
     </View>
   );

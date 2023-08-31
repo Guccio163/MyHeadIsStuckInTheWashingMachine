@@ -44,9 +44,9 @@ export default function IconsInput({ onIconPress, icons }: Props) {
 
           return (
             <View style={{ flexDirection: "row" }}>
-              {item.map((element) => {
-                return (
+              {item.map((element, index) => (
                   <Pressable
+                  key={index}
                     style={[
                       styles.washIcon,
                       {
@@ -74,8 +74,8 @@ export default function IconsInput({ onIconPress, icons }: Props) {
                       resizeMode="center"
                     />
                   </Pressable>
-                );
-              })}
+                )
+              )}
             </View>
           );
         }}

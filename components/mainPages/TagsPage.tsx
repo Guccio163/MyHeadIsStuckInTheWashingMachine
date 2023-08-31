@@ -6,7 +6,7 @@ import {
   Text,
   ScrollView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import TagElement from "../TagElement";
 import PageTitle from "../PageTitle";
@@ -29,10 +29,12 @@ import { Tag, categories } from "../addTagPanel/AddTagForm";
 import FilterCategory from "../FilterCategory";
 import { filterArrayByCategory } from "../../functions/filterArray";
 
+export const UpToDateContext = createContext({arg0: true, arg1: (arg0:boolean)=>{console.log(arg0)}});
+
 export default function TagListPage() {
   const [tagList, setTags] = useState<Tag[]>([]);
   const [filteredTagList, setFiltered] = useState<Tag[]>([]);
-  const [isUpToDate, setUpToDate] = useState("");
+  const [isUpToDate, setUpToDate] = useState(true);
   const [filterCategory, setCategory] = useState("All");
 
   const data = [
@@ -62,7 +64,7 @@ export default function TagListPage() {
       setFiltered(filterArrayByCategory(tagList, filterCategory));
     }
     console.log("odświeżono");
-  }, [filterCategory]);
+  }, [filterCategory, tagList]);
 
   const translateYValue = useSharedValue(Dimensions.get("window").height);
   const buttonRotationValue = useSharedValue(0);
@@ -95,57 +97,49 @@ export default function TagListPage() {
       transform: [{ rotate: `${rotation.value}deg` }],
     };
   });
-  console.log(tagList);
+  // console.log(tagList);
 
   const filterCategories = ["All"].concat(categories);
   return (
-    <View style={styles.pageWrapper}>
-      <PageTitle name="Tags List" />
+    <UpToDateContext.Provider value={{arg0: isUpToDate, arg1: setUpToDate}}>
+      <View style={styles.pageWrapper}>
+        <PageTitle name="Tags List" />
 
-      <Animated.View style={[styles.addTagButtonBox, animatedStyle]}>
-        <Pressable
-          onPress={() => {
-            transformAddPanel();
-            startRotation(360);
-          }}
-          style={styles.addTagButton}
-        >
-          <Icon name="plus" size={30} color="black" />
-        </Pressable>
-      </Animated.View>
+        <Animated.View style={[styles.addTagButtonBox, animatedStyle]}>
+          <Pressable
+            onPress={() => {
+              transformAddPanel();
+              startRotation(360);
+            }}
+            style={styles.addTagButton}
+          >
+            <Icon name="plus" size={30} color="black" />
+          </Pressable>
+        </Animated.View>
 
-      <Animated.View style={[styles.addTagRollout, animatedStyles]}>
-        <AddTagPage
-          translateYValue={translateYValue}
-          rotateOnClose={() => startRotation(0)}
-          refreshList={setUpToDate}
-        />
-      </Animated.View>
+        <Animated.View style={[styles.addTagRollout, animatedStyles]}>
+          <AddTagPage
+            translateYValue={translateYValue}
+            rotateOnClose={() => startRotation(0)}
+          />
+        </Animated.View>
 
-      <View>
-        <FilterCategory
-          chosenCategory={filterCategory}
-          setCategory={setCategory}
-        />
-        <FlatList
-          style={styles.flatListContainer}
-          data={filteredTagList}
-          renderItem={({ item }) => (
-            <TagElement
-              id={item.id}
-              imageUri={item.imageUri}
-              name={item.name}
-              category={item.category}
-              colour={item.colour}
-              brand={item.brand}
-              icons={item.icons}
-              materials={item.materials}
-              notes={item.notes}
-            ></TagElement>
-          )}
-        ></FlatList>
+        <View>
+          <FilterCategory
+            chosenCategory={filterCategory}
+            setCategory={setCategory}
+          />
+          <FlatList
+            style={styles.flatListContainer}
+            data={filteredTagList}
+            nestedScrollEnabled
+            renderItem={({ item, index }) => (
+              <TagElement tag={item}></TagElement>
+            )}
+          ></FlatList>
+        </View>
       </View>
-    </View>
+    </UpToDateContext.Provider>
   );
 }
 
@@ -167,7 +161,7 @@ const styles = StyleSheet.create({
   flatListContainer: {
     alignSelf: "center",
     minHeight: 200,
-    maxHeight: "90%",
+    maxHeight: "87%",
     width: "90%",
     backgroundColor: "transparent",
   },

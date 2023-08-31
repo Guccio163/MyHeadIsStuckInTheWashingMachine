@@ -20,8 +20,8 @@ export default function FilterCategory({chosenCategory, setCategory}:Props) {
         onValueChange={(itemValue) => setCategory(itemValue)}
         style={styles.categoryPicker}
       >
-        {filterCategories.map((c) => (
-          <Picker.Item label={c} value={c} />
+        {filterCategories.map((c, index) => (
+          <Picker.Item label={c} value={c} key={index}/>
         ))}
       </Picker>
     </View>

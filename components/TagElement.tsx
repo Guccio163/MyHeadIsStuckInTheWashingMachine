@@ -7,7 +7,7 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
-import { Tag } from "./addTagPanel/AddTagForm";
+import AddTagForm, { Tag } from "./addTagPanel/AddTagForm";
 import tagItem from "../functions/tagItem";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Animated, {
@@ -15,20 +15,18 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+import CustomButton from "./CustomButton";
+
+interface Props{
+  tag: Tag
+}
 
 export default function TagElement({
-  id,
-  imageUri,
-  name,
-  category,
-  colour,
-  brand,
-  icons,
-  materials,
-  notes,
-}: Tag) {
+  tag
+}: Props) {
   const heightDynamic = useSharedValue(Dimensions.get("window").height * 0.13);
   const [isExtended, setExtended] = useState(false);
+  const [isEditView, setEditView] = useState(false);
 
   const handlePress = () => {
     if (isExtended) {
@@ -39,6 +37,18 @@ export default function TagElement({
       setExtended(true);
     }
   };
+
+  function pressEdit() {
+    if (isEditView) {
+      heightDynamic.value -= 300;
+      setEditView(false);
+      console.log("zamknięto editView");
+    } else {
+      heightDynamic.value += 300;
+      setEditView(true);
+      console.log("otwarto editView");
+    }
+  }
 
   const animatedStyles = useAnimatedStyle(() => ({
     height: withSpring(heightDynamic.value, {
@@ -52,9 +62,9 @@ export default function TagElement({
   }));
 
   return (
-    <Pressable onPress={handlePress}>
+    <Pressable onPress={handlePress} disabled={isEditView}>
       <Animated.View
-        key={id}
+        key={tag.id}
         style={[
           styles.flatListChild,
           animatedStyles,
@@ -62,68 +72,87 @@ export default function TagElement({
           { paddingTop: isExtended ? 10 : 0 },
         ]}
       >
-        <View style={styles.imageWrapper}>
-          {imageUri ? (
-            <Image source={{ uri: imageUri }} style={styles.image} />
-          ) : (
-            <Icon name="file-image-o" size={30} style={styles.icon} />
-          )}
-        </View>
-        <View
-          style={[
-            styles.flatListChildInfo,
-            { justifyContent: isExtended ? "flex-start" : "center" },
-          ]}
-        >
-          <View style={styles.firstRowInfo}>
-            <View style={styles.nameView}>
-              <Text style={styles.nameText}>{name}</Text>
+        {!isEditView ? (
+          <>
+            <View style={styles.imageWrapper}>
+              {tag.imageUri ? (
+                <Image source={{ uri: tag.imageUri }} style={styles.image} />
+              ) : (
+                <Icon name="file-image-o" size={30} style={styles.icon} />
+              )}
             </View>
-            <View style={styles.brandView}>
-              <Text style={styles.brandText}>{brand}</Text>
-            </View>
-          </View>
-          <View style={styles.secondRowInfo}>
-            <View style={styles.categoryView}>
-              <Text style={styles.categoryText}>{category}, </Text>
-            </View>
-            <View style={styles.colourView}>
-              <Text style={styles.colourText}>{colour}</Text>
-            </View>
-          </View>
-          <View style={styles.iconsWrapper}>
-            {icons.map((iconName) => (
-              <View style={styles.singleIconWrapper}>
-                <Image
-                  source={tagItem(iconName)?.image}
-                  resizeMode="center"
-                  style={styles.washIcon}
-                />
+            <View
+              style={[
+                styles.flatListChildInfo,
+                { justifyContent: isExtended ? "flex-start" : "center" },
+              ]}
+            >
+              <View style={styles.firstRowInfo}>
+                <View style={styles.nameView}>
+                  <Text style={styles.nameText}>{tag.name}</Text>
+                </View>
+                <View style={styles.brandView}>
+                  <Text style={styles.brandText}>{tag.brand}</Text>
+                </View>
               </View>
-            ))}
-          </View>
-          {isExtended ? (
-            <>
-              <View style={styles.materialsWrapper}>
-                {materials.map((material) => (
-                  <Text>
-                    {"  "}
-                    {material.percentage}% {material.name}
-                    {"  "}
-                  </Text>
-                ))}
+              <View style={styles.secondRowInfo}>
+                <View style={styles.categoryView}>
+                  <Text style={styles.categoryText}>{tag.category}, </Text>
+                </View>
+                <View style={styles.colourView}>
+                  <Text style={styles.colourText}>{tag.colour}</Text>
+                </View>
               </View>
-              <View style={styles.notesWrapper}>
-                {notes.map((note) => (
-                  <View style={styles.singleNoteWrapper}>
-                    <Icon name="circle" size={6} style={styles.noteIcon} />
-                    <Text style={styles.note}>{note}</Text>
+              <View style={styles.iconsWrapper}>
+                {tag.icons.map((iconName, index) => (
+                  <View style={styles.singleIconWrapper} key={index}>
+                    <Image
+                      source={tagItem(iconName)?.image}
+                      resizeMode="center"
+                      style={styles.washIcon}
+                    />
                   </View>
                 ))}
               </View>
-            </>
-          ) : null}
-        </View>
+              {isExtended ? (
+                <>
+                  <View style={styles.materialsWrapper}>
+                    {tag.materials.map((material) => (
+                      <Text>
+                        {"  "}
+                        {material.percentage}% {material.name}
+                        {"  "}
+                      </Text>
+                    ))}
+                  </View>
+                  <View style={styles.notesWrapper}>
+                    {tag.notes.map((note) => (
+                      <View style={styles.singleNoteWrapper}>
+                        <Icon name="circle" size={6} style={styles.noteIcon} />
+                        <Text style={styles.note}>{note}</Text>
+                      </View>
+                    ))}
+                  </View>
+                  <CustomButton
+                    title="Edytuj"
+                    onPress={pressEdit}
+                    style={styles.editButton}
+                  />
+                </>
+              ) : null}
+            </View>
+          </>
+        ) : (
+          <View>
+            <Text>editView</Text>
+            <CustomButton
+              title="Edytuj"
+              onPress={pressEdit}
+              style={styles.editButton}
+            />
+            <AddTagForm tag={tag}/>
+          </View>
+        )}
       </Animated.View>
     </Pressable>
   );
@@ -151,9 +180,10 @@ const styles = StyleSheet.create({
     margin: 7,
   },
   flatListChildInfo: {
-     alignItems: "center",
-      width: "67%",
-    backgroundColor: 'transparent', },
+    alignItems: "center",
+    width: "67%",
+    backgroundColor: "transparent",
+  },
   firstRowInfo: {
     flexDirection: "row",
   },
@@ -225,5 +255,10 @@ const styles = StyleSheet.create({
   noteIcon: {
     transform: [{ translateY: 8.7 }],
     color: "black",
+  },
+  editButton: {
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 2,
   },
 });
