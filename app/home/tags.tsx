@@ -16,6 +16,7 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  withSequence,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -93,11 +94,17 @@ export default function TagListPage() {
     });
   };
 
-  const startRotation = (degrees: number) => {
-    buttonRotationValue.value = withTiming(degrees, {
-      duration: 1000,
-      easing: Easing.bounce,
-    });
+  const startRotationAnBack = () => {
+    buttonRotationValue.value = withSequence(
+      withTiming(360, {
+        duration: 1000,
+        easing: Easing.inOut(Easing.bezierFn(0.25, 0.1, 0.25, 1)),
+      }),
+      withTiming(0, {
+        duration: 1000,
+        easing: Easing.inOut(Easing.bezierFn(0.25, 0.1, 0.25, 1)),
+      })
+    );
   };
 
   const animatedStyles = useAnimatedStyle(() => ({
@@ -117,46 +124,51 @@ export default function TagListPage() {
 
   const navi = useRouter();
   return (
-      <View style={styles.pageWrapper}>
-        {/* <PageTitle name="Tags List" /> */}
+    <View style={styles.pageWrapper}>
+      {/* <PageTitle name="Tags List" /> */}
 
-        <Animated.View style={[styles.addTagButtonBox, animatedStyle]}>
-          <Pressable
-            onPress={() => {
-              // transformAddPanel();
-              startRotation(360);
-              navi.push({
-                pathname: "addTag",
-              });
-            }}
-            style={styles.addTagButton}
-          >
-            <Icon name="plus" size={30} color="black" />
-          </Pressable>
-        </Animated.View>
+      <Animated.View style={[styles.addTagButtonBox, animatedStyle]}>
+        <Pressable
+          onPress={() => {
+            // transformAddPanel();
+            startRotationAnBack();
+            navi.push({
+              pathname: "addTag",
+            });
+          }}
+          style={({ pressed }) => [
+            styles.addTagButton,
+            {
+              backgroundColor: pressed
+                ? "rgba(80, 150, 220, 1)"
+                : "rgba(120, 195, 251, 1)",
+            },
+          ]}
+        >
+          <Icon name="plus" size={30} color="black" />
+        </Pressable>
+      </Animated.View>
 
-        <Animated.View style={[styles.addTagRollout, animatedStyles]}>
-          <AddTagPage
-            translateYValue={translateYValue}
-            rotateOnClose={() => startRotation(0)}
-          />
-        </Animated.View>
+      <Animated.View style={[styles.addTagRollout, animatedStyles]}>
+        <AddTagPage
+          translateYValue={translateYValue}
+          rotateOnClose={() => startRotationAnBack()}
+        />
+      </Animated.View>
 
-        <View>
-          <FilterCategory
-            chosenCategory={filterCategory}
-            setCategory={setCategory}
-          />
-          <FlatList
-            style={styles.flatListContainer}
-            data={filteredTagList}
-            nestedScrollEnabled
-            renderItem={({ item, index }) => (
-              <TagElement tag={item}></TagElement>
-            )}
-          ></FlatList>
-        </View>
+      <View>
+        <FilterCategory
+          chosenCategory={filterCategory}
+          setCategory={setCategory}
+        />
+        <FlatList
+          style={styles.flatListContainer}
+          data={filteredTagList}
+          nestedScrollEnabled
+          renderItem={({ item, index }) => <TagElement tag={item}></TagElement>}
+        ></FlatList>
       </View>
+    </View>
   );
 }
 
@@ -206,7 +218,6 @@ const styles = StyleSheet.create({
   addTagButton: {
     alignSelf: "center",
     height: 65,
-    backgroundColor: "#78C3FB",
     width: 65,
     borderRadius: 30,
     alignItems: "center",
