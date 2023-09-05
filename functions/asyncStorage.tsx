@@ -2,34 +2,42 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Tag } from "../components/addTagPanel/AddTagForm";
 import React, { useContext } from "react";
 
-export const addItemToDB = async (key: string, value: string) => {
+///////// ADD
+
+export async function addItem(key: string, value: string) {
   try {
     await AsyncStorage.setItem(key, value);
   } catch (e) {
     console.log(e);
   }
-
   console.log("adding item done (usually tagArray).");
-};
+}
 
-export async function addTagToDB(
-  object: Tag,
-) {
-  // const setUpToDate = useContext(upToDateContext);
+export async function addTag(object: Tag) {
   try {
-    const tagCount = await getFromDB("tagCount");
-    const tagArray = await getFromDB("tags");
+    const tagCount = await getItem("tagCount");
+    const tagArray = await getItem("tags");
 
-    // if tag is newly added to db
-    if (tagCount != null && tagArray != null) {
+    if (tagCount == null || tagArray == null) {
+      if (tagCount == null) {
+        await addItem("tagCount", "0");
+        console.log("tagCount nie było sprecyzowane, zdefiniowano");
+      }
+      if (tagArray == null) {
+        await addItem("tags", "[]");
+        console.log("baza nie była założona, założono");
+      }
+      addTag(object);
+      console.log('trying to add tag after preparing env')
+    } else {
       object.id = tagCount;
       let newTagCount = parseInt(tagCount) + 1;
-      await addItemToDB("tagCount", `${newTagCount}`);
+      await addItem("tagCount", `${newTagCount}`);
 
       let tagArrayParsed = JSON.parse(tagArray);
       tagArrayParsed.push(object);
       const tagArrayStringified = JSON.stringify(tagArrayParsed);
-      await addItemToDB("tags", tagArrayStringified);
+      await addItem("tags", tagArrayStringified);
     }
   } catch (e) {
     console.log(e);
@@ -37,13 +45,11 @@ export async function addTagToDB(
   console.log("adding tag done.");
 }
 
-export async function editTagInDB(
-  object: Tag,
-) {
-  // const setUpToDate = useContext(upToDateContext);
+///////// EDIT
+
+export async function editTagInDB(object: Tag) {
   try {
-    // const tagCount = await getFromDB("tagCount");
-    const tagArray = await getFromDB("tags");
+    const tagArray = await getItem("tags");
 
     if (tagArray != null) {
       let tagArrayParsed = JSON.parse(tagArray);
@@ -54,7 +60,7 @@ export async function editTagInDB(
         return item;
       });
       const tagArrayStringified = JSON.stringify(newTagArrayParsed);
-      await addItemToDB("tags", tagArrayStringified);
+      await addItem("tags", tagArrayStringified);
     }
   } catch (e) {
     console.log(e);
@@ -62,22 +68,23 @@ export async function editTagInDB(
   console.log("editing tag done.");
 }
 
-export const getFromDB = async (key: string) => {
+///////// GET
+
+export const getItem = async (key: string) => {
   try {
     return await AsyncStorage.getItem(key);
   } catch (e) {
     console.log(e);
   }
-
-  console.log("getting done.");
+  console.log("getting item done.");
 };
 
-export const getFromDBandSetState = async (
+export const getItemSetState = async (
   key: string,
   setState: (arg0: string) => void
 ) => {
   try {
-    const result = await AsyncStorage.getItem(key);
+    const result = await getItem(key);
     if (result != null) {
       setState(result);
     }
@@ -85,15 +92,12 @@ export const getFromDBandSetState = async (
     console.log(e);
   }
 
-  console.log("getting done.");
+  console.log("getting from db and setting state done.");
 };
 
-export const getTagSetState = async (
-  key: string,
-  setState: (arg0: Tag[]) => void
-) => {
+export const getTagsSetState = async (setState: (arg0: Tag[]) => void) => {
   try {
-    const result = await AsyncStorage.getItem(key);
+    const result = await getItem("tags");
     if (result != null) {
       let resultParsed = JSON.parse(result);
       setState(resultParsed);
@@ -102,7 +106,22 @@ export const getTagSetState = async (
     console.log(e);
   }
 
-  console.log("getting done.");
+  console.log("getting tags from db done.");
+};
+
+export const getTagSetState = async (setState: (arg0: Tag) => void, tagId: string) => {
+  try {
+    const result = await getItem("tags");
+    if (result != null) {
+      let resultParsed = JSON.parse(result);
+      let resultTag = resultParsed[parseInt(tagId)]
+      setState(resultTag);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  console.log("getting tag from db done.");
 };
 
 export const getAllKeys = async () => {
@@ -115,7 +134,7 @@ export const getAllKeys = async () => {
   console.log("getting all keys done.");
 };
 
-export const getAllKeysAndSetState = async (
+export const getAllKeysSetState = async (
   setState: (arg0: string[]) => void
 ) => {
   try {
@@ -128,8 +147,10 @@ export const getAllKeysAndSetState = async (
     console.log(e);
   }
 
-  console.log("getting all keys done.");
+  console.log("getting all keys and setting state done.");
 };
+
+///////// REMOVE
 
 export const removeItem = async (key: string) => {
   try {
@@ -137,12 +158,12 @@ export const removeItem = async (key: string) => {
   } catch (e) {
     console.log(e);
   }
-  console.log("Removing done.");
+  console.log("Removing item done.");
 };
 
 export const removeTag = async (key: string) => {
   try {
-    const tagArray = await getFromDB("tags");
+    const tagArray = await getItem("tags");
 
     if (tagArray != null) {
       // console.log(tagArray);
@@ -152,7 +173,7 @@ export const removeTag = async (key: string) => {
       );
       // console.log(newTagArray);
       const value = JSON.stringify(newTagArray);
-      addItemToDB("tags", value);
+      addItem("tags", value);
     }
   } catch (e) {
     console.log(e);

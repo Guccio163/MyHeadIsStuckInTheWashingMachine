@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import React, { createContext, useEffect, useState } from "react";
 import { Dimensions } from "react-native";
-import TagElement from "../TagElement";
-import PageTitle from "../PageTitle";
+import TagElement from "../../components/TagElement";
+import PageTitle from "../../components/PageTitle";
 import Animated, {
   Easing,
   interpolate,
@@ -19,13 +19,13 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import AddTagPage from "../addTagPanel/AddTagPanel";
+import AddTagPage from "../../components/addTagPanel/AddTagPanel";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { getItemSetState, getTagsSetState } from "../../functions/asyncStorage";
-import { Tag, categories } from "../addTagPanel/AddTagForm";
-import FilterCategory from "../FilterCategory";
+import { Tag, categories } from "../../components/addTagPanel/AddTagForm";
+import FilterCategory from "../../components/FilterCategory";
 import { filterArrayByCategory } from "../../functions/filterArray";
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import addTag from "../../app/addTag";
 
 export const UpToDateContext = createContext({
@@ -56,10 +56,22 @@ export default function TagListPage() {
     { index: 11, name: "mikołaj" },
   ];
 
+  const navigation = useNavigation();
+
   useEffect(() => {
-    getTagsSetState(setTags);
-    console.log("odświeżono");
-  }, [isUpToDate]);
+    const unsubscribe = navigation.addListener("focus", () => {
+      getTagsSetState(setTags);
+
+      console.log("Ekran został zmieniony.");
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  // useEffect(() => {
+  //   getTagsSetState(setTags);
+  //   console.log("odświeżono");
+  // }, [isUpToDate]);
 
   useEffect(() => {
     if (filterCategory == "All") {
@@ -103,18 +115,19 @@ export default function TagListPage() {
   });
   // console.log(tagList);
 
-  const filterCategories = ["All"].concat(categories);
   const navi = useRouter();
   return (
-    <UpToDateContext.Provider value={{ arg0: isUpToDate, arg1: setUpToDate }}>
       <View style={styles.pageWrapper}>
         {/* <PageTitle name="Tags List" /> */}
 
         <Animated.View style={[styles.addTagButtonBox, animatedStyle]}>
           <Pressable
             onPress={() => {
-              transformAddPanel();
+              // transformAddPanel();
               startRotation(360);
+              navi.push({
+                pathname: "addTag",
+              });
             }}
             style={styles.addTagButton}
           >
@@ -144,7 +157,6 @@ export default function TagListPage() {
           ></FlatList>
         </View>
       </View>
-    </UpToDateContext.Provider>
   );
 }
 
@@ -160,13 +172,12 @@ const styles = StyleSheet.create({
   employeeListContainer: {
     backgroundColor: "turquoise",
     width: "90%",
-    height: 400,
     justifyContent: "center",
   },
   flatListContainer: {
     alignSelf: "center",
     minHeight: 200,
-    maxHeight: "87%",
+    maxHeight: "93%",
     width: "90%",
     backgroundColor: "transparent",
   },

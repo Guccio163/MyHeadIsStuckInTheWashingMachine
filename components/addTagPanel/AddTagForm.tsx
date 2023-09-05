@@ -3,26 +3,21 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
-  Text,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import NotesInput from "./formComponents/NotesInput";
 import MaterialsInput from "./formComponents/MaterialsInput";
 import CustomButton from "../CustomButton";
 import IconsInput from "./formComponents/IconsInput";
 import ImageInput from "./formComponents/ImageInput";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  addItemToDB,
-  addTagToDB,
+  addTag,
   editTagInDB,
-  getAllKeys,
-  getFromDB,
-  removeItem,
+  getTagSetState,
   removeTag,
 } from "../../functions/asyncStorage";
 import { Picker } from "@react-native-picker/picker";
-import { UpToDateContext } from "../mainPages/TagsPage";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 export type Tag = {
   id: string;
@@ -55,13 +50,13 @@ export const categories = [
 ];
 
 interface Props {
-  tag?: Tag;
+  tagId?: string;
 }
 
-export default function AddTagForm(prop: Props) {
+export default function AddTagForm({ tagId }: Props) {
   const [id, setId] = useState("");
   const [name, onChangeName] = useState("");
-  const [category, onChangeCategory] = useState("");
+  const [category, onChangeCategory] = useState("Bluzka");
   const [colour, onChangeColour] = useState("");
   const [brand, onChangeBrand] = useState("");
   const [icons, onChangeIcons] = useState<string[]>([]);
@@ -84,7 +79,7 @@ export default function AddTagForm(prop: Props) {
   function resetStates() {
     setImage("");
     onChangeName("");
-    onChangeCategory("");
+    onChangeCategory("Bluzka");
     onChangeColour("");
     onChangeBrand("");
     onChangeIcons([]);
@@ -103,15 +98,20 @@ export default function AddTagForm(prop: Props) {
     onChangeMaterials(tag.materials);
     onChangeNotes(tag.notes);
   }
+  const [tagDetails, setDetails] = useState<Tag>();
 
   useEffect(() => {
-    if (prop.tag) {
-      setStates(prop.tag);
+    if (tagId && !id) {
+      getTagSetState(setDetails, tagId);
+      console.log("tagId isnt null");
     }
-    console.log("odświeżono");
-  }, []);
+    if (tagDetails) {
+      setStates(tagDetails);
+      console.log("załadowano dane z taga (jeśli edytujesz)");
+    }
+  }, [tagDetails]);
 
-  const {arg0: isUpToDate, arg1: setUpToDate} = useContext(UpToDateContext);
+  const navi = useRouter();
 
   return (
     <KeyboardAvoidingView enabled behavior="padding">
@@ -205,7 +205,7 @@ export default function AddTagForm(prop: Props) {
           title="SAVE TAG"
           style={propStyles.button}
           onPress={
-            prop.tag
+            tagId
               ? () => {
                   editTagInDB({
                     id: id,
@@ -218,14 +218,11 @@ export default function AddTagForm(prop: Props) {
                     icons: icons,
                     notes: notes,
                   });
-                  if (isUpToDate) {
-                    setUpToDate(false);
-                  } else {
-                    setUpToDate(true);
-                  }
+
+                  navi.back();
                 }
               : async () => {
-                  await addTagToDB({
+                  await addTag({
                     id: id,
                     imageUri: image,
                     name: name,
@@ -237,11 +234,7 @@ export default function AddTagForm(prop: Props) {
                     notes: notes,
                   });
                   resetStates();
-                  if (isUpToDate) {
-                    setUpToDate(false);
-                  } else {
-                    setUpToDate(true);
-                  }
+                  navi.back();
                 }
           }
         />
@@ -257,6 +250,7 @@ export default function AddTagForm(prop: Props) {
           style={propStyles.button}
           onPress={() => removeTag("7")}
         />
+        {/* <View style={{ height: 5 }} ></View> */}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -264,7 +258,7 @@ export default function AddTagForm(prop: Props) {
 
 const styles = StyleSheet.create({
   scrollView: {
-    maxHeight: "93%",
+    maxHeight: "95%",
     width: "100%",
     backgroundColor: "transparent",
     alignSelf: "center",

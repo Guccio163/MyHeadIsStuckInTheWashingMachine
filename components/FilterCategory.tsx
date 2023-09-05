@@ -1,49 +1,136 @@
-import { View, Text, ScrollView, Pressable, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from "react-native";
 import React, { useState } from "react";
 import { categories } from "./addTagPanel/AddTagForm";
 import { Picker } from "@react-native-picker/picker";
+import { FlatList } from "react-native-gesture-handler";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
+import { varibales as v } from "../assets/globalVariables";
 
-interface Props{
-    chosenCategory: string,
-    setCategory: (arg0:string)=>void
+interface Props {
+  chosenCategory: string;
+  setCategory: (arg0: string) => void;
 }
 
-export default function FilterCategory({chosenCategory, setCategory}:Props) {
+export default function FilterCategory({ chosenCategory, setCategory }: Props) {
   const filterCategories = ["All"].concat(categories);
-//   const [chosenCategory, setCategory] = useState('');
+  const [isExtended, setExtended] = useState(false);
+  //   const [chosenCategory, setCategory] = useState('');
+
+  function toggleFilters(arg0: string) {
+    setExtended(false);
+    setCategory(arg0);
+  }
+
+  const filterWidth = useSharedValue(50);
+
+  const openFilter = () => {
+    filterWidth.value = withSpring(200, {
+      mass: 1,
+      stiffness: 80,
+      damping: 100,
+    });
+  };
+
+  const closeFilter = () => {
+    filterWidth.value = withSpring(50, {
+      mass: 1,
+      stiffness: 80,
+      damping: 100,
+    });
+  };
+
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      height: filterWidth.value,
+    };
+  });
 
   return (
     <View style={styles.filterWrapper}>
       <Text style={styles.filterText}>Filter categories:</Text>
-      <Picker
-        selectedValue={chosenCategory}
-        onValueChange={(itemValue) => setCategory(itemValue)}
-        style={styles.categoryPicker}
-      >
-        {filterCategories.map((c, index) => (
-          <Picker.Item label={c} value={c} key={index}/>
-        ))}
-      </Picker>
+      <View style={styles.viewBack}>
+        <Animated.View style={[styles.filterView, animatedStyles]}>
+          {isExtended ? (
+            <FlatList
+              data={filterCategories}
+              nestedScrollEnabled
+              style={{ height: 200 }}
+              renderItem={({ item, index }) => (
+                <Pressable
+                  key={index}
+                  style={styles.filterItem}
+                  onPress={() => {
+                    toggleFilters(item);
+                    closeFilter();
+                  }}
+                >
+                  <Text>{item}</Text>
+                </Pressable>
+              )}
+            />
+          ) : (
+            <Pressable
+              onPress={() => {
+                setExtended(true);
+                openFilter();
+              }}
+              style={{
+                height: 50,
+                alignSelf: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text>{chosenCategory}</Text>
+            </Pressable>
+          )}
+        </Animated.View>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   filterWrapper: {
-    height: 60,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-  },
-  categoryPicker: {
-    borderWidth: 1,
-    margin: 2,
-    width: "60%",
-    height: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
-    borderRadius: 10,
+    zIndex: 3,
+    overflow: "visible",
+    margin: 5,
   },
   filterText: {
     fontSize: 17,
+  },
+  filterView: {
+    position: "absolute",
+    backgroundColor: v.mainColor,
+    borderRadius: 10,
+    width: 200,
+    margin: 10,
+    zIndex: 3,
+    overflow: "visible",
+    transform: [{ translateY: -10 }],
+  },
+  filterItem: {
+    height: 50,
+    alignSelf: "center",
+    justifyContent: "center",
+  },
+  viewBack: {
+    height: 50,
+    width: 200,
+    alignItems: "center",
+    marginLeft: 10,
   },
 });

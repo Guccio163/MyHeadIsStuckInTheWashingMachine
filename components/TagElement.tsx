@@ -16,17 +16,16 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import CustomButton from "./CustomButton";
+import { useRouter } from "expo-router";
+import { varibales as v } from "../assets/globalVariables";
 
-interface Props{
-  tag: Tag
+interface Props {
+  tag: Tag;
 }
 
-export default function TagElement({
-  tag
-}: Props) {
+export default function TagElement({ tag }: Props) {
   const heightDynamic = useSharedValue(Dimensions.get("window").height * 0.13);
   const [isExtended, setExtended] = useState(false);
-  const [isEditView, setEditView] = useState(false);
 
   const handlePress = () => {
     if (isExtended) {
@@ -38,16 +37,39 @@ export default function TagElement({
     }
   };
 
-  function pressEdit() {
-    if (isEditView) {
-      heightDynamic.value -= 300;
-      setEditView(false);
-      console.log("zamknięto editView");
-    } else {
-      heightDynamic.value += 300;
-      setEditView(true);
-      console.log("otwarto editView");
+  function shortName(name: string, precision: number) {
+    if (name.length > precision) {
+      let prefix = name.slice(0, precision);
+      return `${prefix}(...)`;
     }
+    return name;
+  }
+
+  function mapIcons(icons: string[], isExtended: boolean) {
+    let newIcons = icons;
+    let isShortened = false;
+    if (icons.length > 4 && !isExtended) {
+      newIcons = icons.splice(0, 4);
+      isShortened = true;
+    }
+    return (
+      <>
+        {newIcons.map((icon, index) => (
+          <View style={styles.singleIconWrapper} key={index}>
+            <Image
+              source={tagItem(icon)?.image}
+              resizeMode="center"
+              style={styles.washIcon}
+            />
+          </View>
+        ))}
+        {isShortened ? (
+          <View style={styles.singleIconWrapper}>
+            <Text>+12</Text>
+          </View>
+        ) : null}
+      </>
+    );
   }
 
   const animatedStyles = useAnimatedStyle(() => ({
@@ -61,8 +83,10 @@ export default function TagElement({
     }),
   }));
 
+  const navi = useRouter();
+
   return (
-    <Pressable onPress={handlePress} disabled={isEditView}>
+    <Pressable onPress={handlePress}>
       <Animated.View
         key={tag.id}
         style={[
@@ -72,87 +96,85 @@ export default function TagElement({
           { paddingTop: isExtended ? 10 : 0 },
         ]}
       >
-        {!isEditView ? (
-          <>
-            <View style={styles.imageWrapper}>
-              {tag.imageUri ? (
-                <Image source={{ uri: tag.imageUri }} style={styles.image} />
-              ) : (
-                <Icon name="file-image-o" size={30} style={styles.icon} />
-              )}
-            </View>
+        <>
+          <View style={styles.imageWrapper}>
+            {tag.imageUri ? (
+              <Image source={{ uri: tag.imageUri }} style={styles.image} />
+            ) : (
+              <Icon name="file-image-o" size={30} style={styles.icon} />
+            )}
+          </View>
+          <View
+            style={[
+              styles.flatListChildInfo,
+              { justifyContent: isExtended ? "flex-start" : "center" },
+            ]}
+          >
             <View
               style={[
-                styles.flatListChildInfo,
-                { justifyContent: isExtended ? "flex-start" : "center" },
+                styles.firstRowInfo,
+                isExtended
+                  ? { flexDirection: "column" }
+                  : { flexDirection: "row" },
               ]}
             >
-              <View style={styles.firstRowInfo}>
-                <View style={styles.nameView}>
-                  <Text style={styles.nameText}>{tag.name}</Text>
-                </View>
-                <View style={styles.brandView}>
-                  <Text style={styles.brandText}>{tag.brand}</Text>
-                </View>
+              <View style={styles.nameView}>
+                <Text style={styles.nameText}>
+                  {isExtended ? tag.name : shortName(tag.name, 12)}
+                </Text>
               </View>
-              <View style={styles.secondRowInfo}>
-                <View style={styles.categoryView}>
-                  <Text style={styles.categoryText}>{tag.category}, </Text>
-                </View>
-                <View style={styles.colourView}>
-                  <Text style={styles.colourText}>{tag.colour}</Text>
-                </View>
+              <View style={styles.brandView}>
+                <Text style={styles.brandText}>
+                  {isExtended ? tag.brand : shortName(tag.brand, 10)}
+                </Text>
               </View>
-              <View style={styles.iconsWrapper}>
-                {tag.icons.map((iconName, index) => (
-                  <View style={styles.singleIconWrapper} key={index}>
-                    <Image
-                      source={tagItem(iconName)?.image}
-                      resizeMode="center"
-                      style={styles.washIcon}
-                    />
-                  </View>
-                ))}
-              </View>
-              {isExtended ? (
-                <>
-                  <View style={styles.materialsWrapper}>
-                    {tag.materials.map((material) => (
-                      <Text>
-                        {"  "}
-                        {material.percentage}% {material.name}
-                        {"  "}
-                      </Text>
-                    ))}
-                  </View>
-                  <View style={styles.notesWrapper}>
-                    {tag.notes.map((note) => (
-                      <View style={styles.singleNoteWrapper}>
-                        <Icon name="circle" size={6} style={styles.noteIcon} />
-                        <Text style={styles.note}>{note}</Text>
-                      </View>
-                    ))}
-                  </View>
-                  <CustomButton
-                    title="Edytuj"
-                    onPress={pressEdit}
-                    style={styles.editButton}
-                  />
-                </>
-              ) : null}
             </View>
-          </>
-        ) : (
-          <View>
-            <Text>editView</Text>
-            <CustomButton
-              title="Edytuj"
-              onPress={pressEdit}
-              style={styles.editButton}
-            />
-            <AddTagForm tag={tag}/>
+            <View style={styles.secondRowInfo}>
+              <View style={styles.categoryView}>
+                <Text style={styles.categoryText}>{tag.category}, </Text>
+              </View>
+              <View style={styles.colourView}>
+                <Text style={styles.colourText}>{tag.colour}</Text>
+              </View>
+            </View>
+            <View style={styles.iconsWrapper}>
+              {isExtended
+                ? mapIcons(tag.icons, true)
+                : mapIcons(tag.icons, false)}
+            </View>
+            {isExtended ? (
+              <>
+                <View style={styles.materialsWrapper}>
+                  {tag.materials.map((material) => (
+                    <Text>
+                      {"  "}
+                      {material.percentage}% {material.name}
+                      {"  "}
+                    </Text>
+                  ))}
+                </View>
+                <View style={styles.notesWrapper}>
+                  {tag.notes.map((note) => (
+                    <View style={styles.singleNoteWrapper}>
+                      <Icon name="circle" size={6} style={styles.noteIcon} />
+                      <Text style={styles.note}>{note}</Text>
+                    </View>
+                  ))}
+                </View>
+                <CustomButton
+                  title="Edytuj"
+                  onPress={() => {
+                    navi.push({
+                      pathname: "addTag",
+                      params: { tagId: `${tag.id}` },
+                    });
+                  }}
+                  style={styles.editButton}
+                />
+              </>
+            ) : null}
           </View>
-        )}
+        </>
       </Animated.View>
     </Pressable>
   );
@@ -160,13 +182,15 @@ export default function TagElement({
 
 const styles = StyleSheet.create({
   flatListChild: {
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: 10,
     marginVertical: 10,
     width: "97%",
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
+    backgroundColor: v.mainBackgroud,
     alignSelf: "center",
     alignItems: "center",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 2, height: 2 },
   },
   imageWrapper: {
     alignItems: "center",

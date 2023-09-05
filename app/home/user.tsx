@@ -1,8 +1,8 @@
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import React from "react";
-import PageTitle, { mainColor1 } from "../PageTitle";
-import UserInfoButton from "../UserInfoButton";
-import CustomButton from "../CustomButton";
+import PageTitle, { mainColor1 } from "../../components/PageTitle";
+import UserInfoButton from "../../components/UserInfoButton";
+import CustomButton from "../../components/CustomButton";
 
 export default function UserInfoPage() {
   return (
@@ -47,12 +47,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   button: {
-    height: '6%',
-    width: '70%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "6%",
+    width: "70%",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: mainColor1,
     marginVertical: 10,
     borderRadius: 10,
-  }
+  },
 });

@@ -7,7 +7,7 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
-import PageTitle from "../PageTitle";
+import PageTitle from "../../components/PageTitle";
 import tagItem from "../../functions/tagItem";
 import { icons } from "../../assets/iconsRegister";
 

@@ -1,17 +1,18 @@
 import { View, StyleSheet, Text } from "react-native";
 import React, { useState } from "react";
-import PageTitle from "../PageTitle";
+import PageTitle from "../../components/PageTitle";
 import Icon from "react-native-vector-icons/FontAwesome";
-import CustomButton from "../CustomButton";
-import { getAllKeysSetState,  getItemSetState } from "../../functions/asyncStorage";
+import CustomButton from "../../components/CustomButton";
+import {
+  getAllKeysSetState,
+  getItemSetState,
+} from "../../functions/asyncStorage";
 
 export default function FriendsPage() {
-
-  // MAINTENANCE 
+  // MAINTENANCE
   const [tagCount, setCount] = useState("?");
   const [allTags, setAllTags] = useState("?");
   const [allKeys, setAllKeys] = useState<string[]>([]);
-
 
   return (
     <View style={styles.pageWrapper}>
@@ -32,7 +33,7 @@ export default function FriendsPage() {
           style={propStyles.button}
           onPress={() => getItemSetState("tags", setAllTags)}
         />
-        {allKeys.map((element)=>(
+        {allKeys.map((element) => (
           <Text>{element}</Text>
         ))}
         <CustomButton
