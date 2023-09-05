@@ -28,11 +28,16 @@ export default function TagElement({ tag }: Props) {
   const [isExtended, setExtended] = useState(false);
 
   const handlePress = () => {
+    let changeValue =
+      100 +
+      Math.floor(tag.icons.length / 6) * 40 +
+      tag.materials.length * 40 +
+      tag.notes.length * 40;
     if (isExtended) {
-      heightDynamic.value -= 200;
+      heightDynamic.value -= changeValue;
       setExtended(false);
     } else {
-      heightDynamic.value += 200;
+      heightDynamic.value += changeValue;
       setExtended(true);
     }
   };
@@ -45,11 +50,12 @@ export default function TagElement({ tag }: Props) {
     return name;
   }
 
+  // splice cuts out part of the array!
   function mapIcons(icons: string[], isExtended: boolean) {
-    let newIcons = icons;
+    let newIcons = [...icons];
     let isShortened = false;
     if (icons.length > 4 && !isExtended) {
-      newIcons = icons.splice(0, 4);
+      newIcons = newIcons.splice(0, 4);
       isShortened = true;
     }
     return (
@@ -64,8 +70,16 @@ export default function TagElement({ tag }: Props) {
           </View>
         ))}
         {isShortened ? (
-          <View style={styles.singleIconWrapper}>
-            <Text>+12</Text>
+          <View style={[styles.singleIconWrapper]}>
+            <Text
+              style={{
+                textAlign: "center",
+                transform: [{ translateY: 5.5 }],
+              }}
+            >
+              +{icons.length - 4}
+              {"  "}
+            </Text>
           </View>
         ) : null}
       </>
@@ -120,19 +134,30 @@ export default function TagElement({ tag }: Props) {
             >
               <View style={styles.nameView}>
                 <Text style={styles.nameText}>
-                  {isExtended ? tag.name : shortName(tag.name, 12)}
+                  {tag.name
+                    ? isExtended
+                      ? tag.name
+                      : shortName(tag.name, 12)
+                    : tag.category}
                 </Text>
               </View>
-              <View style={styles.brandView}>
-                <Text style={styles.brandText}>
-                  {isExtended ? tag.brand : shortName(tag.brand, 10)}
-                </Text>
-              </View>
+              {tag.brand ? (
+                <View style={styles.brandView}>
+                  <Text style={styles.brandText}>
+                    {isExtended ? tag.brand : shortName(tag.brand, 10)}
+                  </Text>
+                </View>
+              ) : null}
             </View>
             <View style={styles.secondRowInfo}>
-              <View style={styles.categoryView}>
-                <Text style={styles.categoryText}>{tag.category}, </Text>
-              </View>
+              {tag.name ? (
+                <View style={styles.categoryView}>
+                  <Text style={styles.categoryText}>
+                    {tag.category}
+                    {tag.colour ? ", " : null}
+                  </Text>
+                </View>
+              ) : null}
               <View style={styles.colourView}>
                 <Text style={styles.colourText}>{tag.colour}</Text>
               </View>
@@ -147,17 +172,25 @@ export default function TagElement({ tag }: Props) {
                 <View style={styles.materialsWrapper}>
                   {tag.materials.map((material) => (
                     <Text>
-                      {"  "}
-                      {material.percentage}% {material.name}
-                      {"  "}
+                      {material.percentage
+                        ? `    ${material.percentage}% ${material.name}    `
+                        : ""}
                     </Text>
                   ))}
                 </View>
                 <View style={styles.notesWrapper}>
                   {tag.notes.map((note) => (
                     <View style={styles.singleNoteWrapper}>
-                      <Icon name="circle" size={6} style={styles.noteIcon} />
-                      <Text style={styles.note}>{note}</Text>
+                      {note ? (
+                        <>
+                          <Icon
+                            name="circle"
+                            size={6}
+                            style={styles.noteIcon}
+                          />
+                          <Text style={styles.note}>{note}</Text>
+                        </>
+                      ) : null}
                     </View>
                   ))}
                 </View>
@@ -236,15 +269,18 @@ const styles = StyleSheet.create({
   colourText: {},
   iconsWrapper: {
     flexDirection: "row",
+    maxWidth: "100%",
+    flexWrap: "wrap",
+    justifyContent: "center",
   },
   singleIconWrapper: {
     margin: 4,
-    backgroundColor: "rgba(255, 243, 61, 0.55)",
-    borderWidth: 1,
+    backgroundColor: v.mainColorHalfTransparent,
+    borderWidth: 1.5,
     borderRadius: 10,
-    borderBlockColor: "rgba(255, 243, 61, 0.9)",
-    borderLeftColor: "rgba(255, 243, 61, 0.9)",
-    borderRightColor: "rgba(255, 243, 61, 0.9)",
+    borderBlockColor: v.mainColor,
+    borderLeftColor: v.mainColor,
+    borderRightColor: v.mainColor,
   },
   washIcon: {
     margin: 4,

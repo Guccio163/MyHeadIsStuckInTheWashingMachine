@@ -121,6 +121,8 @@ const styles = StyleSheet.create({
     zIndex: 3,
     overflow: "visible",
     transform: [{ translateY: -10 }],
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 1, height: 1 },
   },
   filterItem: {
     height: 50,
