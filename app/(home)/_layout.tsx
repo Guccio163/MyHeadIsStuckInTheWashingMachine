@@ -1,14 +1,16 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import React from "react";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import NavBarIcon from "../../components/NavBarIcon";
 import { variables as v } from "../../assets/globalVariables";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useRoute } from "@react-navigation/native";
 
 export default function chuj() {
+  const navi = useRouter()
   return (
     <Tabs
       sceneContainerStyle={styles.tabs}
@@ -17,26 +19,39 @@ export default function chuj() {
         headerStyle: styles.headerStyle,
         headerRight: () => (
           <View style={{ height: 45, width: 45, paddingRight: 8 }}>
-            <View style={(styles.userImageWrapper)}>
-              <FontAwesome name="user" size={30} color={v.mainBackgroud} />
+            <View
+              style={[
+                styles.userImageWrapper,
+                {
+                  borderWidth: 0.5,
+                  borderBlockColor: v.mainBackgroud,
+                  borderLeftColor: v.mainBackgroud,
+                  borderRightColor: v.mainBackgroud,
+                  backgroundColor: "rgba(180,180,180,1)",
+                },
+              ]}
+            >
+              <FontAwesome
+                name="user"
+                size={30}
+                color={"rgba(120,120,120,1)"}
+              />
             </View>
           </View>
         ),
         headerLeft: () => (
           <View style={{ height: 45, width: 45, paddingLeft: 8 }}>
-            <View style={styles.userImageWrapper}>
+            <Pressable style={styles.userImageWrapper} onPress={()=>navi.push('user')}>
               <Ionicons
                 name="settings-sharp"
                 size={24}
                 color={v.mainBackgroud}
               />
-            </View>
+            </Pressable>
           </View>
         ),
       }}
     >
-          
-
       <Tabs.Screen
         name="friends"
         options={{
