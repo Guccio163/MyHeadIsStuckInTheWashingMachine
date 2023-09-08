@@ -8,14 +8,13 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { categories } from "./addTagPanel/AddTagForm";
-import { Picker } from "@react-native-picker/picker";
 import { FlatList } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { varibales as v } from "../assets/globalVariables";
+import { variables as v } from "../assets/globalVariables";
 
 interface Props {
   chosenCategory: string;
@@ -87,7 +86,9 @@ export default function FilterCategory({ chosenCategory, setCategory }: Props) {
               }}
               style={{
                 height: 50,
+                width: "100%",
                 alignSelf: "center",
+                alignItems: 'center',
                 justifyContent: "center",
               }}
             >
@@ -126,8 +127,11 @@ const styles = StyleSheet.create({
   },
   filterItem: {
     height: 50,
-    alignSelf: "center",
+    // alignSelf: "center",
+    alignItems: 'center',
     justifyContent: "center",
+    // backgroundColor: "yellow",
+    width: '100%',
   },
   viewBack: {
     height: 50,

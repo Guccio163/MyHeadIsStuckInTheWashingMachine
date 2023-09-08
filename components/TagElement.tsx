@@ -5,19 +5,24 @@ import {
   Dimensions,
   Image,
   Pressable,
+  Button,
 } from "react-native";
-import React, { useState } from "react";
-import AddTagForm, { Tag } from "./addTagPanel/AddTagForm";
+import React, { Component, RefObject, useState } from "react";
+import { Tag } from "./addTagPanel/AddTagForm";
 import tagItem from "../functions/tagItem";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import CustomButton from "./CustomButton";
 import { useRouter } from "expo-router";
-import { varibales as v } from "../assets/globalVariables";
+import { variables as v } from "../assets/globalVariables";
+import { Swipeable } from "react-native-gesture-handler";
+import { removeTag } from "../functions/asyncStorage";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 interface Props {
   tag: Tag;
@@ -26,20 +31,58 @@ interface Props {
 export default function TagElement({ tag }: Props) {
   const heightDynamic = useSharedValue(Dimensions.get("window").height * 0.13);
   const [isExtended, setExtended] = useState(false);
+  const marginDynamic = useSharedValue(10);
+  const opacityDynamic = useSharedValue(1);
 
   const handlePress = () => {
     let changeValue =
       100 +
-      Math.floor(tag.icons.length / 6) * 40 +
+      Math.floor((tag.icons.length - 1) / 6) * 40 +
       tag.materials.length * 40 +
       tag.notes.length * 40;
     if (isExtended) {
       heightDynamic.value -= changeValue;
       setExtended(false);
+      console.log(changeValue);
     } else {
       heightDynamic.value += changeValue;
       setExtended(true);
+      console.log(changeValue);
     }
+  };
+
+  const handleDelete = (tagId: string) => {
+    translateX.value = withTiming(-Dimensions.get("window").width);
+    opacityDynamic.value = withTiming(0, undefined, () => {
+      heightDynamic.value = 0;
+      marginDynamic.value = 0;
+      removeTag(tagId);
+    });
+  };
+
+  const renderRightActions = (tagId: string) => {
+    return (
+      <Animated.View
+        style={[
+          {
+            margin: 0,
+            alignContent: "center",
+            justifyContent: "center",
+            width: "30%",
+          },
+          animatedOpacity,
+        ]}
+      >
+        <Pressable
+          style={{ alignContent: "center", alignSelf: "center" }}
+          onPress={() => {
+            handleDelete(tagId);
+          }}
+        >
+          <FontAwesome5 name={"trash-alt"} size={25} color={"red"} />
+        </Pressable>
+      </Animated.View>
+    );
   };
 
   function shortName(name: string, precision: number) {
@@ -97,119 +140,151 @@ export default function TagElement({ tag }: Props) {
     }),
   }));
 
+  const animatedMargin = useAnimatedStyle(() => ({
+    marginVertical: withSpring(marginDynamic.value, {
+      mass: 10,
+      damping: 1000,
+      stiffness: 1000,
+      overshootClamping: false,
+      restDisplacementThreshold: 0.01,
+      restSpeedThreshold: 2,
+    }),
+  }));
+
+  const animatedOpacity = useAnimatedStyle(() => ({
+    opacity: opacityDynamic.value,
+  }));
+
   const navi = useRouter();
+  const translateX = useSharedValue(0);
+
+  const rStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
 
   return (
-    <Pressable onPress={handlePress}>
-      <Animated.View
-        key={tag.id}
-        style={[
-          styles.flatListChild,
-          animatedStyles,
-          { flexDirection: isExtended ? "column" : "row" },
-          { paddingTop: isExtended ? 10 : 0 },
-        ]}
-      >
-        <>
-          <View style={styles.imageWrapper}>
-            {tag.imageUri ? (
-              <Image source={{ uri: tag.imageUri }} style={styles.image} />
-            ) : (
-              <Icon name="file-image-o" size={30} style={styles.icon} />
-            )}
-          </View>
-          <View
+    <Animated.View
+      style={[
+        animatedStyles,
+        animatedMargin,
+        { shadowOpacity: 0.3, shadowOffset: { width: 2, height: 2 } },
+      ]}
+    >
+      <Swipeable renderRightActions={() => renderRightActions(tag.id)}>
+        <Pressable onPress={handlePress}>
+          <Animated.View
+            key={tag.id}
             style={[
-              styles.flatListChildInfo,
-              { justifyContent: isExtended ? "flex-start" : "center" },
+              styles.flatListChild,
+              animatedStyles,
+              rStyle,
+              { flexDirection: isExtended ? "column" : "row" },
+              { paddingTop: isExtended ? 10 : 0 },
             ]}
           >
-            <View
-              style={[
-                styles.firstRowInfo,
-                isExtended
-                  ? { flexDirection: "column" }
-                  : { flexDirection: "row" },
-              ]}
-            >
-              <View style={styles.nameView}>
-                <Text style={styles.nameText}>
-                  {tag.name
-                    ? isExtended
-                      ? tag.name
-                      : shortName(tag.name, 12)
-                    : tag.category}
-                </Text>
+            <>
+              <View style={styles.imageWrapper}>
+                {tag.imageUri ? (
+                  <Image source={{ uri: tag.imageUri }} style={styles.image} />
+                ) : (
+                  <Icon name="file-image-o" size={30} style={styles.icon} />
+                )}
               </View>
-              {tag.brand ? (
-                <View style={styles.brandView}>
-                  <Text style={styles.brandText}>
-                    {isExtended ? tag.brand : shortName(tag.brand, 10)}
-                  </Text>
-                </View>
-              ) : null}
-            </View>
-            <View style={styles.secondRowInfo}>
-              {tag.name ? (
-                <View style={styles.categoryView}>
-                  <Text style={styles.categoryText}>
-                    {tag.category}
-                    {tag.colour ? ", " : null}
-                  </Text>
-                </View>
-              ) : null}
-              <View style={styles.colourView}>
-                <Text style={styles.colourText}>{tag.colour}</Text>
-              </View>
-            </View>
-            <View style={styles.iconsWrapper}>
-              {isExtended
-                ? mapIcons(tag.icons, true)
-                : mapIcons(tag.icons, false)}
-            </View>
-            {isExtended ? (
-              <>
-                <View style={styles.materialsWrapper}>
-                  {tag.materials.map((material) => (
-                    <Text>
-                      {material.percentage
-                        ? `    ${material.percentage}% ${material.name}    `
-                        : ""}
+              <View
+                style={[
+                  styles.flatListChildInfo,
+                  { justifyContent: isExtended ? "flex-start" : "center" },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.firstRowInfo,
+                    isExtended
+                      ? { flexDirection: "column" }
+                      : { flexDirection: "row" },
+                  ]}
+                >
+                  <View style={styles.nameView}>
+                    <Text style={styles.nameText}>
+                      {tag.name
+                        ? isExtended
+                          ? tag.name
+                          : shortName(tag.name, 12)
+                        : tag.category}
                     </Text>
-                  ))}
-                </View>
-                <View style={styles.notesWrapper}>
-                  {tag.notes.map((note) => (
-                    <View style={styles.singleNoteWrapper}>
-                      {note ? (
-                        <>
-                          <Icon
-                            name="circle"
-                            size={6}
-                            style={styles.noteIcon}
-                          />
-                          <Text style={styles.note}>{note}</Text>
-                        </>
-                      ) : null}
+                  </View>
+                  {tag.brand ? (
+                    <View style={styles.brandView}>
+                      <Text style={styles.brandText}>
+                        {isExtended ? tag.brand : shortName(tag.brand, 10)}
+                      </Text>
                     </View>
-                  ))}
+                  ) : null}
                 </View>
-                <CustomButton
-                  title="Edytuj"
-                  onPress={() => {
-                    navi.push({
-                      pathname: "addTag",
-                      params: { tagId: `${tag.id}` },
-                    });
-                  }}
-                  style={styles.editButton}
-                />
-              </>
-            ) : null}
-          </View>
-        </>
-      </Animated.View>
-    </Pressable>
+                <View style={styles.secondRowInfo}>
+                  {tag.name ? (
+                    <View style={styles.categoryView}>
+                      <Text style={styles.categoryText}>
+                        {tag.category}
+                        {tag.colour ? ", " : null}
+                      </Text>
+                    </View>
+                  ) : null}
+                  <View style={styles.colourView}>
+                    <Text style={styles.colourText}>{tag.colour}</Text>
+                  </View>
+                </View>
+                <View style={styles.iconsWrapper}>
+                  {isExtended
+                    ? mapIcons(tag.icons, true)
+                    : mapIcons(tag.icons, false)}
+                </View>
+                {isExtended ? (
+                  <>
+                    <View style={styles.materialsWrapper}>
+                      {tag.materials.map((material, index) => (
+                        <Text key={index}>
+                          {material.percentage
+                            ? `    ${material.percentage}% ${material.name}    `
+                            : ""}
+                        </Text>
+                      ))}
+                    </View>
+                    <View style={styles.notesWrapper}>
+                      {tag.notes.map((note, index) => (
+                        <View style={styles.singleNoteWrapper} key={index}>
+                          {note ? (
+                            <>
+                              <Icon
+                                name="circle"
+                                size={6}
+                                style={styles.noteIcon}
+                              />
+                              <Text style={styles.note}>{note}</Text>
+                            </>
+                          ) : null}
+                        </View>
+                      ))}
+                    </View>
+                    <CustomButton
+                      title="Edytuj"
+                      onPress={() => {
+                        navi.push({
+                          pathname: "addTagPanel",
+                          params: { tagId: `${tag.id}` },
+                        });
+                        handlePress();
+                      }}
+                      style={styles.editButton}
+                    />
+                  </>
+                ) : null}
+              </View>
+            </>
+          </Animated.View>
+        </Pressable>
+      </Swipeable>
+    </Animated.View>
   );
 }
 
@@ -217,13 +292,11 @@ const styles = StyleSheet.create({
   flatListChild: {
     // borderWidth: 1,
     borderRadius: 10,
-    marginVertical: 10,
+    // marginVertical: 10,
     width: "97%",
     backgroundColor: v.mainBackgroud,
     alignSelf: "center",
     alignItems: "center",
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 2, height: 2 },
   },
   imageWrapper: {
     alignItems: "center",

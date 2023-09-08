@@ -114,7 +114,7 @@ export const getTagSetState = async (setState: (arg0: Tag) => void, tagId: strin
     const result = await getItem("tags");
     if (result != null) {
       let resultParsed = JSON.parse(result);
-      let resultTag = resultParsed[parseInt(tagId)]
+      let resultTag = resultParsed.filter((e: { id: string }) => e.id == tagId)[0];
       setState(resultTag);
     }
   } catch (e) {

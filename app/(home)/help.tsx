@@ -7,9 +7,8 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
-import PageTitle from "../../components/PageTitle";
 import tagItem from "../../functions/tagItem";
-import { icons } from "../../assets/iconsRegister";
+import { iconCategories as icons } from "../../assets/iconsRegister";
 
 export default function LoremScroll() {
   let sectionsArray = Array.from({ length: icons.length }, () => 0);
@@ -28,7 +27,6 @@ export default function LoremScroll() {
 
   return (
     <View style={{ width: "100%", height: "100%" }}>
-      {/* <PageTitle name="Pomoc" /> */}
       <SectionList
         showsVerticalScrollIndicator={false}
         sections={icons}
@@ -50,7 +48,7 @@ export default function LoremScroll() {
           );
         }}
         renderSectionHeader={({
-          section: { index, section, sectionHeaderImage },
+          section: { index, sectionName, sectionHeaderImage },
         }) => (
           <Pressable
             onPress={() => handleClick(index)}
@@ -65,7 +63,7 @@ export default function LoremScroll() {
               source={tagItem(sectionHeaderImage)?.image}
               style={styles.sectionItemImage}
             />
-            <Text style={styles.sectionHeaderText}>{section}</Text>
+            <Text style={styles.sectionHeaderText}>{sectionName}</Text>
           </Pressable>
         )}
       />

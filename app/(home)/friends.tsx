@@ -1,25 +1,28 @@
 import { View, StyleSheet, Text } from "react-native";
 import React, { useState } from "react";
-import PageTitle from "../../components/PageTitle";
 import Icon from "react-native-vector-icons/FontAwesome";
 import CustomButton from "../../components/CustomButton";
 import {
   getAllKeysSetState,
   getItemSetState,
+  getTagsSetState,
 } from "../../functions/asyncStorage";
+import { FlatList } from "react-native-gesture-handler";
+import { Tag } from "../../components/addTagPanel/AddTagForm";
+import IconsPanel from "../../components/addTagPanel/formComponents/IconsPanel";
 
 export default function FriendsPage() {
   // MAINTENANCE
   const [tagCount, setCount] = useState("?");
-  const [allTags, setAllTags] = useState("?");
+  const [allTags, setAllTags] = useState<Tag[]>([]);
   const [allKeys, setAllKeys] = useState<string[]>([]);
 
   return (
     <View style={styles.pageWrapper}>
-      {/* <PageTitle name="Friends List" /> */}
       <View style={styles.friendList}>
         <Icon name="lock" size={60} color="black" />
         <Text style={styles.altText}>Soon !</Text>
+
         {/* COMPONENTS FOR MAINTENANCE REASONS: */}
         <Text>current tag count: {tagCount}</Text>
         <CustomButton
@@ -27,20 +30,36 @@ export default function FriendsPage() {
           style={propStyles.button}
           onPress={() => getItemSetState("tagCount", setCount)}
         />
-        <Text>{allTags}</Text>
-        <CustomButton
-          title="set all tags"
-          style={propStyles.button}
-          onPress={() => getItemSetState("tags", setAllTags)}
-        />
-        {allKeys.map((element) => (
-          <Text>{element}</Text>
-        ))}
+        {allTags ? (
+          <FlatList
+            data={allTags}
+            nestedScrollEnabled
+            horizontal
+            style={{ maxHeight: 20 }}
+            renderItem={({ item, index }) => (
+              <Text key={index}>
+                {item.id}
+                {"  "}
+              </Text>
+            )}
+          />
+        ) : (
+          <Text>?</Text>
+        )}
         <CustomButton
           title="see all tags"
           style={propStyles.button}
+          onPress={() => getTagsSetState(setAllTags)}
+        />
+        {allKeys.map((element, index) => (
+          <Text key={index}>{element}</Text>
+        ))}
+        <CustomButton
+          title="see all keys"
+          style={propStyles.button}
           onPress={() => getAllKeysSetState(setAllKeys)}
         />
+        {/* <IconsPanel/> */}
       </View>
     </View>
   );

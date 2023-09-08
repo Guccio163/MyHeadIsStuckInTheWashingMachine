@@ -1,8 +1,14 @@
+export type iconCategory = {
+  index: number;
+  sectionName: string;
+  sectionHeaderImage: string;
+  data: string[];
+};
 
-export const icons = [
+export const iconCategories:iconCategory[] = [
   {
     index: 0,
-    section: "Wash",
+    sectionName: "Wash",
     sectionHeaderImage: "wash_30",
     data: [
       "wash_machine",
@@ -26,7 +32,7 @@ export const icons = [
   },
   {
     index: 1,
-    section: "Iron",
+    sectionName: "Iron",
     sectionHeaderImage: "iron_medium",
     data: [
       "iron",
@@ -39,7 +45,7 @@ export const icons = [
   },
   {
     index: 2,
-    section: "Dry",
+    sectionName: "Dry",
     sectionHeaderImage: "dry_machine",
     data: [
       "dry",
@@ -60,7 +66,7 @@ export const icons = [
   },
   {
     index: 3,
-    section: "Clean",
+    sectionName: "Clean",
     sectionHeaderImage: "clean_dry_not",
     data: [
       "clean_dry",
@@ -74,7 +80,7 @@ export const icons = [
   },
   {
     index: 4,
-    section: "Bleach",
+    sectionName: "Bleach",
     sectionHeaderImage: "bleach",
     data: [
       "bleach",
@@ -86,7 +92,7 @@ export const icons = [
   },
   {
     index: 5,
-    section: "Others",
+    sectionName: "Others",
     sectionHeaderImage: "",
     data: [
       "heat_low",
@@ -101,7 +107,7 @@ export const icons = [
 export const iconsInRows = [
   {
     index: 0,
-    section: "Wash",
+    sectionName: "Wash",
     sectionHeaderImage: "wash_30",
     data: [
       [
@@ -117,7 +123,7 @@ export const iconsInRows = [
   },
   {
     index: 1,
-    section: "Iron",
+    sectionName: "Iron",
     sectionHeaderImage: "iron_medium",
     data: [
       [
@@ -132,7 +138,7 @@ export const iconsInRows = [
   },
   {
     index: 2,
-    section: "Dry",
+    sectionName: "Dry",
     sectionHeaderImage: "dry_machine",
     data: [
       ["dry", "dry_not", "dry_hang", "dry_drip", "dry_flat", "dry_shade"],
@@ -152,7 +158,7 @@ export const iconsInRows = [
   },
   {
     index: 3,
-    section: "Clean",
+    sectionName: "Clean",
     sectionHeaderImage: "clean_dry_not",
     data: [
       ["clean_dry", "clean_dry_not", "clean_wet_not"],
@@ -161,7 +167,7 @@ export const iconsInRows = [
   },
   {
     index: 4,
-    section: "Bleach",
+    sectionName: "Bleach",
     sectionHeaderImage: "bleach",
     data: [
       [
@@ -175,7 +181,7 @@ export const iconsInRows = [
   },
   {
     index: 5,
-    section: "Others",
+    sectionName: "Others",
     sectionHeaderImage: "",
     data: [
       ["heat_low", "reduced_moisture", "short_cycle", "steam_not", "wring_not"],

@@ -1,10 +1,9 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import TagsPage from '../components/mainPages/TagsPage'
-import { Link, Redirect } from 'expo-router'
+// import React from "react";
+// import { Text } from "react-native";
+// import { Redirect } from "expo-router";
+// import "expo-router/entry";
 
-export default function index() {
-  return (
-    <Redirect href={'/home/tags'}></Redirect>
-  )
-}
+
+// export default function index() {
+//   return <Redirect href={"/home/tags"} />;
+// }

@@ -6,35 +6,24 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import React from "react";
-import { SharedValue, withSpring } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { mainColor1 } from "../PageTitle";
-import FormSample from "./AddTagForm";
+import FormSample from "../components/addTagPanel/AddTagForm";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { variables as v } from "../assets/globalVariables";
 
-interface Props {
-  translateYValue: SharedValue<number>;
-  rotateOnClose: () => void;
-}
+export default function AddTagPanel() {
+  const navi = useRouter();
 
-export default function AddTagPanel({ translateYValue, rotateOnClose }: Props) {
-  const hidePanel = () => {
-    translateYValue.value = withSpring(Dimensions.get("window").height);
-  };
+  const { tagId } = useLocalSearchParams<{ tagId: string }>();
 
   return (
     <View style={styles.panelWrapper}>
-      <Pressable
-        style={styles.closePanelButton}
-        onPress={() => {
-          hidePanel();
-          rotateOnClose();
-        }}
-      >
+      <Pressable style={styles.closePanelButton} onPress={navi.back}>
         <Icon name="chevron-down" size={30} color="black" />
       </Pressable>
-      <View style={styles.addTagForm}>
+      <View style={styles.addTagFormWrapper}>
         <KeyboardAvoidingView enabled behavior="padding">
-          <FormSample />
+          <FormSample tagId={tagId}/>
         </KeyboardAvoidingView>
       </View>
     </View>
@@ -45,8 +34,7 @@ const styles = StyleSheet.create({
   panelWrapper: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
-    backgroundColor: mainColor1,
-    borderRadius: 40,
+    backgroundColor: v.mainColor,
     position: "absolute",
   },
   closePanelButton: {
@@ -56,7 +44,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  addTagForm: {
+  addTagFormWrapper: {
     alignItems: "center",
   },
 });

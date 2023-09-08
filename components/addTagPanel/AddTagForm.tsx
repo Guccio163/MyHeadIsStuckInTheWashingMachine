@@ -3,12 +3,12 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import NotesInput from "./formComponents/NotesInput";
 import MaterialsInput from "./formComponents/MaterialsInput";
 import CustomButton from "../CustomButton";
-import IconsInput from "./formComponents/IconsInput";
 import ImageInput from "./formComponents/ImageInput";
 import {
   addTag,
@@ -18,6 +18,7 @@ import {
 } from "../../functions/asyncStorage";
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import IconsPanel from "./formComponents/IconsPanel";
 
 export type Tag = {
   id: string;
@@ -153,7 +154,7 @@ export default function AddTagForm({ tagId }: Props) {
           keyboardType="default"
         />
 
-        <IconsInput
+        <IconsPanel
           onIconPress={(name: string) => handleIconClick(name)}
           icons={icons}
         />
@@ -206,8 +207,8 @@ export default function AddTagForm({ tagId }: Props) {
           style={propStyles.button}
           onPress={
             tagId
-              ? () => {
-                  editTagInDB({
+              ? async () => {
+                  await editTagInDB({
                     id: id,
                     imageUri: image,
                     name: name,
@@ -238,19 +239,19 @@ export default function AddTagForm({ tagId }: Props) {
                 }
           }
         />
+        {tagId ? (
+          <CustomButton
+            title="DELETE TAG"
+            style={[propStyles.button, propStyles.deleteButton]}
+            onPress={() => console.log("usuń")}
+          />
+        ) : null}
 
         {/* <CustomButton
-          title="set tagCount (for maintenance)"
-          style={propStyles.button}
-          onPress={() => addItemToDB("tagCount", "0")}
-        /> */}
-
-        <CustomButton
           title="custom button (for maintenance)"
           style={propStyles.button}
           onPress={() => removeTag("7")}
-        />
-        {/* <View style={{ height: 5 }} ></View> */}
+        /> */}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -278,10 +279,18 @@ const propStyles = StyleSheet.create({
     borderBlockColor: "black",
     borderWidth: 1,
     height: 30,
-    width: "auto",
+    width: Dimensions.get("window").width - 75,
     alignItems: "center",
+    alignSelf: "center",
     justifyContent: "center",
     borderRadius: 10,
     margin: 3,
+  },
+  deleteButton: {
+    borderWidth: 1.5,
+    backgroundColor: "rgba(240, 0, 0, 1)",
+    borderBlockColor: "rgba(240, 0, 0, 1)",
+    borderLeftColor: "rgba(240, 0, 0, 1)",
+    borderRightColor: "rgba(240, 0, 0, 1)",
   },
 });

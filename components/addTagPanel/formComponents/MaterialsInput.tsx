@@ -25,7 +25,7 @@ export default function MaterialsInput({
   };
 
   return (
-    <View>
+    <View style={{alignSelf: 'center'}}>
       {materials.map((elem, index) => (
         <View key={index}>
           <View style={{ flexDirection: "row" }}>
@@ -36,7 +36,7 @@ export default function MaterialsInput({
               placeholder="0"
               keyboardType="numeric"
             />
-            <Text style={{ fontSize: 20, textAlignVertical: "center" }}>%</Text>
+            <Text style={{ fontSize: 20, lineHeight: 60, marginRight: 12}}>%</Text>
             <TextInput
               style={[styles.input, styles.materialInput]}
               onChangeText={(text) => changeMaterial(text, index)}
@@ -63,16 +63,18 @@ export default function MaterialsInput({
 const styles = StyleSheet.create({
   input: {
     height: 40,
-    margin: 12,
+    marginRight: 12,
+    marginVertical: 12,
+    // marginLeft: 10,
     borderWidth: 1,
     padding: 10,
     borderRadius: 10,
   },
   percentageInput: {
-    width: 40,
+    width: 46,
   },
   materialInput: {
-    width: Dimensions.get("window").width - 210,
+    width: Dimensions.get("window").width - 220,
   },
 });
 
@@ -86,7 +88,7 @@ const propStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
-    margin: 3,
+    // margin: 3,
     marginTop: 10.5,
     marginBottom: 10.5,
   },

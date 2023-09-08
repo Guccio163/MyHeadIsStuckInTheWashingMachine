@@ -28,8 +28,9 @@ export default function NotesInput({ notes, onChangeNotes }: Props) {
           />
           <CustomButton
             onPress={() => {
-              let newNotes = notes.filter((e) => e !== elem);
-              onChangeNotes(newNotes);
+              let prefix = notes.splice(0, index);
+              let suffix = notes.slice(1);
+              onChangeNotes(prefix.concat(suffix));
             }}
             title="-"
             style={myStyles.button}
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    width: Dimensions.get("window").width - 140,
+    width: Dimensions.get("window").width - 153,
     borderRadius: 10,
   },
   noteRow: {

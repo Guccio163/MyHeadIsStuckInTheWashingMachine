@@ -1,20 +1,16 @@
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import React from "react";
-import PageTitle, { mainColor1 } from "../../components/PageTitle";
-import UserInfoButton from "../../components/UserInfoButton";
-import CustomButton from "../../components/CustomButton";
+import PageTitle, { mainColor1 } from "../components/PageTitle";
+import CustomButton from "../components/CustomButton";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function UserInfoPage() {
   return (
-    <>
-      {/* <PageTitle name="UserInfo" /> */}
-      <Image
-        source={require("../../assets/blank-profile-picture-973460_1280.webp")}
-        style={styles.blankUserImage}
-        resizeMode="center"
-      />
+    <View style={{alignItems: 'center', justifyContent: 'center', height: '100%', display: 'none'}}>
+      <View style={styles.userImageWrapper}>
+        <FontAwesome name="user" size={150} color={mainColor1} />
+      </View>
 
-      <Text>UserInfoPage</Text>
       <CustomButton
         title="Settings"
         onPress={() => console.log("miał")}
@@ -32,22 +28,35 @@ export default function UserInfoPage() {
       />
 
       <View style={{ maxHeight: "100%" }}></View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  blankUserImage: {
-    borderWidth: 1,
-    margin: 6,
+  userImageWrapper: {
     width: 200,
     height: 200,
+    borderWidth: 1,
+    alignSelf: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+    overflow: 'hidden',
+    margin: 20
+  },
+  blankUserImage: {
+    // borderWidth: 1,
+    // margin: 6,
+    width: 100,
+    height: 100,
     borderRadius: 100,
     backgroundColor: "transparent",
     alignSelf: "center",
+    transform: [{ scaleX: 1 }, { scaleY: 1 }, { translateY: 2 }],
+    overflow: "hidden",
   },
   button: {
-    height: "6%",
+    height: "7%",
     width: "70%",
     alignItems: "center",
     justifyContent: "center",
