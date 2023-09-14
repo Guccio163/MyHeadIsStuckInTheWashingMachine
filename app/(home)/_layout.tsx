@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import React from "react";
+import { View, Text, StyleSheet, Pressable, Image } from "react-native";
+import React, { useContext, useEffect } from "react";
 import { Tabs, useRouter } from "expo-router";
 import NavBarIcon from "../../components/NavBarIcon";
 import { variables as v } from "../../assets/globalVariables";
@@ -8,9 +8,26 @@ import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useRoute } from "@react-navigation/native";
+import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
+import UserInfoPage from "../user";
+import { getUserInfoSetState } from "../../functions/asyncStorage";
 
 export default function chuj() {
-  const navi = useRouter()
+  const navi = useRouter();
+  const {
+    userName,
+    setUserName,
+    userPassword,
+    setUserPassword,
+    userImage,
+    setUserImage,
+  } = useContext(UserInfoContext);
+
+  useEffect(() => {
+    getUserInfoSetState(setUserName, setUserPassword, setUserImage);
+    console.log("ACTUALISING...");
+  }, []);
+
   return (
     <Tabs
       sceneContainerStyle={styles.tabs}
@@ -30,19 +47,26 @@ export default function chuj() {
                   backgroundColor: "rgba(180,180,180,1)",
                 },
               ]}
-              onPress={()=>navi.push('user')}
+              onPress={() => navi.push("user")}
             >
-              <FontAwesome
-                name="user"
-                size={30}
-                color={"rgba(120,120,120,1)"}
-              />
+              {userImage ? (
+                <Image source={{ uri: userImage }} style={styles.image} />
+              ) : (
+                <FontAwesome
+                  name="user"
+                  size={30}
+                  color={"rgba(120,120,120,1)"}
+                />
+              )}
             </Pressable>
           </View>
         ),
         headerLeft: () => (
           <View style={{ height: 45, width: 45, paddingLeft: 8 }}>
-            <Pressable style={styles.userImageWrapper} onPress={()=>navi.push('settings')}>
+            <Pressable
+              style={styles.userImageWrapper}
+              onPress={() => navi.push("settings")}
+            >
               <Ionicons
                 name="settings-sharp"
                 size={24}
@@ -110,4 +134,17 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   settingsPressable: {},
+  image: {
+    // height: 100,
+    // width: 100,
+    // borderRadius: 10,
+    // alignSelf: "center",
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    backgroundColor: "transparent",
+    alignSelf: "center",
+    // transform: [{ scaleX: 1 }, { scaleY: 1 }, { translateY: 2 }],
+    overflow: "hidden",
+  },
 });

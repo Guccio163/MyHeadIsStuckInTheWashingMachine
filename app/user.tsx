@@ -10,14 +10,25 @@ import LoginPanel from "../components/userPanels/LoginPanel";
 import EditPanel from "../components/userPanels/EditPanel";
 import RegisterPanel from "../components/userPanels/RegisterPanel";
 import { getUserInfo, getUserInfoSetState } from "../functions/asyncStorage";
+import UserInfoContextProvider, { UserInfoContext } from "../contexts/UserInfoContextProvider";
+import ProfilePicInput from "../components/ProfilePicInput";
 
 export default function UserInfoPage() {
   const [isLogged, setLogged] = useState(false);
   const [isChanging, setChanging] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [userPassword, setUserPassword] = useState("");
+  // const [userName, setUserName] = useState("");
+  // const [userPassword, setUserPassword] = useState("");
   const [isInputting, setInputting] = useState(false);
+
+  const {
+    userName,
+    setUserName,
+    userPassword,
+    setUserPassword,
+    userImage,
+    setUserImage
+  } = useContext(UserInfoContext);
 
   const data = {
     setLogged: setLogged,
@@ -28,7 +39,8 @@ export default function UserInfoPage() {
 
   async function myFunction() {
     try {
-      getUserInfoSetState(setUserName, setUserPassword, userName, userPassword);
+      getUserInfoSetState(setUserName, setUserPassword, setUserImage);
+
     } catch {
     } finally {
       console.log("[UserInfoPage]: ", userName, userPassword);
@@ -45,9 +57,11 @@ export default function UserInfoPage() {
     }
   }
 
+
   useEffect(() => {
     if (!isInputting) myFunction();
-  }, [userName, userPassword]);
+    console.log('ACTUALISING...')
+  }, [userName, userPassword, userImage]);
 
   return (
     <UserContext.Provider
@@ -56,12 +70,6 @@ export default function UserInfoPage() {
         setChanging: setChanging,
         isLoading: isLoading,
         setLoading: setLoading,
-        userName: userName,
-        setUserName: setUserName,
-        // userEmail: userEmail,
-        // setUserEmail:setUserEmail,
-        userPassword: userPassword,
-        setUserPassword: setUserPassword,
         isInputting: isInputting,
         setInputting: setInputting,
         styles: styles,
@@ -74,9 +82,10 @@ export default function UserInfoPage() {
           height: "100%",
         }}
       >
-        <View style={styles.userImageWrapper}>
+        {/* <View style={styles.userImageWrapper}>
           <FontAwesome name="user" size={150} color={mainColor1} />
-        </View>
+        </View> */}
+          <ProfilePicInput image={userImage} setImage={setUserImage}/>
         {isLogged ? (
           <>{isChanging ? <EditPanel /> : <LoggedPanel />}</>
         ) : (
@@ -148,14 +157,13 @@ export const UserContext = createContext({
   setChanging: (_arg0: boolean) => console.log("edit"),
   isLoading: false,
   setLoading: (_arg0: boolean) => console.log("load"),
-  userName: "username",
-  setUserName: (_arg0: string) => console.log("username"),
+  // userName: "username",
+  // setUserName: (_arg0: string) => console.log("username"),
   // userEmail: "useremail",
   // setUserEmail: (arg0: string) => console.log("useremail"),
-  userPassword: "userpassword",
-  setUserPassword: (_arg0: string) => console.log("userpassword"),
+  // userPassword: "userpassword",
+  // setUserPassword: (_arg0: string) => console.log("userpassword"),
   isInputting: false,
   setInputting: (_arg0: boolean) => console.log("inputting"),
-
   styles: styles,
 });

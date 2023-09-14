@@ -17,25 +17,47 @@ export async function addUserInfo(
   object: {
     username: string;
     password: string;
-  },
+  }
   // setBuffering: (arg0: boolean) => void
 ) {
   try {
-    const userInfoArray = await getItem("userInfo");
+    const userInfo = await getItem("userInfo");
 
-    if (userInfoArray == null) {
+    if (userInfo == null) {
       await addItem("userInfo", "{}");
       console.log("w basie nie było wcześniej danych");
       addUserInfo(object);
       console.log("trying to add userInfo after preparing env");
     } else {
-      const userInfoStringified = JSON.stringify(object);
-      await addItem("userInfo", userInfoStringified);
+      let userInfoParsed = JSON.parse(userInfo);
+      userInfoParsed.username = object.username;
+      userInfoParsed.password = object.password;
+      const updatedInfoStringified = JSON.stringify(userInfoParsed);
+      await addItem("userInfo", updatedInfoStringified);
     }
   } catch (e) {
     console.log(e);
   }
   console.log("adding userInfo done.");
+  // setBuffering(false);
+}
+
+export async function addUserImage(
+  imageUri: string
+  // setBuffering: (arg0: boolean) => void
+) {
+  try {
+    const userInfoStringified = await getItem("userInfo");
+    if (userInfoStringified != null) {
+      const userInfoParsed = JSON.parse(userInfoStringified);
+      userInfoParsed.image = imageUri;
+      const updatedInfoStringified = JSON.stringify(userInfoParsed);
+      await addItem("userInfo", updatedInfoStringified);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  console.log("adding userImage done.");
   // setBuffering(false);
 }
 
@@ -173,7 +195,7 @@ export const getUserInfo = async () => {
 export async function getUserInfoSetState(
   setNameState: (arg0: string) => void,
   setPasswordState: (arg0: string) => void,
-  usrnm:string, psswrd:string
+setImageState: (arg0:string) => void,
 ) {
   let result = null;
   try {
@@ -186,9 +208,10 @@ export async function getUserInfoSetState(
       console.log(result);
       let resultParsed = JSON.parse(result);
       setNameState(resultParsed.username);
-      console.log('[getUserInfoSetState]: ', usrnm);
+      // console.log("[getUserInfoSetState]: ", usrnm);
       setPasswordState(resultParsed.password);
-      console.log("[getUserInfoSetState]: ", psswrd);
+      // console.log("[getUserInfoSetState]: ", psswrd);
+      setImageState(resultParsed.image);
       console.log("[getUserInfoSetState]: ", resultParsed);
     }
   }

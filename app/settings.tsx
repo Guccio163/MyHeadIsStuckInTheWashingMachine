@@ -4,11 +4,13 @@ import CustomButton from "../components/CustomButton";
 import { variables } from "../assets/globalVariables";
 
 export default function settings() {
+  
+
   return (
     <View style={styles.wrapper}>
       <CustomButton
         title="change color scheme"
-        onPress={() => console.log("miał🥺")}
+        onPress={() => console.log('color setting')}
         style={styles.button}
       />
     </View>
@@ -18,8 +20,8 @@ export default function settings() {
 const styles = StyleSheet.create({
   wrapper: {
     height: "100%",
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   button: {
     height: "7%",

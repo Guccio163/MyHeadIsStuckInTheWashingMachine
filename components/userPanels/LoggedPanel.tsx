@@ -9,17 +9,22 @@ import {
   removeItem,
 } from "../../functions/asyncStorage";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
 
 export default function LoggedPanel() {
   const {
     setLogged,
     setChanging,
     styles,
+  } = useContext(UserContext);
+  const {
     userName,
     setUserName,
     userPassword,
     setUserPassword,
-  } = useContext(UserContext);
+    userImage,
+    setUserImage,
+  } = useContext(UserInfoContext);
 
   
 

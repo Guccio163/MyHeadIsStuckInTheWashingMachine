@@ -6,19 +6,24 @@ import { variables } from "../../assets/globalVariables";
 import { generateCode } from "../../functions/login";
 import { addUserInfo } from "../../functions/asyncStorage";
 import { usePathname } from "expo-router";
+import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
 
 export default function loginPanel() {
   const {
     setLogged,
     setChanging,
-    userName,
-    setUserName,
-    userPassword,
-    setUserPassword,
     isInputting,
     setInputting,
     styles,
   } = useContext(UserContext);
+  const {
+    userName,
+    setUserName,
+    userPassword,
+    setUserPassword,
+    userImage,
+    setUserImage,
+  } = useContext(UserInfoContext);
   const [isBuffering, setBuffering] = useState(false);
 
   // useEffect(() => {

@@ -7,6 +7,7 @@ import FilterCategory from "../../components/FilterCategory";
 import { filterArrayByCategory } from "../../functions/filterArray";
 import { useNavigation } from "expo-router";
 import AddTagButton from "../../components/AddTagButton";
+import UserInfoContext from "../../contexts/UserInfoContextProvider";
 
 export default function TagListPage() {
   const [tagList, setTags] = useState<Tag[]>([]);
@@ -34,23 +35,25 @@ export default function TagListPage() {
   }
 
   return (
-    <View style={styles.pageWrapper}>
-      <AddTagButton />
+    // <UserInfoContext>
+      <View style={styles.pageWrapper}>
+        <AddTagButton />
 
-      <FilterCategory
-        chosenCategory={filterCategory}
-        setCategory={setCategory}
-      />
+        <FilterCategory
+          chosenCategory={filterCategory}
+          setCategory={setCategory}
+        />
 
-      <FlatList
-        style={styles.categoriesList}
-        data={chooseList(filterCategory)}
-        nestedScrollEnabled
-        renderItem={({ item, index }) => (
-          <TagElement tag={item} key={index}/>
-        )}
-      />
-    </View>
+        <FlatList
+          style={styles.categoriesList}
+          data={chooseList(filterCategory)}
+          nestedScrollEnabled
+          renderItem={({ item, index }) => (
+            <TagElement tag={item} key={index} />
+          )}
+        />
+      </View>
+    // </UserInfoContext>
   );
 }
 
