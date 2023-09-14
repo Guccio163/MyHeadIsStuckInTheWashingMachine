@@ -34,3 +34,5 @@ notatki.txt
 
 # typescript
 *.tsbuildinfo
+
+# pseudoEnv.tsx

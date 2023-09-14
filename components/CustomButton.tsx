@@ -7,11 +7,12 @@ interface Props {
   title: string;
   onPress: () => void;
   style: StyleProp<ViewStyle>;
+  disabled?: boolean
 }
 
-export default function CustomButton({title, onPress, style}:Props) {
+export default function CustomButton({title, onPress, style, disabled}:Props) {
   return (
-    <Pressable style={style} onPress={onPress}>
+    <Pressable style={style} onPress={onPress} disabled={disabled}>
       <Text style={styles.buttonText}>{title}</Text>
     </Pressable>
   )

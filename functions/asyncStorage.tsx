@@ -13,6 +13,32 @@ export async function addItem(key: string, value: string) {
   console.log("adding item done (usually tagArray).");
 }
 
+export async function addUserInfo(
+  object: {
+    username: string;
+    password: string;
+  },
+  // setBuffering: (arg0: boolean) => void
+) {
+  try {
+    const userInfoArray = await getItem("userInfo");
+
+    if (userInfoArray == null) {
+      await addItem("userInfo", "{}");
+      console.log("w basie nie było wcześniej danych");
+      addUserInfo(object);
+      console.log("trying to add userInfo after preparing env");
+    } else {
+      const userInfoStringified = JSON.stringify(object);
+      await addItem("userInfo", userInfoStringified);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  console.log("adding userInfo done.");
+  // setBuffering(false);
+}
+
 export async function addTag(object: Tag) {
   try {
     const tagCount = await getItem("tagCount");
@@ -28,7 +54,7 @@ export async function addTag(object: Tag) {
         console.log("baza nie była założona, założono");
       }
       addTag(object);
-      console.log('trying to add tag after preparing env')
+      console.log("trying to add tag after preparing env");
     } else {
       object.id = tagCount;
       let newTagCount = parseInt(tagCount) + 1;
@@ -109,12 +135,17 @@ export const getTagsSetState = async (setState: (arg0: Tag[]) => void) => {
   console.log("getting tags from db done.");
 };
 
-export const getTagSetState = async (setState: (arg0: Tag) => void, tagId: string) => {
+export const getTagSetState = async (
+  setState: (arg0: Tag) => void,
+  tagId: string
+) => {
   try {
     const result = await getItem("tags");
     if (result != null) {
       let resultParsed = JSON.parse(result);
-      let resultTag = resultParsed.filter((e: { id: string }) => e.id == tagId)[0];
+      let resultTag = resultParsed.filter(
+        (e: { id: string }) => e.id == tagId
+      )[0];
       setState(resultTag);
     }
   } catch (e) {
@@ -123,6 +154,47 @@ export const getTagSetState = async (setState: (arg0: Tag) => void, tagId: strin
 
   console.log("getting tag from db done.");
 };
+
+export const getUserInfo = async () => {
+  try {
+    const result = await getItem("userInfo");
+    if (result != null) {
+      let resultParsed = JSON.parse(result);
+      console.log(resultParsed);
+      return resultParsed;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  console.log("getting userInfo from db done.");
+};
+
+export async function getUserInfoSetState(
+  setNameState: (arg0: string) => void,
+  setPasswordState: (arg0: string) => void,
+  usrnm:string, psswrd:string
+) {
+  let result = null;
+  try {
+    result = await getItem("userInfo");
+    console.log("[getUserInfoSetState]: ", result);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    if (result != null) {
+      console.log(result);
+      let resultParsed = JSON.parse(result);
+      setNameState(resultParsed.username);
+      console.log('[getUserInfoSetState]: ', usrnm);
+      setPasswordState(resultParsed.password);
+      console.log("[getUserInfoSetState]: ", psswrd);
+      console.log("[getUserInfoSetState]: ", resultParsed);
+    }
+  }
+
+  console.log("[getUserInfoSetState]: getting userInfo from db done.");
+}
 
 export const getAllKeys = async () => {
   try {

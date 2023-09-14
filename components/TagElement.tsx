@@ -36,7 +36,7 @@ export default function TagElement({ tag }: Props) {
 
   const handlePress = () => {
     let changeValue =
-      100 +
+      150 +
       Math.floor((tag.icons.length - 1) / 6) * 40 +
       tag.materials.length * 40 +
       tag.notes.length * 40;

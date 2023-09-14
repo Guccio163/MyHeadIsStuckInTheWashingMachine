@@ -19,7 +19,7 @@ export default function chuj() {
         headerStyle: styles.headerStyle,
         headerRight: () => (
           <View style={{ height: 45, width: 45, paddingRight: 8 }}>
-            <View
+            <Pressable
               style={[
                 styles.userImageWrapper,
                 {
@@ -30,18 +30,19 @@ export default function chuj() {
                   backgroundColor: "rgba(180,180,180,1)",
                 },
               ]}
+              onPress={()=>navi.push('user')}
             >
               <FontAwesome
                 name="user"
                 size={30}
                 color={"rgba(120,120,120,1)"}
               />
-            </View>
+            </Pressable>
           </View>
         ),
         headerLeft: () => (
           <View style={{ height: 45, width: 45, paddingLeft: 8 }}>
-            <Pressable style={styles.userImageWrapper} onPress={()=>navi.push('user')}>
+            <Pressable style={styles.userImageWrapper} onPress={()=>navi.push('settings')}>
               <Ionicons
                 name="settings-sharp"
                 size={24}
