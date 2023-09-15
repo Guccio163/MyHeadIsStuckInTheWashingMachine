@@ -30,6 +30,10 @@ yarn-error.*
 
 # local env files
 .env*.local
+notatki.txt
 
 # typescript
 *.tsbuildinfo
+
+# pseudoEnv.tsx
+*.env
