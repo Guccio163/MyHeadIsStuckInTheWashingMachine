@@ -1,5 +1,6 @@
 declare module "@env" {
-  export const EMAILJS_SERVICE_ID: string;
-  export const EMAILJS_TEMPLATE_ID: string;
-  export const EMAILJS_PUBLIC_KEY: string;
+  export const API_KEY: string;
+  export const MESSAGING_SENDER_ID: string;
+  export const APP_ID: string;
+  export const MEASUREMENT_ID: string;
 }
