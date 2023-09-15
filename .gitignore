@@ -36,4 +36,4 @@ notatki.txt
 *.tsbuildinfo
 
 # pseudoEnv.tsx
-.env
+*.env
