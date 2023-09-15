@@ -12,15 +12,18 @@ import {
   generateCodeSetState,
   sendAuthCode,
 } from "../../functions/login";
+import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
+import { register } from "../../functions/firebaseFunctions";
 
 export default function registerPanel() {
   const { setLogged, setChanging, isLoading, setLoading, styles } =
     useContext(UserContext);
+  // const {userName, setUserName, userPassword, setUserPassword, userImage, setU} =
+  //   useContext(UserInfoContext);
   const [username, setUsername] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
-
-
 
   function arePasswordsIdentic() {
     return password == passwordRepeat && password != "";
@@ -33,6 +36,13 @@ export default function registerPanel() {
           style={styles.userInfoText}
           placeholder="Username"
           onChangeText={(text) => setUsername(text)}
+        ></TextInput>
+      </View>
+      <View style={styles.userInfoContainer}>
+        <TextInput
+          style={styles.userInfoText}
+          placeholder="Email"
+          onChangeText={(text) => setUserEmail(text)}
         ></TextInput>
       </View>
       <View
@@ -82,6 +92,9 @@ export default function registerPanel() {
           console.log("miał😼");
           if (arePasswordsIdentic()) setLoading(true);
           console.log("add to database");
+          console.log(username, userEmail, password);
+          register(username, userEmail, password);
+          console.log()
         }}
         style={[
           styles.button,

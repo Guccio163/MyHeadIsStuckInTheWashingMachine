@@ -7,18 +7,16 @@ import { generateCode } from "../../functions/login";
 import { addUserInfo } from "../../functions/asyncStorage";
 import { usePathname } from "expo-router";
 import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
+import { signIn } from "../../functions/firebaseFunctions";
 
 export default function loginPanel() {
-  const {
-    setLogged,
-    setChanging,
-    isInputting,
-    setInputting,
-    styles,
-  } = useContext(UserContext);
+  const { setLogged, setChanging, isInputting, setInputting, styles } =
+    useContext(UserContext);
   const {
     userName,
     setUserName,
+    userEmail,
+    setUserEmail,
     userPassword,
     setUserPassword,
     userImage,
@@ -48,6 +46,16 @@ export default function loginPanel() {
       <View style={styles.userInfoContainer}>
         <TextInput
           style={styles.userInfoText}
+          placeholder="Email"
+          onChangeText={(text) => {
+            setUserEmail(text);
+            setInputting(true);
+          }}
+        ></TextInput>
+      </View>
+      <View style={styles.userInfoContainer}>
+        <TextInput
+          style={styles.userInfoText}
           placeholder="Password"
           onChangeText={(text) => {
             setUserPassword(text);
@@ -62,15 +70,22 @@ export default function loginPanel() {
           try {
             // setBuffering(true);
 
-            setUserName(userName);
-            console.log("[Login button] username set:", userName);
-            setUserPassword(userPassword);
-            console.log("[Login button] userpassword set:", userPassword);
-            addUserInfo({
-              username: userName,
-              password: userPassword,
+            // setUserName(userName);
+            // console.log("[Login button] username set:", userName);
+            // setUserPassword(userPassword);
+            // console.log("[Login button] userpassword set:", userPassword);
+            signIn(userEmail, userPassword, () => {
+              addUserInfo({
+                username: userName,
+                password: userPassword,
+              });
+              setLogged(true);
             });
-            setLogged(true);
+            // addUserInfo({
+            //   username: userName,
+            //   password: userPassword,
+            // });
+            // setLogged(true);
           } catch (e) {
             console.log(e);
           }

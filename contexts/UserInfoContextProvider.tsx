@@ -4,6 +4,7 @@ import { variables } from "../assets/globalVariables";
 
 export default function UserInfoContextProvider({ children }: PropsWithChildren) {
   const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState('')
   const [userPassword, setUserPassword] = useState("");
   const [userImage, setUserImage] = useState("");
 
@@ -12,6 +13,8 @@ export default function UserInfoContextProvider({ children }: PropsWithChildren)
       value={{
         userName: userName,
         setUserName: setUserName,
+        userEmail: userEmail,
+        setUserEmail: setUserEmail,
         userPassword: userPassword,
         setUserPassword: setUserPassword,
         userImage: userImage,
@@ -26,6 +29,8 @@ export default function UserInfoContextProvider({ children }: PropsWithChildren)
 export const UserInfoContext = createContext({
   userName: "username",
   setUserName: (_arg0: string) => console.log("username"),
+  userEmail: "email",
+  setUserEmail: (_arg0: string) => console.log("email"),
   userPassword: "userpassword",
   setUserPassword: (_arg0: string) => console.log("userpassword"),
   userImage: "userimage",
