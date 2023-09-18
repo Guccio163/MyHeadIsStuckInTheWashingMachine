@@ -11,10 +11,10 @@ import MaterialsInput from "./formComponents/MaterialsInput";
 import CustomButton from "../CustomButton";
 import ImageInput from "./formComponents/ImageInput";
 import {
-  addTag,
+  addTagToDB,
   editTagInDB,
   getTagSetState,
-  removeTag,
+  deleteTagFromDB,
 } from "../../functions/asyncStorage";
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -223,7 +223,7 @@ export default function AddTagForm({ tagId }: Props) {
                   navi.back();
                 }
               : async () => {
-                  await addTag({
+                  await addTagToDB({
                     id: id,
                     imageUri: image,
                     name: name,

@@ -6,10 +6,12 @@ import { UserContext } from "../../app/user";
 import {
   getUserInfo,
   getUserInfoSetState,
-  removeItem,
+  deleteItemFromDB,
 } from "../../functions/asyncStorage";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
+import { Ionicons } from "@expo/vector-icons"; 
+
 
 export default function LoggedPanel() {
   const {
@@ -19,6 +21,7 @@ export default function LoggedPanel() {
   } = useContext(UserContext);
   const {
     userName,
+    userEmail,
     setUserName,
     userPassword,
     setUserPassword,
@@ -45,7 +48,7 @@ export default function LoggedPanel() {
             size={24}
             color={variables.mainColorDarkened}
           />
-          <Text style={styles.userInfoText}> :</Text>
+          <Text style={styles.userInfoText}>{"  :"}</Text>
         </View>
         <Text style={styles.userInfoText}>{userName}</Text>
       </View>
@@ -56,7 +59,22 @@ export default function LoggedPanel() {
             flexDirection: "row",
             alignItems: "center",
             position: "absolute",
-            left: 20,
+            left: 17,
+          }}
+        >
+          <Ionicons name="mail" size={24} color={variables.mainColorDarkened} />
+          <Text style={styles.userInfoText}> :</Text>
+        </View>
+        <Text style={styles.userInfoText}>{userEmail}</Text>
+      </View>
+      <View style={styles.userInfoContainer}>
+        <View
+          style={{
+            width: "20%",
+            flexDirection: "row",
+            alignItems: "center",
+            position: "absolute",
+            left: 18,
           }}
         >
           <MaterialIcons
@@ -65,7 +83,7 @@ export default function LoggedPanel() {
             color={variables.mainColorDarkened}
             style={{ left: 0 }}
           />
-          <Text style={styles.userInfoText}>:</Text>
+          <Text style={styles.userInfoText}>{" :"}</Text>
         </View>
         <Text style={styles.userInfoText}>{userPassword}</Text>
       </View>
@@ -84,7 +102,7 @@ export default function LoggedPanel() {
           setLogged(false);
           setUserName("");
           setUserPassword("");
-          removeItem("userInfo");
+          deleteItemFromDB("userInfo");
         }}
         style={styles.button}
       />

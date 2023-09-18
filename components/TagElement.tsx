@@ -21,7 +21,7 @@ import CustomButton from "./CustomButton";
 import { useRouter } from "expo-router";
 import { variables as v } from "../assets/globalVariables";
 import { Swipeable } from "react-native-gesture-handler";
-import { removeTag } from "../functions/asyncStorage";
+import { deleteTagFromDB } from "../functions/asyncStorage";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 interface Props {
@@ -56,7 +56,7 @@ export default function TagElement({ tag }: Props) {
     opacityDynamic.value = withTiming(0, undefined, () => {
       heightDynamic.value = 0;
       marginDynamic.value = 0;
-      removeTag(tagId);
+      deleteTagFromDB(tagId);
     });
   };
 

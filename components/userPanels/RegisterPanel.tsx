@@ -7,13 +7,14 @@ import CountDown from "react-native-countdown-component";
 import { variables } from "../../assets/globalVariables";
 import Clock from "../useClock";
 import useClock from "../useClock";
-import {
-  generateCode,
-  generateCodeSetState,
-  sendAuthCode,
-} from "../../functions/login";
+// import {
+//   generateCode,
+//   generateCodeSetState,
+//   sendAuthCode,
+// } from "../../functions/login";
 import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
-import { register } from "../../functions/firebaseFunctions";
+import { registerToFirebase } from "../../functions/firebaseFunctions";
+import { addUserInfoToDB } from "../../functions/asyncStorage";
 
 export default function registerPanel() {
   const { setLogged, setChanging, isLoading, setLoading, styles } =
@@ -89,12 +90,12 @@ export default function registerPanel() {
         title="REGISTER"
         disabled={isLoading}
         onPress={async () => {
-          console.log("miał😼");
+          // console.log("miał😼");
           if (arePasswordsIdentic()) setLoading(true);
-          console.log("add to database");
-          console.log(username, userEmail, password);
-          register(username, userEmail, password);
-          console.log()
+          // console.log("add to database");
+          // console.log(username, userEmail, password);
+          await registerToFirebase(username, userEmail, password);
+          // console.log()
         }}
         style={[
           styles.button,

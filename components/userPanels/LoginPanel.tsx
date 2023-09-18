@@ -3,16 +3,17 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../../app/user";
 import CustomButton from "../CustomButton";
 import { variables } from "../../assets/globalVariables";
-import { generateCode } from "../../functions/login";
-import { addUserInfo } from "../../functions/asyncStorage";
+// import { generateCode } from "../../functions/login";
+import { addUserInfoToDB } from "../../functions/asyncStorage";
 import { usePathname } from "expo-router";
 import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
-import { signIn } from "../../functions/firebaseFunctions";
+import { loginToFirebase } from "../../functions/firebaseFunctions";
 
 export default function loginPanel() {
   const { setLogged, setChanging, isInputting, setInputting, styles } =
     useContext(UserContext);
   const {
+    userID,
     userName,
     setUserName,
     userEmail,
@@ -33,7 +34,7 @@ export default function loginPanel() {
 
   return (
     <>
-      <View style={styles.userInfoContainer}>
+      {/* <View style={styles.userInfoContainer}>
         <TextInput
           style={styles.userInfoText}
           placeholder="Username"
@@ -42,7 +43,7 @@ export default function loginPanel() {
             setInputting(true);
           }}
         ></TextInput>
-      </View>
+      </View> */}
       <View style={styles.userInfoContainer}>
         <TextInput
           style={styles.userInfoText}
@@ -74,10 +75,13 @@ export default function loginPanel() {
             // console.log("[Login button] username set:", userName);
             // setUserPassword(userPassword);
             // console.log("[Login button] userpassword set:", userPassword);
-            signIn(userEmail, userPassword, () => {
-              addUserInfo({
+            loginToFirebase(userEmail, userPassword, (userIDreceived: string) => {
+              console.log(userID)
+              addUserInfoToDB({
+                userID: userIDreceived,
                 username: userName,
                 password: userPassword,
+                email: userEmail,
               });
               setLogged(true);
             });

@@ -1,119 +1,113 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Tag } from "../components/addTagPanel/AddTagForm";
-import React, { useContext } from "react";
 
 ///////// ADD
 
-export async function addItem(key: string, value: string) {
+export async function addItemToDB(key: string, value: string) {
   try {
     await AsyncStorage.setItem(key, value);
   } catch (e) {
     console.log(e);
   }
-  console.log("adding item done (usually tagArray).");
+  console.log("[addItemToDB DONE]");
 }
 
-export async function addUserInfo(
-  object: {
-    username: string;
-    password: string;
-  }
-  // setBuffering: (arg0: boolean) => void
-) {
+export async function addUserInfoToDB(object: {
+  userID: string;
+  username: string;
+  password: string;
+  email: string;
+}) {
   try {
     const userInfo = await getItem("userInfo");
-
     if (userInfo == null) {
-      await addItem("userInfo", "{}");
+      await addItemToDB("userInfo", "{}");
       console.log("w basie nie było wcześniej danych");
-      addUserInfo(object);
+      addUserInfoToDB(object);
       console.log("trying to add userInfo after preparing env");
     } else {
       let userInfoParsed = JSON.parse(userInfo);
+      userInfoParsed.userID = object.userID;
       userInfoParsed.username = object.username;
       userInfoParsed.password = object.password;
+      userInfoParsed.email = object.email;
       const updatedInfoStringified = JSON.stringify(userInfoParsed);
-      await addItem("userInfo", updatedInfoStringified);
+      await addItemToDB("userInfo", updatedInfoStringified);
     }
   } catch (e) {
     console.log(e);
   }
-  console.log("adding userInfo done.");
-  // setBuffering(false);
+  console.log("[addUserInfoToDB DONE]");
 }
 
-export async function addUserImage(
-  imageUri: string
-  // setBuffering: (arg0: boolean) => void
-) {
+export async function addUserImageToDB(imageUri: string) {
   try {
     const userInfoStringified = await getItem("userInfo");
     if (userInfoStringified != null) {
       const userInfoParsed = JSON.parse(userInfoStringified);
       userInfoParsed.image = imageUri;
       const updatedInfoStringified = JSON.stringify(userInfoParsed);
-      await addItem("userInfo", updatedInfoStringified);
+      await addItemToDB("userInfo", updatedInfoStringified);
     }
   } catch (e) {
     console.log(e);
   }
-  console.log("adding userImage done.");
-  // setBuffering(false);
+  console.log("[addUserImageToDB DONE]");
 }
 
-export async function addTag(object: Tag) {
+export async function addTagToDB(tag: Tag) {
   try {
     const tagCount = await getItem("tagCount");
     const tagArray = await getItem("tags");
 
     if (tagCount == null || tagArray == null) {
       if (tagCount == null) {
-        await addItem("tagCount", "0");
-        console.log("tagCount nie było sprecyzowane, zdefiniowano");
+        await addItemToDB("tagCount", "0");
+        console.log("tagCount wasn't declared, fixed");
       }
       if (tagArray == null) {
-        await addItem("tags", "[]");
-        console.log("baza nie była założona, założono");
+        await addItemToDB("tags", "[]");
+        console.log("tagArray wasn't declared, fixed");
       }
-      addTag(object);
-      console.log("trying to add tag after preparing env");
+      addTagToDB(tag);
+      console.log("adding tag after preparing db");
     } else {
-      object.id = tagCount;
+      tag.id = tagCount;
       let newTagCount = parseInt(tagCount) + 1;
-      await addItem("tagCount", `${newTagCount}`);
+      await addItemToDB("tagCount", `${newTagCount}`);
 
       let tagArrayParsed = JSON.parse(tagArray);
-      tagArrayParsed.push(object);
+      tagArrayParsed.push(tag);
       const tagArrayStringified = JSON.stringify(tagArrayParsed);
-      await addItem("tags", tagArrayStringified);
+      await addItemToDB("tags", tagArrayStringified);
     }
   } catch (e) {
     console.log(e);
   }
-  console.log("adding tag done.");
+  console.log("[addTagToDB DONE]");
 }
 
 ///////// EDIT
 
-export async function editTagInDB(object: Tag) {
+export async function editTagInDB(tag: Tag) {
   try {
     const tagArray = await getItem("tags");
 
     if (tagArray != null) {
       let tagArrayParsed = JSON.parse(tagArray);
       let newTagArrayParsed = tagArrayParsed.map((item: Tag) => {
-        if (item.id == object.id) {
-          return object;
+        if (item.id == tag.id) {
+          return tag;
         }
         return item;
       });
       const tagArrayStringified = JSON.stringify(newTagArrayParsed);
-      await addItem("tags", tagArrayStringified);
+      await addItemToDB("tags", tagArrayStringified);
     }
   } catch (e) {
     console.log(e);
   }
-  console.log("editing tag done.");
+  console.log("[editTagInDB DONE]");
 }
 
 ///////// GET
@@ -193,9 +187,11 @@ export const getUserInfo = async () => {
 };
 
 export async function getUserInfoSetState(
+  setIDState: (arg0: string) => void,
   setNameState: (arg0: string) => void,
+  setEmailState: (arg0: string) => void,
   setPasswordState: (arg0: string) => void,
-setImageState: (arg0:string) => void,
+  setImageState: (arg0: string) => void
 ) {
   let result = null;
   try {
@@ -207,7 +203,10 @@ setImageState: (arg0:string) => void,
     if (result != null) {
       console.log(result);
       let resultParsed = JSON.parse(result);
+      setIDState(resultParsed.userID);
       setNameState(resultParsed.username);
+      // console.log("[getUserInfoSetState]: ", usrnm);
+      setEmailState(resultParsed.email);
       // console.log("[getUserInfoSetState]: ", usrnm);
       setPasswordState(resultParsed.password);
       // console.log("[getUserInfoSetState]: ", psswrd);
@@ -216,6 +215,46 @@ setImageState: (arg0:string) => void,
     }
   }
 
+  console.log("[getUserInfoSetState]: getting userInfo from db done.");
+}
+
+export async function getUserImageSetState(
+  setImageState: (arg0: string) => void
+) {
+  let result = null;
+  try {
+    result = await getItem("userInfo");
+    console.log("[getUserInfoSetState]: ", result);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    if (result != null) {
+      console.log(result);
+      let resultParsed = JSON.parse(result);
+      // console.log("[getUserInfoSetState]: ", psswrd);
+      setImageState(resultParsed.image);
+      console.log("[getUserInfoSetState]: ", resultParsed);
+    }
+  }
+  console.log("[getUserInfoSetState]: getting userInfo from db done.");
+}
+
+export async function addUserInfoTemplate(setID: (arg0: string) => void) {
+  let result = null;
+  try {
+    result = await getItem("userInfo");
+    console.log("[getUserInfoSetState]: ", result);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    if (result != null) {
+      console.log(result);
+      let resultParsed = JSON.parse(result);
+      // console.log("[getUserInfoSetState]: ", psswrd);
+      setID(resultParsed.id);
+      console.log("[getUserInfoSetState]: ", resultParsed);
+    }
+  }
   console.log("[getUserInfoSetState]: getting userInfo from db done.");
 }
 
@@ -245,33 +284,29 @@ export const getAllKeysSetState = async (
   console.log("getting all keys and setting state done.");
 };
 
-///////// REMOVE
+///////// DELETE
 
-export const removeItem = async (key: string) => {
+export const deleteItemFromDB = async (key: string) => {
   try {
     await AsyncStorage.removeItem(key);
   } catch (e) {
     console.log(e);
   }
-  console.log("Removing item done.");
+  console.log("[deleteItemFromDB DONE]");
 };
 
-export const removeTag = async (key: string) => {
+export const deleteTagFromDB = async (key: string) => {
   try {
     const tagArray = await getItem("tags");
 
     if (tagArray != null) {
-      // console.log(tagArray);
       let tagArrayParsed = JSON.parse(tagArray);
-      let newTagArray = tagArrayParsed.filter(
-        (e: { id: string }) => e.id != key
-      );
-      // console.log(newTagArray);
+      let newTagArray = tagArrayParsed.filter((e: Tag) => e.id != key);
       const value = JSON.stringify(newTagArray);
-      addItem("tags", value);
+      addItemToDB("tags", value);
     }
   } catch (e) {
     console.log(e);
   }
-  console.log("removing tag done.");
+  console.log("[deleteTagFromDB DONE]");
 };

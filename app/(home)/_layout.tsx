@@ -15,6 +15,8 @@ import { getUserInfoSetState } from "../../functions/asyncStorage";
 export default function chuj() {
   const navi = useRouter();
   const {
+    setUserID,
+    setUserEmail,
     userName,
     setUserName,
     userPassword,
@@ -24,7 +26,7 @@ export default function chuj() {
   } = useContext(UserInfoContext);
 
   useEffect(() => {
-    getUserInfoSetState(setUserName, setUserPassword, setUserImage);
+    getUserInfoSetState(setUserID, setUserName, setUserEmail, setUserPassword, setUserImage);
     console.log("ACTUALISING...");
   }, []);
 

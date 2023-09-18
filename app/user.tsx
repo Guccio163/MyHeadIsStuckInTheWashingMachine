@@ -28,6 +28,8 @@ export default function UserInfoPage() {
   const [user, setUser] = useState(auth.currentUser)
 
   const {
+    userID,
+    setUserID,
     userName,
     setUserName,
     userEmail,
@@ -74,18 +76,20 @@ export default function UserInfoPage() {
 
   async function myFunction() {
     try {
-      getUserInfoSetState(setUserName, setUserPassword, setUserImage);
+      getUserInfoSetState(setUserID, setUserName, setUserEmail, setUserPassword, setUserImage);
     } catch {
     } finally {
-      console.log("[UserInfoPage]: ", userName, userPassword);
-      if (userName && userPassword) {
+      console.log("[UserInfoPage]: ", userName, userEmail, userPassword);
+      if (userEmail && userPassword) {
         setLogged(true);
+        console.log('LOGGED IN')
       }
       // setLogged(true);
 
       console.log(
         "[UserInfoPage]: nie udało się pobrać danych",
         userName,
+        userEmail,
         userPassword
       );
     }
@@ -94,7 +98,7 @@ export default function UserInfoPage() {
   useEffect(() => {
     if (!isInputting) myFunction();
     console.log("ACTUALISING...");
-  }, [userName, userPassword, userImage]);
+  }, [userID, userName, userPassword, userImage]);
 
   return (
     <UserContext.Provider

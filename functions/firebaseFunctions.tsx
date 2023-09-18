@@ -1,69 +1,94 @@
-import { auth } from "../firebase/config";
+import { auth, firestore } from "../firebase/config";
+import { doc, collection, setDoc, updateDoc } from "firebase/firestore";
 import {
-  doc,
-  collection,
-  setDoc,
-  getCountFromServer,
-  
-} from "firebase/firestore";
-import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  
 } from "firebase/auth";
-import { API_KEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID } from "@env";
+import { Tag } from "../components/addTagPanel/AddTagForm";
 
 
-export function register(
+// REGISTER AND LOGIN
+
+export function registerToFirebase(
   username: string,
   email: string,
   password: string
-  //   imageUri: string
 ) {
-  const auth2 = getAuth();
-  createUserWithEmailAndPassword(auth2, email, password)
+  createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      console.log("[register function: ]", user);
-      // ...
+      addUserInfoToFirebase(userCredential.user.uid, username, email);
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.log(errorCode, errorMessage);
-      // ..
     });
 }
 
-export function signIn(email: string, password: string,setLocally: ()=>void ) {
-  // const auth2 = getAuth();
+
+export function loginToFirebase(
+  email: string,
+  password: string,
+  setLocally: (userIDreceived: string) => void
+) {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      console.log("[singIn function: ]", user);
-      setLocally();
-      // ...
+      setLocally(`${userCredential.user.uid}`);
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.log(errorCode, errorMessage);
-      console.log(API_KEY, APP_ID, MEASUREMENT_ID, MESSAGING_SENDER_ID);
-
     });
 }
 
-// export function consoleLogUser(uid: string){
-//   getAuth()
-//     .getUserByEmail('wiktorgut@op.pl')3
-//     .then((userRecord: { toJSON: () => any }) => {
-//       // See the UserRecord reference doc for the contents of userRecord.
-//       console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
-//     })
-//     .catch((error: Error) => {
-//       console.log("Error fetching user data:", error);
-//     });
-// }
+
+// ADD RECORDS
+
+export async function addTagToFirebase(tag: Tag, userID: string) {
+  const ref = collection(firestore, "tags", userID, "userTags");
+  const recordName = tag.name ? tag.name : tag.category
+  await setDoc(doc(ref, `${tag.id}. ${recordName}`), {
+    id: tag.id,
+    name: tag.name,
+    imageUri: tag.imageUri,
+    brand: tag.brand,
+    colour: tag.colour,
+    category: tag.category,
+    icons: tag.icons,
+    materials: tag.materials,
+    notes: tag.notes,
+  });
+}
+
+
+export async function addUserInfoToFirebase(
+  userID: string,
+  username: string,
+  email: string
+) {
+  const ref = doc(firestore, "userInfo", userID);
+  await setDoc(ref, {
+    username: username,
+    email: email,
+  });
+}
+
+
+// UPDATE RECORDS
+
+
+export async function updateUserImageInFirebase(userID: string, imageUrl: string) {
+  const ref = doc(firestore, "userInfo", userID);
+  await updateDoc(ref, {
+    imageUrl: imageUrl,
+  });
+}
+
+
+export async function updateUserNameInFirebase(userID: string, username: string) {
+  const ref = doc(firestore, "userInfo", userID);
+  await updateDoc(ref, {
+    username: username,
+  });
+}
