@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { FontAwesome } from "@expo/vector-icons";
 import { variables } from "../assets/globalVariables";
-import { addUserImage } from "../functions/asyncStorage";
+import { addUserImageToDB } from "../functions/asyncStorage";
 
 interface Props {
   setImage: (arg0: string) => void;
@@ -24,7 +24,7 @@ export default function ImageInput({ setImage, image }: Props) {
     if (!result.canceled) {
       let imageUri = result.assets[0].uri;
       setImage(imageUri);
-      addUserImage(imageUri);
+      addUserImageToDB(imageUri);
     }
   };
 

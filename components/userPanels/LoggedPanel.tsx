@@ -4,8 +4,8 @@ import CustomButton from "../CustomButton";
 import { variables } from "../../assets/globalVariables";
 import { UserContext } from "../../app/user";
 import {
-  getUserInfo,
-  getUserInfoSetState,
+  getUserInfoFromDB,
+  getUserInfoSetStateFromDB,
   deleteItemFromDB,
 } from "../../functions/asyncStorage";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";

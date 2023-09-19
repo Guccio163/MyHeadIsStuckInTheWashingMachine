@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import CustomButton from "../../components/CustomButton";
 import {
-  getAllKeysSetState,
-  getItemSetState,
-  getTagsSetState,
+  getAllKeysSetStateFromDB,
+  getItemSetStateFromDB,
+  getTagsSetStateFromDB,
 } from "../../functions/asyncStorage";
 import { FlatList } from "react-native-gesture-handler";
 import { Tag } from "../../components/addTagPanel/AddTagForm";
@@ -13,9 +13,9 @@ import IconsPanel from "../../components/addTagPanel/formComponents/IconsPanel";
 
 export default function FriendsPage() {
   // MAINTENANCE
-  const [tagCount, setCount] = useState("?");
-  const [allTags, setAllTags] = useState<Tag[]>([]);
-  const [allKeys, setAllKeys] = useState<string[]>([]);
+  // const [tagCount, setCount] = useState("?");
+  // const [allTags, setAllTags] = useState<Tag[]>([]);
+  // const [allKeys, setAllKeys] = useState<string[]>([]);
 
   return (
     <View style={styles.pageWrapper}>
@@ -24,11 +24,11 @@ export default function FriendsPage() {
         <Text style={styles.altText}>Soon !</Text>
 
         {/* COMPONENTS FOR MAINTENANCE REASONS: */}
-        <Text>current tag count: {tagCount}</Text>
+        {/* <Text>current tag count: {tagCount}</Text>
         <CustomButton
           title="see tagCount"
           style={propStyles.button}
-          onPress={() => getItemSetState("tagCount", setCount)}
+          onPress={() => getItemSetStateFromDB("tagCount", setCount)}
         />
         {allTags ? (
           <FlatList
@@ -49,7 +49,7 @@ export default function FriendsPage() {
         <CustomButton
           title="see all tags"
           style={propStyles.button}
-          onPress={() => getTagsSetState(setAllTags)}
+          onPress={() => getTagsSetStateFromDB(setAllTags)}
         />
         {allKeys.map((element, index) => (
           <Text key={index}>{element}</Text>
@@ -57,9 +57,8 @@ export default function FriendsPage() {
         <CustomButton
           title="see all keys"
           style={propStyles.button}
-          onPress={() => getAllKeysSetState(setAllKeys)}
-        />
-        {/* <IconsPanel/> */}
+          onPress={() => getAllKeysSetStateFromDB(setAllKeys)}
+        /> */}
       </View>
     </View>
   );

@@ -56,8 +56,8 @@ export default function TagElement({ tag }: Props) {
     opacityDynamic.value = withTiming(0, undefined, () => {
       heightDynamic.value = 0;
       marginDynamic.value = 0;
-      deleteTagFromDB(tagId);
     });
+    deleteTagFromDB(tagId);
   };
 
   const renderRightActions = (tagId: string) => {
@@ -164,11 +164,7 @@ export default function TagElement({ tag }: Props) {
 
   return (
     <Animated.View
-      style={[
-        animatedStyles,
-        animatedMargin,
-        { shadowOpacity: 0.3, shadowOffset: { width: 2, height: 2 } },
-      ]}
+      style={[animatedStyles, animatedMargin, styles.animatedWrapper]}
     >
       <Swipeable renderRightActions={() => renderRightActions(tag.id)}>
         <Pressable onPress={handlePress}>
@@ -289,6 +285,11 @@ export default function TagElement({ tag }: Props) {
 }
 
 const styles = StyleSheet.create({
+  animatedWrapper: {
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 2, height: 2 },
+    // backgroundColor: v.halfTransparent,
+  },
   flatListChild: {
     // borderWidth: 1,
     borderRadius: 10,

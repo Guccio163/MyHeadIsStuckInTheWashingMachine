@@ -13,7 +13,7 @@ import ImageInput from "./formComponents/ImageInput";
 import {
   addTagToDB,
   editTagInDB,
-  getTagSetState,
+  getTagSetStateFromDB,
   deleteTagFromDB,
 } from "../../functions/asyncStorage";
 import { Picker } from "@react-native-picker/picker";
@@ -103,7 +103,7 @@ export default function AddTagForm({ tagId }: Props) {
 
   useEffect(() => {
     if (tagId && !id) {
-      getTagSetState(setDetails, tagId);
+      getTagSetStateFromDB(setDetails, tagId);
       console.log("tagId isnt null");
     }
     if (tagDetails) {

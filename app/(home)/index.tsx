@@ -1,21 +1,16 @@
 import { View, FlatList, StyleSheet } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TagElement from "../../components/TagElement";
 import {
-  getTagsSetState,
-  getUserImageSetState,
-  getUserInfoSetState,
+  getTagsSetStateFromDB,
 } from "../../functions/asyncStorage";
 import { Tag } from "../../components/addTagPanel/AddTagForm";
 import FilterCategory from "../../components/FilterCategory";
 import { filterArrayByCategory } from "../../functions/filterArray";
 import { useNavigation } from "expo-router";
 import AddTagButton from "../../components/AddTagButton";
-import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
-import { setUserId } from "firebase/analytics";
-// import UserInfoContextProvider, {
-//   UserInfoContext,
-// } from "../contexts/UserInfoContextProvider";
+
+
 
 export default function TagListPage() {
   const [tagList, setTags] = useState<Tag[]>([]);
@@ -23,24 +18,9 @@ export default function TagListPage() {
   const [filterCategory, setCategory] = useState("All");
   const navigation = useNavigation();
 
-  const {
-    userID,
-    setUserID,
-    userName,
-    setUserName,
-    userEmail,
-    setUserEmail,
-    userPassword,
-    setUserPassword,
-    userImage,
-    setUserImage,
-  } = useContext(UserInfoContext);
-
   useEffect(() => {
     navigation.addListener("focus", () => {
-      getTagsSetState(setTags);
-      // getUserImageSetState(setUserImage);
-
+      getTagsSetStateFromDB(setTags);
       console.log("Ekran został zmieniony.");
     });
   }, [navigation]);
@@ -57,38 +37,7 @@ export default function TagListPage() {
     return filteredTagList;
   }
 
-  // async function myFunction() {
-  //   try {
-  //     // getUserInfoSetState(
-  //     //   setUserID,
-  //     //   setUserName,
-  //     //   setUserEmail,
-  //     //   setUserPassword,
-  //     //   setUserImage
-  //     // );
-  //     getUserImageSetState(setUserImage);
-  //   } catch {
-  //   } finally {
-  //     console.log("[INDEX PAGE]: ", userName, userEmail, userPassword);
-
-  //     // setLogged(true);
-
-  //     console.log(
-  //       "[INDEX PAGE]: nie udało się pobrać danych",
-  //       userName,
-  //       userEmail,
-  //       userPassword
-  //     );
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   myFunction();
-  //   console.log("ACTUALISING...");
-  // }, [userName, userPassword, userImage]);
-
   return (
-    // <UserInfoContext>
     <View style={styles.pageWrapper}>
       <AddTagButton />
 
@@ -104,7 +53,6 @@ export default function TagListPage() {
         renderItem={({ item, index }) => <TagElement tag={item} key={index} />}
       />
     </View>
-    // </UserInfoContext>
   );
 }
 

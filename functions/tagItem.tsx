@@ -1,10 +1,4 @@
-import { View, Text } from "react-native";
-import React from "react";
 
-type tagIcon = {
-  name: string;
-  image: string;
-};
 
 export default function tagItem(name: string) {
   const imagesFolderPath: string = "../assets/tagIcons/";
@@ -16,6 +10,7 @@ export default function tagItem(name: string) {
   const otherIconsFolderPath = imagesFolderPath + "other/";
 
   const tagIcons = [
+
     //////////////// WASH ////////////////
 
     {

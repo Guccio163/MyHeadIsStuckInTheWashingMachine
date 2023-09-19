@@ -6,7 +6,6 @@ import {
 } from "firebase/auth";
 import { Tag } from "../components/addTagPanel/AddTagForm";
 
-
 // REGISTER AND LOGIN
 
 export function registerToFirebase(
@@ -25,7 +24,6 @@ export function registerToFirebase(
     });
 }
 
-
 export function loginToFirebase(
   email: string,
   password: string,
@@ -42,12 +40,11 @@ export function loginToFirebase(
     });
 }
 
-
 // ADD RECORDS
 
 export async function addTagToFirebase(tag: Tag, userID: string) {
   const ref = collection(firestore, "tags", userID, "userTags");
-  const recordName = tag.name ? tag.name : tag.category
+  const recordName = tag.name ? tag.name : tag.category;
   await setDoc(doc(ref, `${tag.id}. ${recordName}`), {
     id: tag.id,
     name: tag.name,
@@ -61,7 +58,6 @@ export async function addTagToFirebase(tag: Tag, userID: string) {
   });
 }
 
-
 export async function addUserInfoToFirebase(
   userID: string,
   username: string,
@@ -74,19 +70,22 @@ export async function addUserInfoToFirebase(
   });
 }
 
-
 // UPDATE RECORDS
 
-
-export async function updateUserImageInFirebase(userID: string, imageUrl: string) {
+export async function updateUserImageInFirebase(
+  userID: string,
+  imageUrl: string
+) {
   const ref = doc(firestore, "userInfo", userID);
   await updateDoc(ref, {
     imageUrl: imageUrl,
   });
 }
 
-
-export async function updateUserNameInFirebase(userID: string, username: string) {
+export async function updateUserNameInFirebase(
+  userID: string,
+  username: string
+) {
   const ref = doc(firestore, "userInfo", userID);
   await updateDoc(ref, {
     username: username,

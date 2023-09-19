@@ -44,7 +44,7 @@ export default function AddTagButton() {
         onPress={() => {
           startRotationAnBack();
           navi.push({
-            pathname: "addTagPanel",
+            pathname: "addtag",
           });
         }}
         style={({ pressed }) => [

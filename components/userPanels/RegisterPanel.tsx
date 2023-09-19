@@ -5,8 +5,6 @@ import CustomButton from "../CustomButton";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import CountDown from "react-native-countdown-component";
 import { variables } from "../../assets/globalVariables";
-import Clock from "../useClock";
-import useClock from "../useClock";
 // import {
 //   generateCode,
 //   generateCodeSetState,
