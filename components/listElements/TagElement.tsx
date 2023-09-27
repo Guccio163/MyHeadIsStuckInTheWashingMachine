@@ -8,8 +8,8 @@ import {
   Button,
 } from "react-native";
 import React, { Component, RefObject, useState } from "react";
-import { Tag } from "./addTagPanel/AddTagForm";
-import tagItem from "../functions/tagItem";
+import { Tag } from "../addTagPanel/AddTagForm";
+import tagItem from "../../functions/tagItem";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Animated, {
   useAnimatedStyle,
@@ -17,11 +17,11 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import CustomButton from "./CustomButton";
+import CustomButton from "../CustomButton";
 import { useRouter } from "expo-router";
-import { variables as v } from "../assets/globalVariables";
+import { variables as v } from "../../assets/globalVariables";
 import { Swipeable } from "react-native-gesture-handler";
-import { deleteTagFromDB } from "../functions/asyncStorage";
+import { deleteTagFromDB } from "../../functions/asyncStorage";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 interface Props {
@@ -266,7 +266,7 @@ export default function TagElement({ tag }: Props) {
                       title="Edytuj"
                       onPress={() => {
                         navi.push({
-                          pathname: "addTagPanel",
+                          pathname: "addtag",
                           params: { tagId: `${tag.id}` },
                         });
                         handlePress();
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   animatedWrapper: {
     shadowOpacity: 0.3,
     shadowOffset: { width: 2, height: 2 },
-    // backgroundColor: v.halfTransparent,
+    shadowColor: "black",
   },
   flatListChild: {
     // borderWidth: 1,

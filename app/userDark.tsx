@@ -6,7 +6,7 @@ import LoggedPanel from "../components/userPanels/LoggedPanel";
 import LoginPanel from "../components/userPanels/LoginPanel";
 import EditPanel from "../components/userPanels/EditPanel";
 import RegisterPanel from "../components/userPanels/RegisterPanel";
-import { getUserInfoSetStateFromDB, getUserInfoWithoutIDSetStateFromDB } from "../functions/asyncStorage";
+import { getUserInfoSetStateFromDB } from "../functions/asyncStorage";
 import { UserInfoContext } from "../contexts/UserInfoContextProvider";
 import ProfilePicInput from "../components/ProfilePicInput";
 import { auth } from "../firebase/config";
@@ -39,12 +39,10 @@ export default function UserInfoPage() {
     styles: styles,
   };
 
-
-  // PRAWDOPODOBNIE TA FUNKCJA POBIERA ID ZANIM LOGIN Z FIREBASE NADPISZE TE DANE I SIĘ 
-  // PRZEZ TO WYWALA
   async function myFunction() {
     try {
-      getUserInfoWithoutIDSetStateFromDB(
+      getUserInfoSetStateFromDB(
+        setUserID,
         setUserName,
         setUserEmail,
         setUserPassword,
@@ -70,7 +68,7 @@ export default function UserInfoPage() {
   useEffect(() => {
     if (!isInputting) myFunction();
     console.log("ACTUALISING...");
-    // console.log("userimage:", userImage);
+    console.log("userimage:", userImage);
   }, [userID, userName, userPassword, userImage]);
 
   return (

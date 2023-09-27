@@ -31,6 +31,8 @@ yarn-error.*
 # local env files
 .env*.local
 notatki.txt
+deletedMaintenance.txt
+ToDo.txt
 
 # typescript
 *.tsbuildinfo

@@ -1,8 +1,9 @@
 import { View, Text, Pressable, Image, StyleSheet } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { variables as v } from "../assets/globalVariables";
+import { ModeContext } from "../contexts/ModeContextProvider";
 
 interface Props{
     userImage: string
@@ -10,11 +11,14 @@ interface Props{
 
 export default function HeaderRight({userImage}:Props) {
   const navi = useRouter();
+      const { isDark, setDark } = useContext(ModeContext);
+
   return (
     <View style={styles.userImageWrapper}>
       <Pressable
         style={styles.userImagePressable}
-        onPress={() => navi.push("user")}
+        onPress={() => isDark ? navi.push("userDark") :
+            navi.push("user")}
       >
         {userImage ? (
           <Image source={{ uri: userImage }} style={styles.image} />

@@ -7,13 +7,14 @@ import { variables } from "../../assets/globalVariables";
 import { addUserInfoToDB } from "../../functions/asyncStorage";
 import { usePathname } from "expo-router";
 import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
-import { loginToFirebase } from "../../functions/firebaseFunctions";
+import { getUserUsernameSetStateFromFirebase, loginToFirebase } from "../../functions/firebaseFunctions";
 
 export default function loginPanel() {
   const { setLogged, setChanging, isInputting, setInputting, styles } =
     useContext(UserContext);
   const {
     userID,
+    setUserID,
     userName,
     setUserName,
     userEmail,
@@ -75,14 +76,16 @@ export default function loginPanel() {
             // console.log("[Login button] username set:", userName);
             // setUserPassword(userPassword);
             // console.log("[Login button] userpassword set:", userPassword);
-            loginToFirebase(userEmail, userPassword, (userIDreceived: string) => {
-              console.log(userID)
+            loginToFirebase(userEmail, userPassword, async (userIDreceived: string) => {
+              const nameReceived = await getUserUsernameSetStateFromFirebase(userIDreceived, setUserName);
               addUserInfoToDB({
                 userID: userIDreceived,
-                username: userName,
+                username: nameReceived,
                 password: userPassword,
                 email: userEmail,
               });
+              console.log("ID received:",userIDreceived)
+              setUserID(userIDreceived)
               setLogged(true);
             });
             // addUserInfo({

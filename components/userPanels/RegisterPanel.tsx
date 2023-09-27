@@ -92,7 +92,12 @@ export default function registerPanel() {
           if (arePasswordsIdentic()) setLoading(true);
           // console.log("add to database");
           // console.log(username, userEmail, password);
-          await registerToFirebase(username, userEmail, password);
+          try {
+            await registerToFirebase(username, userEmail, password);
+            setChanging(false)
+          } catch (error) {
+            console.log(error);
+          }
           // console.log()
         }}
         style={[

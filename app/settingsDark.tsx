@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Switch } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import CustomButton from "../components/CustomButton";
 import { variables as v } from "../assets/globalVariables";
 import { ModeContext } from "../contexts/ModeContextProvider";
@@ -8,9 +8,8 @@ import { useRouter } from "expo-router";
 
 export default function settings() {
   const { isDark, setDark } = useContext(ModeContext);
-    const navi = useRouter();
-
-  const changeMode = async () => {
+  const navi = useRouter();
+  const changeMode = () => {
     setDark((previousState) => !previousState);
     navi.back();
   };
@@ -22,7 +21,7 @@ export default function settings() {
 
   return (
     <View style={styles.wrapper}>
-      <Text>change color scheme</Text>
+      <Text style={styles.text}>change color scheme</Text>
       {/* <CustomButton
         title="change color scheme"
         onPress={() => {
@@ -45,6 +44,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: v.mainColorHeavyDarkened
   },
   button: {
     height: "7%",
@@ -55,4 +55,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 10,
   },
+  text:{
+    color: 'white'
+  }
 });

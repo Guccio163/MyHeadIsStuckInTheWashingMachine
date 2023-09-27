@@ -5,7 +5,7 @@ import {
   KeyboardAvoidingView,
   Dimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import NotesInput from "./formComponents/NotesInput";
 import MaterialsInput from "./formComponents/MaterialsInput";
 import CustomButton from "../CustomButton";
@@ -19,6 +19,8 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import IconsPanel from "./formComponents/IconsPanel";
+import { addTagToFirebase, updateTagInFirebase } from "../../functions/firebaseFunctions";
+import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
 
 export type Tag = {
   id: string;
@@ -76,6 +78,11 @@ export default function AddTagForm({ tagId }: Props) {
     }
     console.log(icons);
   }
+
+   const {
+     userID,
+    //  isConnected,
+   } = useContext(UserInfoContext);
 
   function resetStates() {
     setImage("");
@@ -219,11 +226,7 @@ export default function AddTagForm({ tagId }: Props) {
                     icons: icons,
                     notes: notes,
                   });
-
-                  navi.back();
-                }
-              : async () => {
-                  await addTagToDB({
+                  await updateTagInFirebase(userID, {
                     id: id,
                     imageUri: image,
                     name: name,
@@ -234,6 +237,35 @@ export default function AddTagForm({ tagId }: Props) {
                     icons: icons,
                     notes: notes,
                   });
+                  // console.log(isConnected)
+
+
+                  navi.back();
+                }
+              : async () => {
+                  let newId = await addTagToDB({
+                    id: id,
+                    imageUri: image,
+                    name: name,
+                    category: category,
+                    colour: colour,
+                    brand: brand,
+                    materials: materials,
+                    icons: icons,
+                    notes: notes,
+                  });
+                  await addTagToFirebase({
+                    id: newId ? newId : 'n_r',
+                    imageUri: image,
+                    name: name,
+                    category: category,
+                    colour: colour,
+                    brand: brand,
+                    materials: materials,
+                    icons: icons,
+                    notes: notes,
+                  }, userID);
+
                   resetStates();
                   navi.back();
                 }

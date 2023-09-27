@@ -39,7 +39,7 @@ export async function addUserInfoToDB(object: {
   } catch (e) {
     console.log(e);
   }
-  console.log("[addUserInfoToDB DONE]");
+  console.log("[addUserInfoToDB DONE] userID:", object.userID);
 }
 
 export async function addUserImageToDB(imageUri: string) {
@@ -57,9 +57,47 @@ export async function addUserImageToDB(imageUri: string) {
   console.log("[addUserImageToDB DONE]");
 }
 
-export async function addTagToDB(tag: Tag) {
+export async function addSystemModeToDB(mode: boolean) {
   try {
-    const tagCount = await getItemFromDB("tagCount");
+    const systemSettings = await getItemFromDB("systemSettings");
+    if (systemSettings == null) {
+      await addItemToDB("systemSettings", "{}");
+      console.log("w basie nie było wcześniej danych");
+      addSystemModeToDB(mode);
+      console.log("trying to add systemSettings after preparing env");
+    } else {
+      let systemSettingsParsed = JSON.parse(systemSettings);
+      systemSettingsParsed.mode = mode;
+      const updatedSystemSettingsStringified = JSON.stringify(systemSettingsParsed);
+      await addItemToDB("systemSettings", updatedSystemSettingsStringified);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  console.log("[addSystemModeSetStateToDB DONE]");
+}
+
+// export async function addSystemModeToDB(mode: boolean) {
+//   try {
+//     const systemSettings = await getItemFromDB("systemSettings");
+//     if (systemSettings != null) {
+//       const systemSettingsParsed = JSON.parse(systemSettings);
+//       systemSettingsParsed.mode = mode;
+//       const systemSettingsStringified = JSON.stringify(systemSettingsParsed);
+//       await addItemToDB("systemSettings", systemSettingsStringified);
+//       console.log(systemSettingsStringified)
+//     }
+//   } catch (e) {
+//     console.log(e);
+//   }
+//   console.log("[addSystemMode DONE]");
+
+// }
+
+export async function addTagToDB(tag: Tag) {
+  let tagCount;
+  try {
+    tagCount = await getItemFromDB("tagCount");
     const tagArray = await getItemFromDB("tags");
 
     if (tagCount == null || tagArray == null) {
@@ -85,24 +123,11 @@ export async function addTagToDB(tag: Tag) {
     }
   } catch (e) {
     console.log(e);
+  } finally {
+    console.log("[addTagToDB DONE]");
+    return tagCount;
   }
-  console.log("[addTagToDB DONE]");
 }
-
-// export async function addUserInfoTemplate(setID: (arg0: string) => void) {
-//   let result = null;
-//   try {
-//     result = await getItemFromDB("userInfo");
-//   } catch (e) {
-//     console.log(e);
-//   } finally {
-//     if (result != null) {
-//       let resultParsed = JSON.parse(result);
-//       setID(resultParsed.id);
-//     }
-//   }
-//   console.log("[getUserInfoSetState]: getting userInfo from db done.");
-// }
 
 /////////////////////////////
 ///////// EDIT
@@ -209,7 +234,7 @@ export async function getUserInfoSetStateFromDB(
   setNameState: (arg0: string) => void,
   setEmailState: (arg0: string) => void,
   setPasswordState: (arg0: string) => void,
-  setImageState: (arg0: string) => void
+  // setImageState: (arg0: string) => void
 ) {
   let result = null;
   try {
@@ -223,10 +248,50 @@ export async function getUserInfoSetStateFromDB(
       setNameState(resultParsed.username);
       setEmailState(resultParsed.email);
       setPasswordState(resultParsed.password);
-      setImageState(resultParsed.image);
+      // setImageState(resultParsed.image);
     }
   }
   console.log("[getUserInfoSetStateFromDB DONE]");
+}
+
+export async function getUserInfoWithoutIDSetStateFromDB(
+  setNameState: (arg0: string) => void,
+  setEmailState: (arg0: string) => void,
+  setPasswordState: (arg0: string) => void
+  // setImageState: (arg0: string) => void
+) {
+  let result = null;
+  try {
+    result = await getItemFromDB("userInfo");
+  } catch (e) {
+    console.log(e);
+  } finally {
+    if (result != null) {
+      let resultParsed = JSON.parse(result);
+      setNameState(resultParsed.username);
+      setEmailState(resultParsed.email);
+      setPasswordState(resultParsed.password);
+      // setImageState(resultParsed.image);
+    }
+  }
+  console.log("[getUserInfoSetStateFromDB DONE]");
+}
+
+export async function getUserIDSetStateFromDB(
+  setIDState: (arg0: string) => void,
+) {
+  let result = null;
+  try {
+    result = await getItemFromDB("userInfo");
+  } catch (e) {
+    console.log(e);
+  } finally {
+    if (result != null) {
+      let resultParsed = JSON.parse(result);
+      setIDState(resultParsed.userID);
+    }
+  }
+  console.log("[getUserIDSetStateFromDB DONE]");
 }
 
 export async function getUserImageSetStateFromDB(
@@ -244,6 +309,38 @@ export async function getUserImageSetStateFromDB(
     }
   }
   console.log("[getUserInfoSetState DONE]");
+}
+
+export async function getSystemModeFromDB() {
+  let result = null;
+  try {
+    result = await getItemFromDB("systemSettings");
+  } catch (e) {
+    console.log(e);
+  } finally {
+    if (result != null) {
+      let resultParsed:{mode:boolean} = JSON.parse(result);
+      return resultParsed.mode
+    }
+  }
+  console.log("[getSystemModeSetStateFromDB DONE]");
+}
+
+export async function getSystemModeSetStateFromDB(
+  setModeState: (arg0: boolean) => void
+) {
+  let result = null;
+  try {
+    result = await getItemFromDB("systemSettings");
+  } catch (e) {
+    console.log(e);
+  } finally {
+    if (result != null) {
+      let resultParsed = JSON.parse(result);
+      setModeState(resultParsed.mode);
+    }
+  }
+  console.log("[getSystemModeSetStateFromDB DONE]");
 }
 
 export const getAllKeysFromDB = async () => {

@@ -1,30 +1,39 @@
 import { StyleSheet, Pressable, Image, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { FontAwesome } from "@expo/vector-icons";
 import { variables } from "../assets/globalVariables";
 import { addUserImageToDB } from "../functions/asyncStorage";
+import { updateProfileImageInStorage, updateUserImageInFirebase } from "../functions/firebaseFunctions";
+import { UserInfoContext } from "../contexts/UserInfoContextProvider";
 
 interface Props {
   setImage: (arg0: string) => void;
   image: string;
 }
 
+
+
 export default function ImageInput({ setImage, image }: Props) {
+  const { userID, userEmail } = useContext(UserInfoContext);
+
+
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-      
-    });
+    let result = await ImagePicker.launchImageLibraryAsync(
+      {
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      },
+    );
 
     if (!result.canceled) {
       let imageUri = result.assets[0].uri;
       setImage(imageUri);
       addUserImageToDB(imageUri);
+      updateProfileImageInStorage(imageUri, userID);
     }
   };
 

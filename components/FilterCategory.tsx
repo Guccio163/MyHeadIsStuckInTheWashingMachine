@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { categories } from "./addTagPanel/AddTagForm";
 import { FlatList } from "react-native-gesture-handler";
 import Animated, {
@@ -15,6 +15,8 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { variables as v } from "../assets/globalVariables";
+import { ModeContext } from "../contexts/ModeContextProvider";
+import { getSearchedUsersFromFirebaseSetState } from "../functions/firebaseFunctions";
 
 interface Props {
   chosenCategory: string;
@@ -24,6 +26,8 @@ interface Props {
 export default function FilterCategory({ chosenCategory, setCategory }: Props) {
   const filterCategories = ["All"].concat(categories);
   const [isExtended, setExtended] = useState(false);
+    const { isDark, setDark } = useContext(ModeContext);
+
   //   const [chosenCategory, setCategory] = useState('');
 
   function toggleFilters(arg0: string) {
@@ -39,6 +43,7 @@ export default function FilterCategory({ chosenCategory, setCategory }: Props) {
       stiffness: 80,
       damping: 100,
     });
+    // getDocumentFromFirebaseSetState()
   };
 
   const closeFilter = () => {
@@ -57,7 +62,7 @@ export default function FilterCategory({ chosenCategory, setCategory }: Props) {
 
   return (
     <View style={styles.filterWrapper}>
-      <Text style={styles.filterText}>Filter categories:</Text>
+      <Text style={[styles.filterText, {color: isDark ? v.mainColor : 'black'}]}>Filter categories:</Text>
       <View style={styles.viewBack}>
         <Animated.View style={[styles.filterView, animatedStyles]}>
           {isExtended ? (
