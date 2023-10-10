@@ -33,6 +33,8 @@ yarn-error.*
 notatki.txt
 deletedMaintenance.txt
 ToDo.txt
+memoryMng.txt
+firebaseconfigbackup.txt
 
 # typescript
 *.tsbuildinfo
