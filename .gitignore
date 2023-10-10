@@ -40,4 +40,4 @@ firebaseconfigbackup.txt
 *.tsbuildinfo
 
 # env
-*.env
+*.envconfig.js
