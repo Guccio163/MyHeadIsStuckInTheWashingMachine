@@ -35,6 +35,7 @@ deletedMaintenance.txt
 ToDo.txt
 memoryMng.txt
 firebaseconfigbackup.txt
+.env
 
 # typescript
 *.tsbuildinfo
