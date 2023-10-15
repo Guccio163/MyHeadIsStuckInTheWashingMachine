@@ -10,6 +10,7 @@ import {
   
 } from "../../functions/firebaseFunctions";
 import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
+import { useRouter } from "expo-router";
 
 interface Props {
   id: string;
@@ -21,6 +22,7 @@ interface Props {
 export default function FriendElement({ id, name, email, type }: Props) {
   let buttons = null;
   const { userID, userName, userEmail } = useContext(UserInfoContext);
+  const navi = useRouter();
 
   const [imageUrl, setImageUrl] = useState("");
   if (type != "friends") {
@@ -73,6 +75,7 @@ export default function FriendElement({ id, name, email, type }: Props) {
       style={styles.mainConstainer}
       onPress={() => {
         console.log("you pressed", name);
+        navi.push(`friendtags?friendID=${id}&friendName=${name}`)
       }}
       disabled={type != "friends"}
     >

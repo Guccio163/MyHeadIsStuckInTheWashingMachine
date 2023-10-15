@@ -70,6 +70,11 @@ export async function addSystemModeToDB(mode: boolean) {
       systemSettingsParsed.mode = mode;
       const updatedSystemSettingsStringified = JSON.stringify(systemSettingsParsed);
       await addItemToDB("systemSettings", updatedSystemSettingsStringified);
+      //USUŃ PONIŻSZE WYWOŁANIA
+            console.log(systemSettings);
+            getUserInfoFromDB();
+            
+
     }
   } catch (e) {
     console.log(e);

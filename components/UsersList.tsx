@@ -1,9 +1,10 @@
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
 import React, { useContext } from "react";
 import { friend } from "../app/(home)/friends";
 import FriendElement from "./listElements/FriendElement";
 import { variables as v } from "../assets/globalVariables";
 import { ModeContext } from "../contexts/ModeContextProvider";
+import { useRouter } from "expo-router";
 
 interface Props {
   type: string;
@@ -14,9 +15,10 @@ export default function UsersList({ type, friendsList }: Props) {
   const { isDark } = useContext(ModeContext);
 
   let textColor = { color: isDark ? v.mainColorHeavyDarkened : "black" };
+  const navi = useRouter();
 
   return (
-    <View style={{ width: "90%", alignSelf: "center" }}>
+    <Pressable style={{ width: "90%", alignSelf: "center" }}>
       <View style={styles.header}>
         {type == "friends" ? (
           <Text style={[styles.altText, textColor]}>Friends</Text>
@@ -37,7 +39,7 @@ export default function UsersList({ type, friendsList }: Props) {
           />
         )}
       />
-    </View>
+    </Pressable>
   );
 }
 

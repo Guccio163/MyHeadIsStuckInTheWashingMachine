@@ -12,6 +12,7 @@ export default function settings() {
 
   const changeMode = async () => {
     setDark((previousState) => !previousState);
+    console.log("zmieniłeś mode")
     navi.back();
   };
 

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import UserInfoContextProvider from "../contexts/UserInfoContextProvider";
 import NetInfo from "@react-native-community/netinfo";
 import ModeContextProvider, { ModeContext } from "../contexts/ModeContextProvider";
@@ -9,6 +9,8 @@ export default function _layout() {
 
   // const [isConnected, setConnected] = useState(true);
   const { isDark } = useContext(ModeContext);
+
+  const params = useLocalSearchParams();
 
   useEffect(()=>{
     console.log('tryb ciemny:', isDark)
@@ -39,7 +41,7 @@ export default function _layout() {
               headerStyle: {
                 backgroundColor: isDark ? v.mainColorDarkened : v.mainColor,
               },
-              headerTintColor: isDark ? v.mainColor : 'black',
+              headerTintColor: isDark ? v.mainColor : "black",
             }}
           />
           <Stack.Screen
@@ -66,6 +68,17 @@ export default function _layout() {
           />
           <Stack.Screen
             name="userDark"
+            options={{
+              headerShown: true,
+              presentation: "card",
+              headerStyle: {
+                backgroundColor: v.mainColorHeavyDarkened,
+              },
+              headerTintColor: v.mainColor,
+            }}
+          />
+          <Stack.Screen
+            name="friendtags"
             options={{
               headerShown: true,
               presentation: "card",

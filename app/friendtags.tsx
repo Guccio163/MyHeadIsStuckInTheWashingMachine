@@ -1,28 +1,41 @@
 import { View, FlatList, StyleSheet } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import TagElement from "../../components/listElements/TagElement";
-import {
-  getAllKeysSetStateFromDB,
-  getTagsSetStateFromDB,
-  getUserIDSetStateFromDB,
-} from "../../functions/asyncStorage";
-import { Tag } from "../../components/addTagPanel/AddTagForm";
-import FilterCategory from "../../components/FilterCategory";
-import { filterArrayByCategory } from "../../functions/filterArray";
-import { useNavigation } from "expo-router";
-import AddTagButton from "../../components/AddTagButton";
+import React, { useContext, useEffect, useReducer, useState } from "react";
+// import TagElement from "../../components/listElements/TagElement";
+// import {
+//   getAllKeysSetStateFromDB,
+//   getTagsSetStateFromDB,
+//   getUserIDSetStateFromDB,
+// } from "../../functions/asyncStorage";
+// import { Tag } from "../../components/addTagPanel/AddTagForm";
+// import FilterCategory from "../../components/FilterCategory";
+// import { filterArrayByCategory } from "../../functions/filterArray";
+import { useLocalSearchParams, useNavigation, useRouter, useSearchParams } from "expo-router";
+// import AddTagButton from "../../components/AddTagButton";
 import NetInfo from "@react-native-community/netinfo";
-import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
-import { getImageUrlFromFirebaseSetState } from "../../functions/firebaseFunctions";
+// import { UserInfoContext } from "../../contexts/UserInfoContextProvider";
+// import { getImageUrlFromFirebaseSetState } from "../../functions/firebaseFunctions";
+import { friend } from "./(home)/friends";
+import { useRoute } from "@react-navigation/native";
+import { Tag } from "../components/addTagPanel/AddTagForm";
+import { getAllKeysSetStateFromDB, getTagsSetStateFromDB } from "../functions/asyncStorage";
+import { filterArrayByCategory } from "../functions/filterArray";
+import FilterCategory from "../components/FilterCategory";
+import TagElement from "../components/listElements/TagElement";
+import { getTagsSetStateFromFirebase } from "../functions/firebaseFunctions";
 
-export default function TagListPage() {
+// interface Props{
+//     friend: friend
+// }
+
+export default function FriendTags() {
   const [tagList, setTags] = useState<Tag[]>([]);
   const [filteredTagList, setFiltered] = useState<Tag[]>([]);
   const [filterCategory, setCategory] = useState("All");
   const navigation = useNavigation();
-  const { userImage, setUserID, userID, setUserImage } =
-    useContext(UserInfoContext);
   const [keys, setKeys] = useState<string[]>([]);
+  const navi = useNavigation();
+  const {friendID, friendName}= useLocalSearchParams();
+  const friendsId = `${friendID}`
 
   // const { isConnected, setConnected } = useContext(UserInfoContext);
 
@@ -45,25 +58,24 @@ export default function TagListPage() {
   // }
 
   useEffect(() => {
-    navigation.addListener("focus", () => {
-      getTagsSetStateFromDB(setTags);
-      console.log("Ekran został zmieniony.");
-    });
-  }, [navigation]);
+      getTagsSetStateFromFirebase(setTags, friendsId);
+    
+  }, []);
 
-  // useEffect(() => {
-  //   getAllKeysSetStateFromDB(setKeys);
-  //   console.log(keys);
-  // }, [keys]);
+//   useEffect(() => {
+//     getAllKeysSetStateFromDB(setKeys);
+//     console.log(keys);
+//   }, [keys]);
 
   useEffect(() => {
     setFiltered(filterArrayByCategory(tagList, filterCategory));
     console.log("odświeżono");
   }, [filterCategory, tagList]);
 
-  // useEffect(() => {
-  //   myFunction();
-  // }, []);
+  useEffect(() => {
+      navi.setOptions({ title: `${friendName}'s tags`});
+}, []);
+
   function chooseList(filterCategory: string) {
     if (filterCategory == "All") {
       return tagList;
@@ -73,7 +85,6 @@ export default function TagListPage() {
 
   return (
     <View style={styles.pageWrapper}>
-      <AddTagButton />
 
       <FilterCategory
         chosenCategory={filterCategory}

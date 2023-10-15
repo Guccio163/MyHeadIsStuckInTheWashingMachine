@@ -382,4 +382,47 @@ export async function getUserUsernameSetStateFromFirebase(
   }
 }
 
+export async function getTagsSetStateFromFirebase(
+  setState: (arg0: Tag[]) => void,
+  userID: string
+) {
+  const tagsRef = collection(firestore, `tags`, userID, 'userTags');
+  const docsSnap = await getDocs(tagsRef);
+  let tagsArray: Tag[] = [];
+  docsSnap.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+      // tagsArray = docSnap.data().requests;
+      // console.log(tagsArray);
+      let tagBrand = doc.data().brand;
+      let tagCategory = doc.data().category;
+      let tagColour = doc.data().colour;
+      let tagIcons = doc.data().icons;
+      let tagId = doc.data().id;
+      let tagImage = doc.data().imageUri;
+      let tagMaterials = doc.data().materials;
+      let tagName = doc.data().name;
+      let tagNotes = doc.data().notes;
+
+      let newTag:Tag = {
+        id: tagId,
+        imageUri: tagImage,
+        name: tagName,
+        category: tagCategory,
+        colour: tagColour,
+        brand: tagBrand,
+        materials: tagMaterials,
+        icons: tagIcons,
+        notes: tagNotes,
+      };
+      tagsArray.push(newTag);
+      console.log(newTag)
+    
+    // console.log(doc.id, " => ", doc.data());
+  });
+  
+  setState(tagsArray);
+  return tagsArray;
+}
+
+
 // POJAWIAJĄCY SIĘ PROBLEM: There was a problem sending log messages to your development environment [PrettyFormatPluginError: value.hasOwnProperty is not a function (it is undefined)]

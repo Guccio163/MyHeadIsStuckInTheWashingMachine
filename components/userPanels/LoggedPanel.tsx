@@ -85,7 +85,7 @@ export default function LoggedPanel() {
           />
           <Text style={styles.userInfoText}>{" :"}</Text>
         </View>
-        <Text style={styles.userInfoText}>{userPassword}</Text>
+        <Text style={styles.userInfoText}>{userPassword ? '*********' : ''}</Text>
       </View>
 
       <CustomButton
