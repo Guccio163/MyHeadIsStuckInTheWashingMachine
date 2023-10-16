@@ -84,7 +84,7 @@ export default function TagListPage() {
         style={styles.categoriesList}
         data={chooseList(filterCategory)}
         nestedScrollEnabled
-        renderItem={({ item }) => <TagElement tag={item} />}
+        renderItem={({ item }) => <TagElement tag={item} isOwner={true}/>}
         keyExtractor={(item) => item.id}
       />
     </View>

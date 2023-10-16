@@ -59,13 +59,7 @@ export default function FriendTags() {
 
   useEffect(() => {
       getTagsSetStateFromFirebase(setTags, friendsId);
-    
   }, []);
-
-//   useEffect(() => {
-//     getAllKeysSetStateFromDB(setKeys);
-//     console.log(keys);
-//   }, [keys]);
 
   useEffect(() => {
     setFiltered(filterArrayByCategory(tagList, filterCategory));
@@ -95,7 +89,7 @@ export default function FriendTags() {
         style={styles.categoriesList}
         data={chooseList(filterCategory)}
         nestedScrollEnabled
-        renderItem={({ item }) => <TagElement tag={item} />}
+        renderItem={({ item }) => <TagElement tag={item} isOwner={false} />}
         keyExtractor={(item) => item.id}
       />
     </View>

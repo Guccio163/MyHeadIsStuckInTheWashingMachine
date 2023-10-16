@@ -26,14 +26,14 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 interface Props {
   tag: Tag;
+  isOwner: boolean;
 }
 
-export default function TagElement({ tag }: Props) {
-  const heightDynamic = useSharedValue(Dimensions.get("window").height * 0.13);
+export default function TagElement({ tag, isOwner }: Props) {
   const [isExtended, setExtended] = useState(false);
-  const marginDynamic = useSharedValue(10);
-  const opacityDynamic = useSharedValue(1);
+  const navi = useRouter();
 
+  // collapsing/unwinding the element
   const handlePress = () => {
     let changeValue =
       150 +
@@ -51,6 +51,7 @@ export default function TagElement({ tag }: Props) {
     }
   };
 
+  // set of events after clicking delete button
   const handleDelete = (tagId: string) => {
     translateX.value = withTiming(-Dimensions.get("window").width);
     opacityDynamic.value = withTiming(0, undefined, () => {
@@ -60,6 +61,7 @@ export default function TagElement({ tag }: Props) {
     deleteTagFromDB(tagId);
   };
 
+  // delete button spawned after swiping component left
   const renderRightActions = (tagId: string) => {
     return (
       <Animated.View
@@ -85,15 +87,17 @@ export default function TagElement({ tag }: Props) {
     );
   };
 
-  function shortName(name: string, precision: number) {
-    if (name.length > precision) {
+  // displaying the name/brand
+  function showName(name: string, precision: number, isExtended: boolean) {
+    if (isExtended || name.length <= precision) return name;
+    else {
       let prefix = name.slice(0, precision);
       return `${prefix}(...)`;
     }
-    return name;
   }
 
-  // splice cuts out part of the array!
+  // displaying tag's icons
+  // note: splice cuts out part of the array!
   function mapIcons(icons: string[], isExtended: boolean) {
     let newIcons = [...icons];
     let isShortened = false;
@@ -129,6 +133,8 @@ export default function TagElement({ tag }: Props) {
     );
   }
 
+  // collapsing the component after delete
+  const heightDynamic = useSharedValue(Dimensions.get("window").height * 0.13);
   const animatedStyles = useAnimatedStyle(() => ({
     height: withSpring(heightDynamic.value, {
       mass: 10,
@@ -140,6 +146,8 @@ export default function TagElement({ tag }: Props) {
     }),
   }));
 
+  // margin removal linked to collapsing component after delete
+  const marginDynamic = useSharedValue(10);
   const animatedMargin = useAnimatedStyle(() => ({
     marginVertical: withSpring(marginDynamic.value, {
       mass: 10,
@@ -151,13 +159,14 @@ export default function TagElement({ tag }: Props) {
     }),
   }));
 
+  // delete button fading away
+  const opacityDynamic = useSharedValue(1);
   const animatedOpacity = useAnimatedStyle(() => ({
     opacity: opacityDynamic.value,
   }));
 
-  const navi = useRouter();
+  // swiping left to delete
   const translateX = useSharedValue(0);
-
   const rStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
   }));
@@ -203,16 +212,14 @@ export default function TagElement({ tag }: Props) {
                   <View style={styles.nameView}>
                     <Text style={styles.nameText}>
                       {tag.name
-                        ? isExtended
-                          ? tag.name
-                          : shortName(tag.name, 12)
+                        ? showName(tag.name, 12, isExtended)
                         : tag.category}
                     </Text>
                   </View>
                   {tag.brand ? (
                     <View style={styles.brandView}>
                       <Text style={styles.brandText}>
-                        {isExtended ? tag.brand : shortName(tag.brand, 10)}
+                        {showName(tag.brand, 10, isExtended)}
                       </Text>
                     </View>
                   ) : null}
@@ -262,17 +269,19 @@ export default function TagElement({ tag }: Props) {
                         </View>
                       ))}
                     </View>
-                    <CustomButton
-                      title="Edytuj"
-                      onPress={() => {
-                        navi.push({
-                          pathname: "addtag",
-                          params: { tagId: `${tag.id}` },
-                        });
-                        handlePress();
-                      }}
-                      style={styles.editButton}
-                    />
+                    {isOwner ? (
+                      <CustomButton
+                        title="Edytuj"
+                        onPress={() => {
+                          navi.push({
+                            pathname: "addtag",
+                            params: { tagId: `${tag.id}` },
+                          });
+                          handlePress();
+                        }}
+                        style={styles.editButton}
+                      />
+                    ) : null}
                   </>
                 ) : null}
               </View>
