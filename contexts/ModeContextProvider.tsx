@@ -30,8 +30,7 @@ export default function ModeContextProvider({ children }: PropsWithChildren) {
       {children}
     </ModeContext.Provider>
   );
-}
-
+} 
 export const ModeContext = createContext({
   isDark: false,
   setDark: (value: React.SetStateAction<boolean>) => console.log("darkmode"),
